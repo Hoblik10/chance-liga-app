@@ -43,3 +43,7 @@ klic,zapsano,kolo,datum,domaci,hoste,model,p_domaci,p_remiza,p_hoste,tip,skore,v
 5|SK Sigma Olomouc|FK Pardubice|poisson,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,poisson,0.534462,0.254397,0.211141,1X (Neprohra domácích),,
 5|SK Sigma Olomouc|FK Pardubice|elo,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,elo,0.460269,0.281647,0.258084,1X (Neprohra domácích),,
 5|SK Sigma Olomouc|FK Pardubice|ensemble,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,ensemble,0.601247,0.205211,0.193542,1 (Výhra domácích),,
+5|FC Hradec Králové|FC Viktoria Plzeň|index_sily,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,index_sily,0.717222,0.130143,0.152635,1 (Výhra domácích),,
+5|FC Hradec Králové|FC Viktoria Plzeň|poisson,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,poisson,0.551123,0.295021,0.153855,1 (Výhra domácích),,
+5|FC Hradec Králové|FC Viktoria Plzeň|elo,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,elo,0.445066,0.285983,0.268952,1X (Neprohra domácích),,
+5|FC Hradec Králové|FC Viktoria Plzeň|ensemble,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,ensemble,0.571137,0.237049,0.191814,1 (Výhra domácích),,
