@@ -12,6 +12,12 @@ import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
+try:
+    PASMO_PRAHA = ZoneInfo("Europe/Prague")
+except Exception:
+    # GitHub runner bez tzdata – radši UTC+2 než pád celé úlohy.
+    PASMO_PRAHA = timezone(timedelta(hours=2))
+
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -22,7 +28,6 @@ import staticka_data
 
 # TheSportsDB posílá strTimestamp v UTC bez označení zóny. Výkop se musí
 # ukázat v českém čase, jinak je v létě o dvě hodiny vedle.
-PASMO_PRAHA = ZoneInfo("Europe/Prague")
 
 # Zkrácené a anglické názvy, pod kterými týmy vedou jednotlivé zdroje.
 MAPA_TYMU = {

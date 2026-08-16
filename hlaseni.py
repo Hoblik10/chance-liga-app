@@ -1,12 +1,10 @@
 """Sestavení a odeslání hlášení s tipy na další kolo.
 
 Stejný text jde na Telegram z tlačítka v aplikaci i z naplánované úlohy.
-Zpráva je tabulka jako nahoře ve webové aplikaci, seřazená od nejvyšší
-jistoty. Naplánovaná úloha bere kolo, které se hraje v nejbližších dnech,
+Naplánovaná úloha bere kolo, které se hraje v nejbližších dnech,
 ne odložené zbytky staršího kola.
 """
 
-import html
 from datetime import datetime, timedelta
 
 import data
@@ -216,19 +214,18 @@ def sestav_zpravu(kolo, zapasy, predikce):
         return None
 
     bloky = [
-        f"<b>Chance Liga · {kolo}. kolo</b>",
+        f"Chance Liga · {kolo}. kolo",
         "od nejvyšší jistoty",
         "",
     ]
 
     for cislo, radek in enumerate(radky, start=1):
-        domaci = html.escape(kratky_nazev(radek["domaci"]))
-        hoste = html.escape(kratky_nazev(radek["hoste"]))
-        tip = html.escape(radek["tip"].split(" ")[0])
-        vykop = html.escape(kratky_vykop(radek["datum"]))
-        skore = html.escape(radek["skore"])
+        domaci = kratky_nazev(radek["domaci"])
+        hoste = kratky_nazev(radek["hoste"])
+        tip = radek["tip"].split(" ")[0]
+        vykop = kratky_vykop(radek["datum"])
 
-        bloky.append(f"<b>{cislo}. {domaci} – {hoste}</b>")
+        bloky.append(f"{cislo}. {domaci} – {hoste}")
         if vykop:
             bloky.append(vykop)
         bloky.append(
@@ -236,7 +233,7 @@ def sestav_zpravu(kolo, zapasy, predikce):
             f"X {radek['p_remiza']:.0%} · "
             f"2 {radek['p_hoste']:.0%}"
         )
-        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%} · {skore}")
+        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%} · {radek['skore']}")
         bloky.append("")
 
     return "\n".join(bloky).strip()

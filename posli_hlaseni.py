@@ -10,6 +10,7 @@ Naplánovaná úloha na GitHubu tohle spouští každé pondělí ráno.
 
 import argparse
 import sys
+import traceback
 
 import hlaseni
 
@@ -23,7 +24,11 @@ def main():
     )
     argumenty = parser.parse_args()
 
-    vysledek = hlaseni.priprav_a_posli(odeslat=not argumenty.suchy)
+    try:
+        vysledek = hlaseni.priprav_a_posli(odeslat=not argumenty.suchy)
+    except Exception:
+        traceback.print_exc()
+        return 1
 
     print(vysledek.get("log", ""))
 

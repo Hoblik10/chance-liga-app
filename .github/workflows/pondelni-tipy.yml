@@ -31,7 +31,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SPORTSDB_KEY: ${{ secrets.SPORTSDB_KEY }}
           SEZONA: ${{ secrets.SEZONA }}
-        run: python posli_hlaseni.py
+          PYTHONUTF8: "1"
+          TZ: Europe/Prague
+        run: python -u posli_hlaseni.py
 
       - name: Uložit aktualizovaný log predikcí
         run: |
