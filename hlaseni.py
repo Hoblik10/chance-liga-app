@@ -1,9 +1,13 @@
 """Sestavení a odeslání hlášení s tipy na další kolo.
 
 Stejný text jde na Telegram z tlačítka v aplikaci i z naplánované úlohy.
-Zápasy jsou seřazené od nejvyšší jistoty, aby bylo hned vidět, čím si
-model věří nejvíc.
+Zpráva je tabulka jako nahoře ve webové aplikaci, seřazená od nejvyšší
+jistoty. Naplánovaná úloha bere kolo, které se hraje v nejbližších dnech,
+ne odložené zbytky staršího kola.
 """
+
+import html
+from datetime import datetime, timedelta
 
 import data
 import modely
@@ -11,6 +15,9 @@ import nastaveni
 import zaznamy
 
 VYCHOZI_ZRANENI = list(modely.POKUTA_ZRANENI)[0]
+
+# Pondělní hlášení pokrývá nadcházející víkend, ne zápasy za tři týdny.
+HORIZONT_DNU = 8
 
 
 def dostupna_kola(podklady):
@@ -20,8 +27,40 @@ def dostupna_kola(podklady):
     )
 
 
-def najdi_dalsi_kolo(databaze_kol, kola):
-    """První kolo, ve kterém ještě zbývá nesehraný zápas."""
+def _cas_zapasu(zapas):
+    """Čas výkopu v pražském pásmu, nebo None."""
+    cas = zapas.get("cas")
+    if cas is None:
+        return None
+    if cas.tzinfo is None:
+        return cas.replace(tzinfo=data.PASMO_PRAHA)
+    return cas.astimezone(data.PASMO_PRAHA)
+
+
+def najdi_dalsi_kolo(databaze_kol, kola, ted=None):
+    """Kolo, které se hraje v nejbližších dnech.
+
+    První kolo s jakýmkoli nesehraným zápasem nestačí – ve 4. kole můžou
+    zbývat dva zápasy přeložené na září, zatímco 5. kolo je příští víkend.
+    """
+    ted = ted or datetime.now(data.PASMO_PRAHA)
+    konec = ted + timedelta(days=HORIZONT_DNU)
+
+    nejlepsi, nejvic = None, -1
+    for cislo_kola in sorted(kola):
+        pocet = 0
+        for zapas in databaze_kol.get(cislo_kola, []):
+            if zapas["stav"] == modely.ODEHRANO or zapas["stav"].startswith("🔴"):
+                continue
+            cas = _cas_zapasu(zapas)
+            if cas is None or ted - timedelta(hours=3) <= cas <= konec:
+                pocet += 1
+        if pocet > nejvic:
+            nejvic, nejlepsi = pocet, cislo_kola
+
+    if nejvic > 0:
+        return nejlepsi
+
     for cislo_kola in sorted(kola):
         if any(
             z["stav"] != modely.ODEHRANO and not z["stav"].startswith("🔴")
@@ -138,7 +177,7 @@ def radky_souhrnu(kolo, zapasy, predikce):
                 "poradi": poradi,
                 "domaci": zapas["domaci"],
                 "hoste": zapas["hoste"],
-                "datum": zapas.get("datum", ""),
+                "datum": data.formatuj_vykop(zapas.get("cas")) or zapas.get("datum", ""),
                 "p_domaci": vysledek["p_domaci"],
                 "p_remiza": vysledek["p_remiza"],
                 "p_hoste": vysledek["p_hoste"],
@@ -152,37 +191,55 @@ def radky_souhrnu(kolo, zapasy, predikce):
     return radky
 
 
+def kratky_nazev(tym):
+    """Zkrátí název, aby se vešel na jeden řádek v telefonu."""
+    if tym == "Bohemians Praha 1905":
+        return "Bohemians"
+    for predpona in ("1. FC ", "SK ", "AC ", "FK ", "FC "):
+        if tym.startswith(predpona):
+            tym = tym[len(predpona):]
+            break
+    return tym.replace(" Praha", "").strip()
+
+
+def kratky_vykop(datum):
+    """22.08.2026 20:00 → 22.08. 20:00"""
+    if not datum:
+        return ""
+    return datum.replace(".2026", ".").replace(".2027", ".").strip()
+
+
 def sestav_zpravu(kolo, zapasy, predikce):
-    """Text hlášení na Telegram, seřazený od nejvyšší jistoty."""
+    """Hlášení čitelné na telefonu – jeden zápas = jeden blok, ne široká tabulka."""
     radky = radky_souhrnu(kolo, zapasy, predikce)
     if not radky:
         return None
 
-    zprava = [
-        f"Chance Liga – tipy na {kolo}. kolo",
-        "Seřazeno od nejvyšší jistoty modelu.",
+    bloky = [
+        f"<b>Chance Liga · {kolo}. kolo</b>",
+        "od nejvyšší jistoty",
         "",
     ]
 
     for cislo, radek in enumerate(radky, start=1):
-        zprava.append(f"{cislo}. {radek['domaci']} vs {radek['hoste']}")
-        zprava.append(f"   {radek['datum']}")
-        zprava.append(
-            f"   Tip: {radek['tip']} · jistota {radek['jistota']:.0%}"
-        )
-        zprava.append(
-            f"   1 {radek['p_domaci']:.0%} | "
-            f"X {radek['p_remiza']:.0%} | "
+        domaci = html.escape(kratky_nazev(radek["domaci"]))
+        hoste = html.escape(kratky_nazev(radek["hoste"]))
+        tip = html.escape(radek["tip"].split(" ")[0])
+        vykop = html.escape(kratky_vykop(radek["datum"]))
+        skore = html.escape(radek["skore"])
+
+        bloky.append(f"<b>{cislo}. {domaci} – {hoste}</b>")
+        if vykop:
+            bloky.append(vykop)
+        bloky.append(
+            f"1 {radek['p_domaci']:.0%} · "
+            f"X {radek['p_remiza']:.0%} · "
             f"2 {radek['p_hoste']:.0%}"
         )
-        zprava.append(f"   Nejčastější skóre: {radek['skore']}")
-        zprava.append("")
+        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%} · {skore}")
+        bloky.append("")
 
-    zprava.append(
-        "Jistota = nejvyšší z pravděpodobností 1/X/2. "
-        "Bez kurzu z toho neplyne, že se sázka vyplatí."
-    )
-    return "\n".join(zprava)
+    return "\n".join(bloky).strip()
 
 
 def priprav_a_posli(odeslat=True):

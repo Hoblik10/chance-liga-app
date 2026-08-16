@@ -7,8 +7,9 @@ import os
 import tempfile
 import unittest
 
-import modely
+import data
 import hlaseni
+import modely
 import zaznamy
 
 
@@ -473,12 +474,16 @@ class TestHlaseni(unittest.TestCase):
 
     def test_zprava_obsahuje_tip_i_skore(self):
         zprava = hlaseni.sestav_zpravu(5, self.zapasy, self.predikce)
-        self.assertIn("A vs B", zprava)
-        self.assertIn("1 (Výhra domácích)", zprava)
+        self.assertIn("A – B", zprava)
+        self.assertIn("62%", zprava)
         self.assertIn("2:0", zprava)
-        self.assertIn("jistota 62%", zprava)
+        self.assertIn("Tip 1", zprava)
+        self.assertNotIn("<pre>", zprava)
         # Odehraný zápas do zprávy nepatří, i kdyby měl vyšší jistotu.
-        self.assertNotIn("E vs F", zprava)
+        self.assertNotIn("E – F", zprava)
+
+    def test_kratky_vykop(self):
+        self.assertEqual(hlaseni.kratky_vykop("22.08.2026 20:00"), "22.08. 20:00")
 
     def test_prazdne_kolo(self):
         self.assertIsNone(hlaseni.sestav_zpravu(5, [zapas("A", "B", "1:0")], {}))
@@ -490,6 +495,99 @@ class TestHlaseni(unittest.TestCase):
         }
         self.assertEqual(hlaseni.najdi_dalsi_kolo(databaze, [4, 5]), 5)
         self.assertIsNone(hlaseni.najdi_dalsi_kolo(databaze, [4]))
+
+    def test_najdi_dalsi_kolo_preskoci_odlozene_zbytky(self):
+        """Ve 4. kole zbývají jen zářijové odklady, 5. kolo je příští víkend."""
+        from datetime import datetime
+
+        praha = data.PASMO_PRAHA
+        ted = datetime(2026, 8, 17, 8, 0, tzinfo=praha)
+
+        def s_casem(domaci, hoste, cas, stav="🕒 Nadcházející"):
+            polozka = zapas(domaci, hoste)
+            polozka["cas"] = cas
+            polozka["stav"] = stav
+            return polozka
+
+        databaze = {
+            4: [
+                s_casem("A", "B", datetime(2026, 8, 16, 20, 0, tzinfo=praha), modely.ODEHRANO),
+                s_casem("C", "D", datetime(2026, 9, 2, 18, 0, tzinfo=praha)),
+            ],
+            5: [
+                s_casem("E", "F", datetime(2026, 8, 22, 17, 0, tzinfo=praha)),
+            ],
+        }
+        self.assertEqual(hlaseni.najdi_dalsi_kolo(databaze, [4, 5], ted=ted), 5)
+
+    def test_kratky_nazev(self):
+        self.assertEqual(hlaseni.kratky_nazev("SK Slavia Praha"), "Slavia")
+        self.assertEqual(hlaseni.kratky_nazev("Bohemians Praha 1905"), "Bohemians")
+        self.assertEqual(hlaseni.kratky_nazev("1. FC Slovácko"), "Slovácko")
+
+
+class TestCasVPraze(unittest.TestCase):
+    def test_letni_cas_posune_o_dve_hodiny(self):
+        cas = data.cas_v_praze({"strTimestamp": "2026-08-16T18:00:00"})
+        self.assertEqual(cas.strftime("%Y-%m-%d %H:%M"), "2026-08-16 20:00")
+
+    def test_odpoledni_vykop(self):
+        cas = data.cas_v_praze({"strTimestamp": "2026-08-16T13:00:00"})
+        self.assertEqual(cas.strftime("%Y-%m-%d %H:%M"), "2026-08-16 15:00")
+
+    def test_zimni_cas_posune_o_hodinu(self):
+        cas = data.cas_v_praze({"strTimestamp": "2026-12-05T15:00:00"})
+        self.assertEqual(cas.strftime("%Y-%m-%d %H:%M"), "2026-12-05 16:00")
+
+    def test_prepad_pres_pulnoc(self):
+        cas = data.cas_v_praze({"strTimestamp": "2026-08-16T23:00:00"})
+        self.assertEqual(cas.strftime("%Y-%m-%d %H:%M"), "2026-08-17 01:00")
+
+    def test_fallback_z_dateevent(self):
+        cas = data.cas_v_praze({"dateEvent": "2026-08-16", "strTime": "18:00:00"})
+        self.assertEqual(cas.strftime("%Y-%m-%d %H:%M"), "2026-08-16 20:00")
+
+    def test_neplatny_vstup(self):
+        self.assertIsNone(data.cas_v_praze({}))
+
+    def test_format_vykopu(self):
+        cas = data.cas_v_praze({"strTimestamp": "2026-08-16T18:00:00"})
+        self.assertEqual(data.formatuj_vykop(cas), "16.08.2026 20:00")
+
+    def test_preved_zapas_pouziva_prazsky_cas(self):
+        zapas = data._preved_zapas(
+            {
+                "strHomeTeam": "Slavia Prague",
+                "strAwayTeam": "Sparta Prague",
+                "strTimestamp": "2026-08-16T18:00:00",
+                "strStatus": "NS",
+                "strPostponed": "no",
+            }
+        )
+        self.assertEqual(zapas["datum"], "16.08.2026 20:00")
+
+    def test_oznac_prelozene(self):
+        from datetime import datetime
+
+        praha = data.PASMO_PRAHA
+
+        def polozka(cas):
+            return {
+                "cas": datetime.fromisoformat(cas).replace(tzinfo=praha),
+                "stav": "🕒 Nadcházející",
+                "datum": cas,
+            }
+
+        zapasy = [
+            polozka("2026-08-15 17:00"),
+            polozka("2026-08-16 20:00"),
+            polozka("2026-09-02 18:00"),
+        ]
+        vysledek = data.oznac_prelozene(zapasy)
+        self.assertEqual(vysledek[0]["stav"], "🕒 Nadcházející")
+        self.assertEqual(vysledek[1]["stav"], "🕒 Nadcházející")
+        self.assertTrue(vysledek[2]["stav"].startswith("🔴"))
+        self.assertIn("02.09.2026", vysledek[2]["poznamka_termin"])
 
 
 if __name__ == "__main__":

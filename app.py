@@ -192,8 +192,11 @@ for i, z in enumerate(zápasy):
         # Odložené a zrušené zápasy (stav hlásí přímo API)
         elif z['stav'].startswith("🔴"):
             st.markdown(f"### 🏟️ {z['domaci']} vs {z['hoste']}")
-            st.markdown(f"🕒 Původní termín: {z['datum']}")
-            st.warning(f"{z['stav']} – zápas se v tomto kole nehraje, tip se neodesílá.")
+            if z.get("poznamka_termin"):
+                st.warning(f"{z['poznamka_termin']} – v tomto kole se nehraje, tip se neodesílá.")
+            else:
+                st.markdown(f"🕒 Původní termín: {z['datum']}")
+                st.warning(f"{z['stav']} – zápas se v tomto kole nehraje, tip se neodesílá.")
 
         # Nadcházející / Dnes hrané zápasy
         else:

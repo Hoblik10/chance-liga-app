@@ -66,7 +66,12 @@ def poslat_na_telegram(zprava):
     try:
         odpoved = requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            json={"chat_id": TELEGRAM_CHAT_ID, "text": zprava},
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": zprava,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True,
+            },
             timeout=10,
         )
         return odpoved.status_code == 200

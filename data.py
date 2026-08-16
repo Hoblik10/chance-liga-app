@@ -9,7 +9,8 @@ z odehraných zápasů → statická záloha v kódu.
 
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
@@ -18,6 +19,10 @@ from bs4 import BeautifulSoup
 import modely
 import nastaveni
 import staticka_data
+
+# TheSportsDB posílá strTimestamp v UTC bez označení zóny. Výkop se musí
+# ukázat v českém čase, jinak je v létě o dvě hodiny vedle.
+PASMO_PRAHA = ZoneInfo("Europe/Prague")
 
 # Zkrácené a anglické názvy, pod kterými týmy vedou jednotlivé zdroje.
 MAPA_TYMU = {
@@ -195,6 +200,68 @@ def _sportsdb_dotaz(endpoint, parametry, pokusy=3):
     raise ValueError("TheSportsDB odmítá další dotazy (limit testovacího klíče).")
 
 
+def cas_v_praze(zaznam):
+    """Převede čas zápasu z TheSportsDB na pražské pásmo.
+
+    ``strTimestamp`` i ``strTime`` jsou UTC. ``strTimeLocal`` u odložených
+    zápasů občas zůstane na původním termínu, proto se na něj nespoléháme.
+    """
+    surove = (zaznam.get("strTimestamp") or "").strip()
+    try:
+        cas = datetime.fromisoformat(surove)
+    except ValueError:
+        datum = (zaznam.get("dateEvent") or "").strip()
+        hodina = (zaznam.get("strTime") or "00:00:00").strip()
+        try:
+            cas = datetime.fromisoformat(f"{datum}T{hodina}")
+        except ValueError:
+            return None
+
+    if cas.tzinfo is None:
+        cas = cas.replace(tzinfo=timezone.utc)
+
+    return cas.astimezone(PASMO_PRAHA)
+
+
+def formatuj_vykop(cas):
+    """Čitelné datum a čas výkopu pro UI i Telegram."""
+    if cas is None:
+        return ""
+    return cas.strftime("%d.%m.%Y %H:%M")
+
+
+# Zápas posunutý o tolik dní od zbytku kola se bere jako přeložený.
+DNU_PRO_PRELOZENI = 5
+
+
+def oznac_prelozene(zapasy):
+    """Označí zápasy, jejichž termín leží mimo zbytek kola.
+
+    TheSportsDB u přeložených zápasů často nechá strPostponed = no, jen
+    posune datum o týdny. Bez tohohle by 4. kolo tvářilo Brno–Hradec
+    na 2. 9. jako běžný víkendový zápas.
+    """
+    casy = [z["cas"] for z in zapasy if z.get("cas")]
+    if len(casy) < 3:
+        return zapasy
+
+    serazene = sorted(casy)
+    stred = serazene[len(serazene) // 2]
+
+    for zapas in zapasy:
+        cas = zapas.get("cas")
+        if cas is None:
+            continue
+        if abs((cas - stred).days) < DNU_PRO_PRELOZENI:
+            continue
+        if zapas["stav"] == modely.ODEHRANO or zapas["stav"].startswith("🔴"):
+            continue
+        zapas["stav"] = "🔴 Odloženo"
+        zapas["poznamka_termin"] = f"Přeloženo na {formatuj_vykop(cas)}"
+
+    return zapasy
+
+
 def _preved_zapas(zaznam):
     """Převede záznam z TheSportsDB na strukturu používanou aplikací."""
     if (zaznam.get("strPostponed") or "no").lower() == "yes":
@@ -212,11 +279,8 @@ def _preved_zapas(zaznam):
     else:
         skore = "-"
 
-    try:
-        cas = datetime.fromisoformat(zaznam.get("strTimestamp", ""))
-        datum = cas.strftime("%Y-%m-%d %H:%M")
-    except ValueError:
-        cas, datum = None, zaznam.get("dateEvent", "")
+    cas = cas_v_praze(zaznam)
+    datum = formatuj_vykop(cas) if cas else (zaznam.get("dateEvent") or "")
 
     domaci = zaznam.get("strHomeTeam", "")
     hoste = zaznam.get("strAwayTeam", "")
@@ -258,7 +322,8 @@ def nacti_kolo(cislo_kola):
     )
 
     zapasy = [_preved_zapas(z) for z in (data.get("events") or [])]
-    zapasy.sort(key=lambda z: z["datum"])
+    zapasy = oznac_prelozene(zapasy)
+    zapasy.sort(key=lambda z: z.get("cas") or datetime.min.replace(tzinfo=PASMO_PRAHA))
     return zapasy
 
 
@@ -349,9 +414,8 @@ def nacti_pohary_tymu(id_tymu):
             if zaznam.get("idLeague") == nastaveni.SPORTSDB_LIGA:
                 continue
 
-            try:
-                cas = datetime.fromisoformat(zaznam.get("strTimestamp", ""))
-            except ValueError:
+            cas = cas_v_praze(zaznam)
+            if cas is None:
                 continue
 
             nazev_souteze = zaznam.get("strLeague", "")
