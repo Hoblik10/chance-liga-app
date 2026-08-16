@@ -1,0 +1,42 @@
+# Pondělní hlášení s tipy na další kolo.
+# Čas je v UTC: 06:00 UTC = 08:00 v Česku v létě, 07:00 v zimě.
+# Úloha se spouští na strojích GitHubu, tvůj počítač u toho nemusí běžet.
+
+name: Pondělní tipy na Telegram
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  posli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Nainstalovat závislosti
+        run: pip install -r requirements.txt
+
+      - name: Spočítat tipy a odeslat
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SPORTSDB_KEY: ${{ secrets.SPORTSDB_KEY }}
+          SEZONA: ${{ secrets.SEZONA }}
+        run: python posli_hlaseni.py
+
+      - name: Uložit aktualizovaný log predikcí
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add predikce_log.csv
+          git diff --cached --quiet || git commit -m "Aktualizace logu predikcí"
+          git push

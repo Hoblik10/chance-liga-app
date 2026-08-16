@@ -1,0 +1,12 @@
+# Streamlit secrets – nikdy nesmí do gitu
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Pracovní soubory
+*.orig
+*.diff
