@@ -76,7 +76,7 @@ STATICKA_DATABAZE = {
         {"domaci": "SK Slavia Praha", "hoste": "Bohemians Praha 1905", "datum": "2026-08-22 20:00", "stav": "🕒 Nadcházející", "skore": "-", "tip": "1 (Výhra domácích)"},
         {"domaci": "FK Jablonec", "hoste": "FC Baník Ostrava", "datum": "2026-08-23 15:00", "stav": "🕒 Nadcházející", "skore": "-", "tip": "0 (Remíza)"},
         {"domaci": "FK Teplice", "hoste": "FC Zbrojovka Brno", "datum": "2026-08-23 17:00", "stav": "🕒 Nadcházející", "skore": "-", "tip": "1X (Neprohra domácích)"},
-        {"domaci": "FC Hradec Králové", "hoste": "FC Viktoria Plzeň", "datum": "2026-08-23 17:00", "stav": "🕒 Nadcházející", "skore": "-", "tip": "2 (Výhra hostů)"},
+        {"domaci": "FC Hradec Králové", "hoste": "FC Viktoria Plzeň", "datum": "2026-08-23 17:00", "stav": "🔴 Odloženo", "skore": "-", "tip": "2 (Výhra hostů)"},
         {"domaci": "SK Sigma Olomouc", "hoste": "FK Pardubice", "datum": "2026-08-23 20:00", "stav": "🕒 Nadcházející", "skore": "-", "tip": "1 (Výhra domácích)"}
     ],
     6: [
