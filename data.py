@@ -9,7 +9,7 @@ z odehraných zápasů → statická záloha v kódu.
 
 import re
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 try:
@@ -238,28 +238,45 @@ def formatuj_vykop(cas):
 # Zápas posunutý o tolik dní od zbytku kola se bere jako přeložený.
 DNU_PRO_PRELOZENI = 5
 
+# Odklady, u kterých LFA ještě nedala nový termín. TheSportsDB i oficiální
+# rozpis nechávají původní datum a strPostponed = no, takže posun o 5 dní
+# je nepozná. Až se datum změní, tahle mapa přestane platit a zafunguje
+# buď nový termín mimo kolo, nebo ostrý výkop.
+ODKLADY_BEZ_TERMINU = {
+    ("FC Hradec Králové", "FC Viktoria Plzeň"): date(2026, 8, 23),
+}
+
+
+def _je_odklad_bez_terminu(zapas):
+    """Původní termín odloženého zápasu, ke kterému ještě není náhrada."""
+    cas = zapas.get("cas")
+    if cas is None:
+        return False
+    puvodni = ODKLADY_BEZ_TERMINU.get((zapas.get("domaci"), zapas.get("hoste")))
+    return puvodni is not None and cas.date() == puvodni
+
 
 def oznac_prelozene(zapasy):
-    """Označí zápasy, jejichž termín leží mimo zbytek kola.
+    """Označí zápasy, které se v termínu kola hrát nebudou.
 
-    TheSportsDB u přeložených zápasů často nechá strPostponed = no, jen
-    posune datum o týdny. Bez tohohle by 4. kolo tvářilo Brno–Hradec
-    na 2. 9. jako běžný víkendový zápas.
+    TheSportsDB u přeložených zápasů často nechá strPostponed = no.
+    Buď posune datum o týdny (Brno–Hradec na 2. 9.), nebo původní
+    termín vůbec nesundá (Hradec–Plzeň 23. 8. bez náhradního data).
     """
     casy = [z["cas"] for z in zapasy if z.get("cas")]
-    if len(casy) < 3:
-        return zapasy
-
-    serazene = sorted(casy)
-    stred = serazene[len(serazene) // 2]
+    stred = sorted(casy)[len(casy) // 2] if len(casy) >= 3 else None
 
     for zapas in zapasy:
+        if zapas["stav"] == modely.ODEHRANO or zapas["stav"].startswith("🔴"):
+            continue
+        if _je_odklad_bez_terminu(zapas):
+            zapas["stav"] = "🔴 Odloženo"
+            zapas["poznamka_termin"] = "Odloženo, náhradní termín není znám"
+            continue
         cas = zapas.get("cas")
-        if cas is None:
+        if cas is None or stred is None:
             continue
         if abs((cas - stred).days) < DNU_PRO_PRELOZENI:
-            continue
-        if zapas["stav"] == modely.ODEHRANO or zapas["stav"].startswith("🔴"):
             continue
         zapas["stav"] = "🔴 Odloženo"
         zapas["poznamka_termin"] = f"Přeloženo na {formatuj_vykop(cas)}"
@@ -474,7 +491,7 @@ def nacti_podklady(pocet_kol=None):
     ziva_kola = []
     id_tymu_v_lize = {}
 
-    # 1) Živý rozpis. Odložené zápasy se propíšou samy (strPostponed = yes).
+    # 1) Živý rozpis. Odklady bez nového termínu TheSportsDB často neoznačí.
     try:
         aktualni_kolo = zjisti_aktualni_kolo()
 
@@ -542,6 +559,13 @@ def nacti_podklady(pocet_kol=None):
         try:
             historie_kol = nacti_historii_sezony(min(ziva_kola))
             historie_je_ziva = True
+
+            # Odehraná kola patří i do přehledu v aplikaci, ne jen do modelů.
+            # Bez tohohle by archiv ukazoval statickou zálohu z kódu.
+            for cislo_kola, zapasy_kola in historie_kol.items():
+                if cislo_kola not in ziva_kola and zapasy_kola:
+                    databaze_kol[cislo_kola] = zapasy_kola
+
             historie_zdroj = (
                 f"✅ Historie sezóny z TheSportsDB "
                 f"({len(modely.odehrane_zapasy(historie_kol))} odehraných zápasů)"

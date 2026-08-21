@@ -35,8 +35,24 @@ st.sidebar.header("📌 Navigace")
 dostupna_kola = ziva_kola or modely.vyber_zobrazena_kola(
     databaze_kol, nastaveni.POCET_ZOBRAZENYCH_KOL
 )
+
+# Nabídka drží i dohraná kola, aby šlo zpětně projít výsledky a tipy.
+vsechna_kola = sorted(set(historie_kol) | set(dostupna_kola))
+vychozi_kolo = dostupna_kola[0] if dostupna_kola else vsechna_kola[-1]
+
+
+def popis_kola(kolo):
+    zapasy_kola = databaze_kol.get(kolo, [])
+    if zapasy_kola and all(z["stav"] == modely.ODEHRANO for z in zapasy_kola):
+        return f"{kolo}. Kolo (archiv)"
+    return f"{kolo}. Kolo"
+
+
 zvolene_kolo = st.sidebar.selectbox(
-    "Vyber kolo:", options=dostupna_kola, format_func=lambda x: f"{x}. Kolo"
+    "Vyber kolo:",
+    options=vsechna_kola,
+    index=vsechna_kola.index(vychozi_kolo),
+    format_func=popis_kola,
 )
 st.sidebar.caption(zapasy_zdroj)
 
@@ -132,18 +148,30 @@ st.header(f"📅 Přehled zápasů – {zvolene_kolo}. Kolo")
 
 zápasy = databaze_kol.get(zvolene_kolo, [])
 
-# TLAČÍTKO PRO HROMADNÉ ODESLÁNÍ TIPŮ TOHOTO KOLA
-if st.button(f"📤 Odeslat zbývající tipy pro {zvolene_kolo}. kolo na Telegram", type="primary", width="stretch"):
-    zprava = hlaseni.sestav_zpravu(zvolene_kolo, zápasy, predikce)
-    if not zprava:
-        st.warning(f"Všechny zápasy {zvolene_kolo}. kola už byly odehrány, není co posílat.")
-    elif nastaveni.poslat_na_telegram(zprava):
-        st.success("✅ Hromadné tipy byly úspěšně odeslány na Telegram!")
-    else:
-        st.error("❌ Nepodařilo se odeslat zprávu na Telegram.")
+# Archiv ukazuje, co modely tipovaly před výkopem, ne dnešní přepočet.
+zapsane_kola = zaznamy.zapsane_predikce_kola(zvolene_kolo)
+
+ZNACKY_VYHODNOCENI = {True: "✅ vyšel", False: "❌ nevyšel"}
+
+
+def archivni_tip(zapas):
+    """Tip zapsaný před zápasem; u starších kol v logu chybět může."""
+    ulozene = zapsane_kola.get((zapas["domaci"], zapas["hoste"]), {})
+    return (ulozene.get("ensemble") or {}).get("tip") or zapas.get("tip") or ""
 
 souhrn = hlaseni.radky_souhrnu(zvolene_kolo, zápasy, predikce)
+
 if souhrn:
+    # TLAČÍTKO PRO HROMADNÉ ODESLÁNÍ TIPŮ TOHOTO KOLA
+    if st.button(f"📤 Odeslat zbývající tipy pro {zvolene_kolo}. kolo na Telegram", type="primary", width="stretch"):
+        zprava = hlaseni.sestav_zpravu(zvolene_kolo, zápasy, predikce)
+        if not zprava:
+            st.warning(f"Všechny zápasy {zvolene_kolo}. kola už byly odehrány, není co posílat.")
+        elif nastaveni.poslat_na_telegram(zprava):
+            st.success("✅ Hromadné tipy byly úspěšně odeslány na Telegram!")
+        else:
+            st.error("❌ Nepodařilo se odeslat zprávu na Telegram.")
+
     st.subheader("🎯 Nejjistější tipy kola")
     st.caption(
         "Seřazeno od nejvyšší jistoty modelu. Jistota je jen nejvyšší z pravděpodobností "
@@ -166,6 +194,29 @@ if souhrn:
         ).set_index("Zápas")
     )
 
+elif zápasy:
+    st.subheader("📦 Archiv kola")
+    st.caption(
+        "Tipy pocházejí z logu – jsou to ty, které vznikly před výkopem, "
+        "ne dnešní přepočet."
+    )
+    st.table(
+        pd.DataFrame(
+            [
+                {
+                    "Zápas": f"{z['domaci']} – {z['hoste']}",
+                    "Termín": z.get("datum", ""),
+                    "Skóre": z.get("skore", "-"),
+                    "Tip": (archivni_tip(z) or "–").split(" ")[0],
+                    "Vyhodnocení": ZNACKY_VYHODNOCENI.get(
+                        modely.vyhodnot_tip(archivni_tip(z), z.get("skore")), "–"
+                    ),
+                }
+                for z in zápasy
+            ]
+        ).set_index("Zápas")
+    )
+
 st.divider()
 
 # Vykreslení jednotlivých zápasů
@@ -174,11 +225,19 @@ for i, z in enumerate(zápasy):
         # Odehrané zápasy (zobrazení výsledku a kontrola úspěšnosti)
         if z['stav'] == "✅ Odehráno":
             st.markdown(f"### 🏟️ {z['domaci']} vs {z['hoste']} (ARCHIV)")
-            st.markdown(f"**Stav:** {z['stav']} | **Konečné skóre:** {z['skore']}")
+            st.markdown(
+                f"**Stav:** {z['stav']} | **Konečné skóre:** {z['skore']} | "
+                f"**Termín:** {z.get('datum', '–')}"
+            )
 
-            puvodni_tip = z.get('tip')
+            ulozene = zapsane_kola.get((z["domaci"], z["hoste"]), {})
+            puvodni_tip = archivni_tip(z)
+
             if not puvodni_tip:
-                st.caption("Pro tento zápas nebyl zaznamenán žádný tip.")
+                st.caption(
+                    "Pro tento zápas není v logu žádná predikce – aplikace ho "
+                    "poprvé viděla až po výkopu."
+                )
             else:
                 st.markdown(f"🎯 **Zaznamenaný tip:** {puvodni_tip}")
                 sedel = modely.vyhodnot_tip(puvodni_tip, z['skore'])
@@ -188,6 +247,33 @@ for i, z in enumerate(zápasy):
                     st.error("Vyhodnocení: ❌ Tip nevyšel")
                 else:
                     st.caption("Vyhodnocení: výsledek se nepodařilo porovnat.")
+
+            if ulozene:
+                with st.expander("🔬 Co který model tipoval před zápasem"):
+                    radky_modelu = []
+                    for nazev_modelu in (*modely.NAZVY_MODELU, "ensemble"):
+                        hodnoty = ulozene.get(nazev_modelu)
+                        if not hodnoty:
+                            continue
+                        radky_modelu.append(
+                            {
+                                "Model": POPISKY_MODELU.get(nazev_modelu, nazev_modelu),
+                                "1": f"{hodnoty['p_domaci']:.0%}",
+                                "X": f"{hodnoty['p_remiza']:.0%}",
+                                "2": f"{hodnoty['p_hoste']:.0%}",
+                                "Tip": str(hodnoty["tip"]).split(" ")[0],
+                                "Vyhodnocení": ZNACKY_VYHODNOCENI.get(
+                                    modely.vyhodnot_tip(hodnoty["tip"], z["skore"]), "–"
+                                ),
+                            }
+                        )
+
+                    if radky_modelu:
+                        st.table(pd.DataFrame(radky_modelu).set_index("Model"))
+
+                    zapsano = (ulozene.get("ensemble") or {}).get("zapsano")
+                    if zapsano:
+                        st.caption(f"Predikce zapsaná {zapsano}, tedy před výkopem.")
 
         # Odložené a zrušené zápasy (stav hlásí přímo API)
         elif z['stav'].startswith("🔴"):

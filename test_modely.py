@@ -432,6 +432,29 @@ class TestZaznamy(unittest.TestCase):
         self.assertTrue(zaznamy.nacti_zaznamy("neexistujici.csv").empty)
         self.assertEqual(zaznamy.metriky_podle_modelu(cesta="neexistujici.csv"), {})
 
+    def test_zapsane_predikce_kola(self):
+        """Archiv musí ukázat tip, který vznikl před výkopem."""
+        zaznamy.zapis_predikce(
+            [
+                self._zapas_k_zapisu(
+                    predikce={"elo": (0.7, 0.2, 0.1), "ensemble": (0.6, 0.25, 0.15)}
+                )
+            ],
+            cesta=self.cesta,
+        )
+
+        zapasy = zaznamy.zapsane_predikce_kola(5, cesta=self.cesta)
+        self.assertIn(("A", "B"), zapasy)
+
+        ensemble = zapasy[("A", "B")]["ensemble"]
+        self.assertAlmostEqual(ensemble["p_domaci"], 0.6)
+        self.assertTrue(ensemble["tip"].startswith("1"))
+        self.assertIn("elo", zapasy[("A", "B")])
+
+    def test_zapsane_predikce_jineho_kola(self):
+        zaznamy.zapis_predikce([self._zapas_k_zapisu()], cesta=self.cesta)
+        self.assertEqual(zaznamy.zapsane_predikce_kola(6, cesta=self.cesta), {})
+
 
 class TestHlaseni(unittest.TestCase):
     def setUp(self):
@@ -481,6 +504,16 @@ class TestHlaseni(unittest.TestCase):
         self.assertNotIn("<pre>", zprava)
         # Odehraný zápas do zprávy nepatří, i kdyby měl vyšší jistotu.
         self.assertNotIn("E – F", zprava)
+
+    def test_zprava_vynecha_odlozeny_zapas(self):
+        zapasy = self.zapasy + [
+            zapas("FC Hradec Králové", "FC Viktoria Plzeň", stav="🔴 Odloženo")
+        ]
+        predikce = dict(self.predikce)
+        predikce[(5, 3)] = self.predikce[(5, 0)]
+        zprava = hlaseni.sestav_zpravu(5, zapasy, predikce)
+        self.assertNotIn("Plzeň", zprava)
+        self.assertNotIn("Hradec", zprava)
 
     def test_kratky_vykop(self):
         self.assertEqual(hlaseni.kratky_vykop("22.08.2026 20:00"), "22.08. 20:00")
@@ -588,6 +621,50 @@ class TestCasVPraze(unittest.TestCase):
         self.assertEqual(vysledek[1]["stav"], "🕒 Nadcházející")
         self.assertTrue(vysledek[2]["stav"].startswith("🔴"))
         self.assertIn("02.09.2026", vysledek[2]["poznamka_termin"])
+
+    def test_odklad_bez_nahradniho_terminu(self):
+        """Hradec–Plzeň zůstalo na 23. 8., LFA ale zápas odložila."""
+        from datetime import datetime
+
+        praha = data.PASMO_PRAHA
+        zapasy = [
+            {
+                "domaci": "SK Slavia Praha",
+                "hoste": "Bohemians Praha 1905",
+                "cas": datetime(2026, 8, 22, 20, 0, tzinfo=praha),
+                "stav": "🕒 Nadcházející",
+            },
+            {
+                "domaci": "FK Teplice",
+                "hoste": "FC Zbrojovka Brno",
+                "cas": datetime(2026, 8, 23, 17, 0, tzinfo=praha),
+                "stav": "🕒 Nadcházející",
+            },
+            {
+                "domaci": "FC Hradec Králové",
+                "hoste": "FC Viktoria Plzeň",
+                "cas": datetime(2026, 8, 23, 17, 0, tzinfo=praha),
+                "stav": "🕒 Nadcházející",
+            },
+        ]
+        vysledek = data.oznac_prelozene(zapasy)
+        self.assertEqual(vysledek[0]["stav"], "🕒 Nadcházející")
+        self.assertEqual(vysledek[1]["stav"], "🕒 Nadcházející")
+        self.assertTrue(vysledek[2]["stav"].startswith("🔴"))
+        self.assertIn("náhradní termín", vysledek[2]["poznamka_termin"])
+
+    def test_odklad_bez_terminu_po_presunu_data_neplati(self):
+        """Nový termín už není 23. 8. – bere se jako běžný, nebo jako posun kola."""
+        from datetime import datetime
+
+        praha = data.PASMO_PRAHA
+        zapas = {
+            "domaci": "FC Hradec Králové",
+            "hoste": "FC Viktoria Plzeň",
+            "cas": datetime(2026, 10, 14, 18, 0, tzinfo=praha),
+            "stav": "🕒 Nadcházející",
+        }
+        self.assertFalse(data._je_odklad_bez_terminu(zapas))
 
 
 if __name__ == "__main__":

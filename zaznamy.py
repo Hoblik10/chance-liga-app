@@ -188,6 +188,36 @@ def metriky_podle_modelu(cesta=SOUBOR_ZAZNAMU):
     return metriky
 
 
+def zapsane_predikce_kola(kolo, cesta=SOUBOR_ZAZNAMU):
+    """Predikce zapsané před zápasy jednoho kola.
+
+    Vrací (domácí, hosté) -> název modelu -> hodnoty. Archiv v aplikaci
+    musí ukazovat, co model tipoval **tehdy**, ne co by tipoval dnes.
+    """
+    df = nacti_zaznamy(cesta)
+    if df.empty:
+        return {}
+
+    zapasy = {}
+    for _, radek in df.iterrows():
+        try:
+            if int(radek["kolo"]) != int(kolo):
+                continue
+            hodnoty = {
+                "p_domaci": float(radek["p_domaci"]),
+                "p_remiza": float(radek["p_remiza"]),
+                "p_hoste": float(radek["p_hoste"]),
+            }
+        except (TypeError, ValueError):
+            continue
+
+        hodnoty["tip"] = radek["tip"]
+        hodnoty["zapsano"] = radek["zapsano"]
+        zapasy.setdefault((radek["domaci"], radek["hoste"]), {})[str(radek["model"])] = hodnoty
+
+    return zapasy
+
+
 def prehled_zaznamu(cesta=SOUBOR_ZAZNAMU, pocet=50):
     """Posledních N zápisů pro zobrazení v aplikaci."""
     df = nacti_zaznamy(cesta)
