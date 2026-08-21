@@ -559,6 +559,13 @@ def nacti_podklady(pocet_kol=None):
         try:
             historie_kol = nacti_historii_sezony(min(ziva_kola))
             historie_je_ziva = True
+
+            # Odehraná kola patří i do přehledu v aplikaci, ne jen do modelů.
+            # Bez tohohle by archiv ukazoval statickou zálohu z kódu.
+            for cislo_kola, zapasy_kola in historie_kol.items():
+                if cislo_kola not in ziva_kola and zapasy_kola:
+                    databaze_kol[cislo_kola] = zapasy_kola
+
             historie_zdroj = (
                 f"✅ Historie sezóny z TheSportsDB "
                 f"({len(modely.odehrane_zapasy(historie_kol))} odehraných zápasů)"

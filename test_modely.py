@@ -432,6 +432,29 @@ class TestZaznamy(unittest.TestCase):
         self.assertTrue(zaznamy.nacti_zaznamy("neexistujici.csv").empty)
         self.assertEqual(zaznamy.metriky_podle_modelu(cesta="neexistujici.csv"), {})
 
+    def test_zapsane_predikce_kola(self):
+        """Archiv musí ukázat tip, který vznikl před výkopem."""
+        zaznamy.zapis_predikce(
+            [
+                self._zapas_k_zapisu(
+                    predikce={"elo": (0.7, 0.2, 0.1), "ensemble": (0.6, 0.25, 0.15)}
+                )
+            ],
+            cesta=self.cesta,
+        )
+
+        zapasy = zaznamy.zapsane_predikce_kola(5, cesta=self.cesta)
+        self.assertIn(("A", "B"), zapasy)
+
+        ensemble = zapasy[("A", "B")]["ensemble"]
+        self.assertAlmostEqual(ensemble["p_domaci"], 0.6)
+        self.assertTrue(ensemble["tip"].startswith("1"))
+        self.assertIn("elo", zapasy[("A", "B")])
+
+    def test_zapsane_predikce_jineho_kola(self):
+        zaznamy.zapis_predikce([self._zapas_k_zapisu()], cesta=self.cesta)
+        self.assertEqual(zaznamy.zapsane_predikce_kola(6, cesta=self.cesta), {})
+
 
 class TestHlaseni(unittest.TestCase):
     def setUp(self):
