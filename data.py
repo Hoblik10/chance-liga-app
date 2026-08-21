@@ -7,6 +7,8 @@ Pořadí zdrojů je vždy stejné: TheSportsDB → scraping webu → dopočet
 z odehraných zápasů → statická záloha v kódu.
 """
 
+import json
+import os
 import re
 import time
 from datetime import date, datetime, timedelta, timezone
@@ -65,6 +67,12 @@ MAPA_TYMU = {
     "Zlin": "FC Zlín",
     "Mlada Boleslav": "FK Mladá Boleslav",
     "Hradec Kralove": "FC Hradec Králové",
+    # Týmy z minulých sezón – v aktuální lize nehrají, ale historie je nese.
+    "Dukla Praha": "FK Dukla Praha",
+    "Dynamo České Budějovice": "SK Dynamo České Budějovice",
+    "Dynamo Ceske Budejovice": "SK Dynamo České Budějovice",
+    "Karviná": "MFK Karviná",
+    "Karvina": "MFK Karviná",
 }
 
 # Stavy zápasu podle pole strStatus.
@@ -332,14 +340,14 @@ def zjisti_aktualni_kolo():
 
 
 @_cachovane(1800)
-def nacti_kolo(cislo_kola):
+def nacti_kolo(cislo_kola, sezona=None):
     """Stáhne všechny zápasy jednoho kola."""
     data = _sportsdb_dotaz(
         "eventsround.php",
         {
             "id": nastaveni.SPORTSDB_LIGA,
             "r": cislo_kola,
-            "s": nastaveni.SEZONA_SPORTSDB,
+            "s": sezona or nastaveni.SEZONA_SPORTSDB,
         },
     )
 
@@ -371,6 +379,95 @@ def nacti_historii_sezony(aktualni_kolo):
         raise ValueError("Nepodařilo se stáhnout žádné odehrané kolo.")
 
     return kola
+
+
+# --- ARCHIV MINULÝCH SEZÓN ---
+
+# Modely se učí jen z rozehrané sezóny, takže v srpnu nemají skoro z čeho.
+# Starší ročníky se stahují jednorázově na disk – testovací klíč by stovky
+# dotazů při každém běhu neunesl.
+SLOZKA_SEZON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sezony")
+
+# Základní část má 30 kol (starší ročníky s 18 týmy 34), nadstavba čísla kol
+# recykluje – proto se zápasy nakonec řadí podle data, ne podle kola.
+POCET_KOL_SEZONY = 35
+
+
+def _soubor_sezony(sezona):
+    return os.path.join(SLOZKA_SEZON, f"{sezona}.json")
+
+
+def stahni_sezonu(sezona, pocet_kol=POCET_KOL_SEZONY, prodleva=1.0):
+    """Stáhne odehrané zápasy sezóny a doplní je k tomu, co už leží na disku.
+
+    Testovací klíč občas kolo odmítne kvůli limitu dotazů. Výsledky se proto
+    slučují místo přepisování – opakované spuštění chybějící kola dobere.
+    """
+    ulozene = {
+        (z["kolo"], z["domaci"], z["hoste"]): z
+        for z in nacti_sezonu(sezona, stahni=False)
+    }
+
+    for cislo_kola in range(1, pocet_kol + 1):
+        try:
+            kolo = nacti_kolo(cislo_kola, sezona)
+        except Exception:
+            continue
+
+        for zapas in kolo:
+            if zapas["stav"] != modely.ODEHRANO or zapas.get("cas") is None:
+                continue
+            ulozene[(cislo_kola, zapas["domaci"], zapas["hoste"])] = {
+                "kolo": cislo_kola,
+                "datum": zapas["cas"].strftime("%Y-%m-%d %H:%M"),
+                "domaci": zapas["domaci"],
+                "hoste": zapas["hoste"],
+                "skore": zapas["skore"],
+            }
+
+        time.sleep(prodleva)
+
+    if not ulozene:
+        raise ValueError(f"Sezóna {sezona} nevrátila žádný odehraný zápas.")
+
+    zapasy = sorted(ulozene.values(), key=lambda z: z["datum"])
+
+    os.makedirs(SLOZKA_SEZON, exist_ok=True)
+    with open(_soubor_sezony(sezona), "w", encoding="utf-8") as soubor:
+        json.dump(zapasy, soubor, ensure_ascii=False, indent=1)
+
+    return zapasy
+
+
+def stazena_kola(sezona):
+    """Čísla kol, která už jsou v archivu na disku."""
+    return {z["kolo"] for z in nacti_sezonu(sezona, stahni=False)}
+
+
+def nacti_archiv(sezony=None):
+    """Zápasy starších ročníků ve tvaru, který čekají modely.
+
+    Klíčem je dvojice (sezóna, kolo), protože čísla kol se každý rok opakují.
+    """
+    archiv = {}
+
+    for sezona in sezony if sezony is not None else nastaveni.ARCHIVNI_SEZONY:
+        for zapas in nacti_sezonu(sezona, stahni=False):
+            archiv.setdefault((sezona, zapas["kolo"]), []).append(
+                {**zapas, "stav": modely.ODEHRANO}
+            )
+
+    return archiv
+
+
+def nacti_sezonu(sezona, stahni=True):
+    """Odehrané zápasy sezóny z disku; volitelně je nejdřív stáhne."""
+    cesta = _soubor_sezony(sezona)
+    if os.path.exists(cesta):
+        with open(cesta, encoding="utf-8") as soubor:
+            return json.load(soubor)
+
+    return stahni_sezonu(sezona) if stahni else []
 
 
 @_cachovane(1800)
@@ -575,6 +672,19 @@ def nacti_podklady(pocet_kol=None):
                 f"⚠️ Historii nešlo načíst ({chyba_historie}), počítá se ze zobrazených kol"
             )
 
+    # 4) Archiv starších ročníků. V srpnu stojí Poisson a Elo hlavně na něm.
+    try:
+        archiv_kol = nacti_archiv()
+        archiv_zdroj = (
+            f"📚 Archiv sezón {', '.join(nastaveni.ARCHIVNI_SEZONY)} "
+            f"({len(modely.odehrane_zapasy(archiv_kol))} zápasů)"
+            if archiv_kol
+            else "📚 Archiv minulých sezón chybí (spusť: python -m stahni_sezony)"
+        )
+    except Exception as chyba_archivu:
+        archiv_kol = {}
+        archiv_zdroj = f"⚠️ Archiv minulých sezón nešlo načíst ({chyba_archivu})"
+
     return {
         "databaze_kol": databaze_kol,
         "ziva_kola": ziva_kola,
@@ -582,6 +692,8 @@ def nacti_podklady(pocet_kol=None):
         "tabulka": df_tabulka,
         "forma": forma_tymu,
         "historie_kol": historie_kol,
+        "archiv_kol": archiv_kol,
+        "archiv_zdroj": archiv_zdroj,
         "historie_je_ziva": historie_je_ziva,
         "zapasy_zdroj": zapasy_zdroj,
         "tabulka_zdroj": tabulka_zdroj,
@@ -589,7 +701,7 @@ def nacti_podklady(pocet_kol=None):
     }
 
 
-def spocitej_sily(podklady):
+def spocitej_sily(podklady, polocas_dnu=None, prenos_pres_leto=None):
     """Z podkladů odvodí vstupy všech tří modelů."""
     databaze_kol = podklady["databaze_kol"]
     forma_tymu = dict(podklady["forma"])
@@ -607,8 +719,16 @@ def spocitej_sily(podklady):
         if tym in indexy_sily:
             indexy_sily[tym] = round(indexy_sily[tym] + modely.bonus_za_formu(forma), 1)
 
+    # Góly a Elo čerpají i ze starších ročníků; tabulka zůstává jen sezónní.
+    historie = dict(podklady["historie_kol"])
+    for klic, zapasy_kola in (podklady.get("archiv_kol") or {}).items():
+        historie[("archiv", klic)] = zapasy_kola
+
     sily_golu, prumer_domaci, prumer_hoste = modely.spocitej_utok_obranu(
-        podklady["historie_kol"]
+        historie,
+        polocas_dnu=(
+            modely.POLOCAS_DNU if polocas_dnu is None else polocas_dnu
+        ),
     )
 
     return {
@@ -617,5 +737,10 @@ def spocitej_sily(podklady):
         "sily_golu": sily_golu,
         "prumer_domaci": prumer_domaci,
         "prumer_hoste": prumer_hoste,
-        "elo": modely.spocitej_elo(podklady["historie_kol"]),
+        "elo": modely.spocitej_elo(
+            historie,
+            prenos_pres_leto=(
+                modely.PRENOS_PRES_LETO if prenos_pres_leto is None else prenos_pres_leto
+            ),
+        ),
     }

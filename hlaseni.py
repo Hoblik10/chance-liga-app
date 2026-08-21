@@ -68,12 +68,17 @@ def najdi_dalsi_kolo(databaze_kol, kola, ted=None):
     return None
 
 
-def predikce_kola(sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=None):
+def predikce_kola(
+    sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=None, cil_tipu=None
+):
     """Predikce všech zápasů ve vybraných kolech.
 
     ``rucni_vstupy`` je volitelný slovník (kolo, pořadí) ->
     {pohary_d, pohary_h, zraneni_d, zraneni_h} z UI. Bez něj se použije
     odhad únavy z pohárů a kompletní kádr.
+
+    ``cil_tipu`` rozhoduje, jestli má tip vycházet co nejčastěji (dvojitá
+    šance), nebo rovnou pojmenovat vítěze.
     """
     rucni_vstupy = rucni_vstupy or {}
     predikce = {}
@@ -97,6 +102,7 @@ def predikce_kola(sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=N
                 zraneni_domaci=vstupy.get("zraneni_d", VYCHOZI_ZRANENI),
                 zraneni_hoste=vstupy.get("zraneni_h", VYCHOZI_ZRANENI),
                 vahy=vahy,
+                cil_tipu=cil_tipu,
             )
 
             if vysledek is None:

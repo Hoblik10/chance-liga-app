@@ -6,6 +6,7 @@ Spuštění:  python test_modely.py
 import os
 import tempfile
 import unittest
+from datetime import datetime
 
 import data
 import hlaseni
@@ -665,6 +666,145 @@ class TestCasVPraze(unittest.TestCase):
             "stav": "🕒 Nadcházející",
         }
         self.assertFalse(data._je_odklad_bez_terminu(zapas))
+
+
+class TestChronologie(unittest.TestCase):
+    def test_cas_zapasu_zvlada_oba_tvary(self):
+        self.assertEqual(
+            modely.cas_zapasu({"datum": "15.08.2026 17:00"}),
+            datetime(2026, 8, 15, 17, 0),
+        )
+        self.assertEqual(
+            modely.cas_zapasu({"datum": "2026-08-15 17:00"}),
+            datetime(2026, 8, 15, 17, 0),
+        )
+
+    def test_razeni_nejde_podle_retezce(self):
+        """Textově by '05.09.' předběhlo '30.08.', chronologicky ne."""
+        databaze = {
+            1: [zapas("A", "B", "1:0", datum="30.08.2026 17:00")],
+            2: [zapas("C", "D", "2:0", datum="05.09.2026 17:00")],
+        }
+        poradi = [z["domaci"] for z in modely.odehrane_zapasy(databaze)]
+        self.assertEqual(poradi, ["A", "C"])
+
+
+class TestUtlumHistorie(unittest.TestCase):
+    def test_starsi_zapasy_vazi_min(self):
+        """A i B daly čtyři góly, ale A nedávno – útlum musí A upřednostnit."""
+        databaze = {
+            1: [
+                zapas("A", "X", "0:0", datum="2024-08-01 17:00"),
+                zapas("B", "X", "4:0", datum="2024-08-01 17:00"),
+            ],
+            2: [
+                zapas("A", "Y", "4:0", datum="2026-08-01 17:00"),
+                zapas("B", "Y", "0:0", datum="2026-08-01 17:00"),
+            ],
+        }
+
+        s_utlumem, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=180.0)
+        bez_utlumu, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=None)
+
+        self.assertGreater(s_utlumem["A"]["utok"], s_utlumem["B"]["utok"])
+        self.assertAlmostEqual(
+            bez_utlumu["A"]["utok"], bez_utlumu["B"]["utok"], places=6
+        )
+
+    def test_bez_polocasu_vazi_vsechno_stejne(self):
+        databaze = {
+            1: [zapas("A", "B", "2:0", datum="2024-08-01 17:00")],
+            2: [zapas("B", "A", "2:0", datum="2026-08-01 17:00")],
+        }
+        sily, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=None)
+        self.assertAlmostEqual(sily["A"]["utok"], sily["B"]["utok"], places=6)
+
+
+class TestPrenosElo(unittest.TestCase):
+    def test_leto_stahne_rating_k_prumeru(self):
+        stara_sezona = {
+            1: [zapas("A", "B", "3:0", datum="2025-04-01 17:00")],
+        }
+        s_novou = {
+            **stara_sezona,
+            2: [zapas("C", "D", "1:1", datum="2025-07-20 17:00")],
+        }
+
+        pred_letem = modely.spocitej_elo(stara_sezona)["A"]
+        po_lete = modely.spocitej_elo(s_novou)["A"]
+
+        self.assertLess(po_lete, pred_letem)
+        self.assertGreater(po_lete, modely.VYCHOZI_ELO)
+
+    def test_zimni_pauza_rating_nestahuje(self):
+        databaze = {
+            1: [zapas("A", "B", "3:0", datum="2025-12-10 17:00")],
+            2: [zapas("C", "D", "1:1", datum="2026-02-10 17:00")],
+        }
+        jen_prvni = {1: databaze[1]}
+
+        self.assertEqual(
+            modely.spocitej_elo(databaze)["A"], modely.spocitej_elo(jen_prvni)["A"]
+        )
+
+
+class TestTipy(unittest.TestCase):
+    def test_dvojita_sance_vynecha_nejmene_pravdepodobne(self):
+        self.assertEqual(modely.dvojita_sance(0.5, 0.3, 0.2), modely.POPISY_TIPU["1X"])
+        self.assertEqual(modely.dvojita_sance(0.2, 0.3, 0.5), modely.POPISY_TIPU["02"])
+        self.assertEqual(modely.dvojita_sance(0.45, 0.1, 0.45), modely.POPISY_TIPU["12"])
+
+    def test_cil_uspesnost_tipuje_vzdy_dvojitou_sanci(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.8, 0.15, 0.05, cil=modely.CIL_USPESNOST
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1X"])
+
+    def test_cil_informace_rekne_viteze(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.8, 0.15, 0.05, cil=modely.CIL_INFORMACE
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1"])
+
+    def test_cil_informace_pod_prahem_couvne(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.4, 0.35, 0.25, cil=modely.CIL_INFORMACE
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1X"])
+
+    def test_vyhodnoceni_tipu_bez_remizy(self):
+        self.assertIs(modely.vyhodnot_tip(modely.POPISY_TIPU["12"], "2:1"), True)
+        self.assertIs(modely.vyhodnot_tip(modely.POPISY_TIPU["12"], "1:1"), False)
+
+
+class TestKalibrace(unittest.TestCase):
+    def test_zplosteni_snizi_jistotu(self):
+        trojice = modely.kalibruj(0.7, 0.2, 0.1, sila=0.5)
+        self.assertAlmostEqual(sum(trojice), 1.0, places=6)
+        self.assertLess(trojice[0], 0.7)
+
+    def test_vyostreni_zvysi_jistotu(self):
+        trojice = modely.kalibruj(0.7, 0.2, 0.1, sila=1.5)
+        self.assertGreater(trojice[0], 0.7)
+
+    def test_poradi_zustava(self):
+        trojice = modely.kalibruj(0.5, 0.3, 0.2, sila=0.4)
+        self.assertEqual(list(trojice), sorted(trojice, reverse=True))
+
+    def test_sila_jedna_nemeni_nic(self):
+        self.assertEqual(modely.kalibruj(0.5, 0.3, 0.2, sila=1.0), (0.5, 0.3, 0.2))
+
+    def test_spolehlivost_porovna_slib_se_skutecnosti(self):
+        zaznamy_pasma = [
+            {"p_domaci": 0.7, "p_remiza": 0.2, "p_hoste": 0.1, "vysledek": "1"},
+            {"p_domaci": 0.7, "p_remiza": 0.2, "p_hoste": 0.1, "vysledek": "2"},
+        ]
+        pasma = modely.spolehlivost(zaznamy_pasma)
+
+        self.assertEqual(len(pasma), 1)
+        self.assertEqual(pasma[0]["zapasu"], 2)
+        self.assertAlmostEqual(pasma[0]["slibeno"], 0.7)
+        self.assertAlmostEqual(pasma[0]["skutecnost"], 0.5)
 
 
 if __name__ == "__main__":

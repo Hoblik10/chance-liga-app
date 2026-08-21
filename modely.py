@@ -14,6 +14,7 @@ Výstupy se skládají do ensemble váženého podle naměřeného Brier score.
 
 import math
 import re
+from datetime import datetime
 
 import pandas as pd
 
@@ -28,6 +29,13 @@ VAHA_PRIORU = 5.0
 
 # Výhoda domácího prostředí jako násobitel indexu síly.
 VYHODA_DOMACICH = 1.08
+
+# Tvar převodu rozdílu sil na pravděpodobnosti. Nižší strmost = opatrnější
+# model, vyšší síla remízy = víc remíz u vyrovnaných zápasů. Hodnoty hledá
+# skript ladeni.py na archivu minulých sezón.
+STRMOST_INDEX = 12.0
+SILA_REMIZY_INDEX = 0.28
+SIRKA_REMIZY_INDEX = 450.0
 
 # Únava z pohárů: evropské poháry berou 10–15 % síly.
 POKUTA_POHARY = {
@@ -60,11 +68,35 @@ def _goly(skore):
     return int(domaci), int(hoste)
 
 
+TVARY_DATA = ("%d.%m.%Y %H:%M", "%d.%m.%Y", "%Y-%m-%d %H:%M", "%Y-%m-%d")
+
+
+def cas_zapasu(zapas):
+    """Datum výkopu jako datetime, ať jde zápasy seřadit chronologicky.
+
+    Elo i útlum starých zápasů stojí na pořadí, ale zobrazovaný řetězec
+    '15.08.2026' by se řadil podle dne v měsíci.
+    """
+    cas = zapas.get("cas")
+    if isinstance(cas, datetime):
+        return cas.replace(tzinfo=None)
+
+    text = str(zapas.get("datum") or "").strip()
+    for tvar in TVARY_DATA:
+        try:
+            return datetime.strptime(text, tvar)
+        except ValueError:
+            continue
+
+    return datetime.min
+
+
 def odehrane_zapasy(databaze_kol):
     """Všechny dohrané zápasy s platným skóre, seřazené podle data."""
     zapasy = []
 
-    for kolo in sorted(databaze_kol):
+    # Klíč může být číslo kola i dvojice (sezóna, kolo) z archivu, proto key=str.
+    for kolo in sorted(databaze_kol, key=str):
         for zapas in databaze_kol[kolo]:
             if zapas.get("stav") != ODEHRANO:
                 continue
@@ -75,6 +107,7 @@ def odehrane_zapasy(databaze_kol):
                 {
                     "kolo": kolo,
                     "datum": zapas.get("datum", ""),
+                    "cas": cas_zapasu(zapas),
                     "domaci": zapas["domaci"],
                     "hoste": zapas["hoste"],
                     "goly_domaci": vysledek[0],
@@ -82,7 +115,7 @@ def odehrane_zapasy(databaze_kol):
                 }
             )
 
-    zapasy.sort(key=lambda z: z["datum"])
+    zapasy.sort(key=lambda z: z["cas"])
     return zapasy
 
 
@@ -133,8 +166,8 @@ def predikuj_zapas(sila_domaci, sila_hoste):
     """Převede indexy síly na pravděpodobnosti výhry / remízy / prohry."""
     rozdil = sila_domaci * VYHODA_DOMACICH - sila_hoste
 
-    p_remiza = 0.28 * math.exp(-(rozdil**2) / 450.0)
-    p_domaci = 1 / (1 + math.exp(-rozdil / 12.0))
+    p_remiza = SILA_REMIZY_INDEX * math.exp(-(rozdil**2) / SIRKA_REMIZY_INDEX)
+    p_domaci = 1 / (1 + math.exp(-rozdil / STRMOST_INDEX))
 
     zbytek = 1 - p_remiza
     return p_domaci * zbytek, p_remiza, (1 - p_domaci) * zbytek
@@ -152,46 +185,70 @@ RHO_DIXON_COLES = -0.12
 # Nad tolik gólů už je pravděpodobnost zanedbatelná.
 MAX_GOLU = 8
 
+# Za kolik dní má zápas poloviční váhu. Loňská sestava už je jiná, ale úplně
+# zahodit starší ročník by na začátku sezóny nechalo modely bez dat.
+POLOCAS_DNU = 365.0
 
-def spocitej_utok_obranu(databaze_kol):
+
+def _vahy_stari(zapasy, polocas_dnu):
+    """Váhy zápasů podle stáří – čerstvé výsledky váží víc než loňské."""
+    if not polocas_dnu:
+        return [1.0] * len(zapasy)
+
+    posledni = max(z["cas"] for z in zapasy)
+    return [
+        0.5 ** (max((posledni - zapas["cas"]).days, 0) / polocas_dnu)
+        for zapas in zapasy
+    ]
+
+
+def spocitej_utok_obranu(databaze_kol, polocas_dnu=POLOCAS_DNU):
     """Síla útoku a obrany každého týmu vůči průměru ligy.
 
     Hodnota 1.0 znamená přesný ligový průměr, 1.2 o pětinu lepší útok.
+    Starší zápasy se počítají s menší vahou podle ``polocas_dnu``.
     """
     zapasy = odehrane_zapasy(databaze_kol)
     if not zapasy:
         return {}, 0.0, 0.0
 
-    prumer_domaci = sum(z["goly_domaci"] for z in zapasy) / len(zapasy)
-    prumer_hoste = sum(z["goly_hoste"] for z in zapasy) / len(zapasy)
+    vahy = _vahy_stari(zapasy, polocas_dnu)
+    vaha_celkem = sum(vahy)
+
+    prumer_domaci = sum(v * z["goly_domaci"] for v, z in zip(vahy, zapasy)) / vaha_celkem
+    prumer_hoste = sum(v * z["goly_hoste"] for v, z in zip(vahy, zapasy)) / vaha_celkem
     prumer_na_tym = (prumer_domaci + prumer_hoste) / 2
 
     if prumer_na_tym <= 0:
         return {}, prumer_domaci, prumer_hoste
 
     statistiky = {}
-    for zapas in zapasy:
+    for vaha, zapas in zip(vahy, zapasy):
         for tym, vstrelene, inkasovane in (
             (zapas["domaci"], zapas["goly_domaci"], zapas["goly_hoste"]),
             (zapas["hoste"], zapas["goly_hoste"], zapas["goly_domaci"]),
         ):
-            zaznam = statistiky.setdefault(tym, {"zapasy": 0, "vstrelene": 0, "inkasovane": 0})
+            zaznam = statistiky.setdefault(
+                tym, {"zapasy": 0, "vaha": 0.0, "vstrelene": 0.0, "inkasovane": 0.0}
+            )
             zaznam["zapasy"] += 1
-            zaznam["vstrelene"] += vstrelene
-            zaznam["inkasovane"] += inkasovane
+            zaznam["vaha"] += vaha
+            zaznam["vstrelene"] += vaha * vstrelene
+            zaznam["inkasovane"] += vaha * inkasovane
 
     sily = {}
     for tym, zaznam in statistiky.items():
-        pocet = zaznam["zapasy"]
-        utok_syrovy = (zaznam["vstrelene"] / pocet) / prumer_na_tym
-        obrana_syrova = (zaznam["inkasovane"] / pocet) / prumer_na_tym
+        vaha_tymu = zaznam["vaha"]
+        utok_syrovy = (zaznam["vstrelene"] / vaha_tymu) / prumer_na_tym
+        obrana_syrova = (zaznam["inkasovane"] / vaha_tymu) / prumer_na_tym
 
         # Po pár kolech jsou poměry divoké, proto se stahují k ligovému průměru.
-        duvera = pocet / (pocet + VAHA_PRIORU_GOLY)
+        duvera = vaha_tymu / (vaha_tymu + VAHA_PRIORU_GOLY)
         sily[tym] = {
             "utok": 1.0 + (utok_syrovy - 1.0) * duvera,
             "obrana": 1.0 + (obrana_syrova - 1.0) * duvera,
-            "zapasy": pocet,
+            "zapasy": zaznam["zapasy"],
+            "vaha": vaha_tymu,
         }
 
     return sily, prumer_domaci, prumer_hoste
@@ -207,16 +264,23 @@ def _poissonova_pravdepodobnost(pocet, stredni_hodnota):
 
 
 def _korekce_dixon_coles(goly_domaci, goly_hoste, lambda_domaci, lambda_hoste):
-    """Úprava pravděpodobnosti u nízkých skóre, kde Poisson selhává."""
+    """Úprava pravděpodobnosti u nízkých skóre, kde Poisson selhává.
+
+    U vysokých lambd a silného rho by korekce mohla spadnout pod nulu,
+    což by dalo zápornou pravděpodobnost – proto se ořezává.
+    """
     if goly_domaci == 0 and goly_hoste == 0:
-        return 1.0 - lambda_domaci * lambda_hoste * RHO_DIXON_COLES
-    if goly_domaci == 0 and goly_hoste == 1:
-        return 1.0 + lambda_domaci * RHO_DIXON_COLES
-    if goly_domaci == 1 and goly_hoste == 0:
-        return 1.0 + lambda_hoste * RHO_DIXON_COLES
-    if goly_domaci == 1 and goly_hoste == 1:
-        return 1.0 - RHO_DIXON_COLES
-    return 1.0
+        korekce = 1.0 - lambda_domaci * lambda_hoste * RHO_DIXON_COLES
+    elif goly_domaci == 0 and goly_hoste == 1:
+        korekce = 1.0 + lambda_domaci * RHO_DIXON_COLES
+    elif goly_domaci == 1 and goly_hoste == 0:
+        korekce = 1.0 + lambda_hoste * RHO_DIXON_COLES
+    elif goly_domaci == 1 and goly_hoste == 1:
+        korekce = 1.0 - RHO_DIXON_COLES
+    else:
+        return 1.0
+
+    return max(korekce, 0.0)
 
 
 def ocekavane_goly(sily, prumer_domaci, prumer_hoste, domaci, hoste):
@@ -292,12 +356,48 @@ K_FAKTOR = 20.0
 # Výhoda domácího prostředí v Elo bodech.
 VYHODA_ELO = 60.0
 
+# Tvar remízy v Elo modelu – stejná logika jako u indexu síly.
+SILA_REMIZY_ELO = 0.30
+SIRKA_REMIZY_ELO = 160000.0
 
-def spocitej_elo(databaze_kol):
-    """Projde odehrané zápasy chronologicky a vrátí aktuální rating týmů."""
+# Přes léto se kádry mění, takže se rating stahuje zpět k průměru. 0.75 znamená
+# "tři čtvrtiny loňského náskoku si tým nese s sebou".
+PRENOS_PRES_LETO = 0.75
+
+# Letní pauza pozná podle díry v rozpisu; zimní přestávka je kratší a padá
+# do února, proto se rating v ní nestahuje.
+MIN_DNU_LETNI_PAUZY = 30
+MESICE_STARTU_SEZONY = (7, 8)
+
+
+def _je_letni_pauza(predchozi, aktualni):
+    """Rozhodne, jestli mezi dvěma zápasy leží přelom sezón."""
+    if predchozi is None:
+        return False
+
+    return (
+        (aktualni - predchozi).days >= MIN_DNU_LETNI_PAUZY
+        and aktualni.month in MESICE_STARTU_SEZONY
+    )
+
+
+def spocitej_elo(databaze_kol, prenos_pres_leto=PRENOS_PRES_LETO):
+    """Projde odehrané zápasy chronologicky a vrátí aktuální rating týmů.
+
+    Když historie sahá přes víc sezón, na přelomu ročníků se rating stáhne
+    k průměru – jinak by si tým nesl loňskou formu beze změny.
+    """
     rating = {}
+    predchozi_cas = None
 
     for zapas in odehrane_zapasy(databaze_kol):
+        if _je_letni_pauza(predchozi_cas, zapas["cas"]):
+            rating = {
+                tym: VYCHOZI_ELO + prenos_pres_leto * (hodnota - VYCHOZI_ELO)
+                for tym, hodnota in rating.items()
+            }
+        predchozi_cas = zapas["cas"]
+
         domaci, hoste = zapas["domaci"], zapas["hoste"]
         rating.setdefault(domaci, VYCHOZI_ELO)
         rating.setdefault(hoste, VYCHOZI_ELO)
@@ -330,7 +430,7 @@ def predikuj_elem(rating, domaci, hoste):
     ocekavane = 1.0 / (1.0 + 10.0 ** (-rozdil / 400.0))
 
     # Čím vyrovnanější zápas, tím vyšší šance na remízu.
-    p_remiza = 0.30 * math.exp(-(rozdil**2) / 160000.0)
+    p_remiza = SILA_REMIZY_ELO * math.exp(-(rozdil**2) / SIRKA_REMIZY_ELO)
     zbytek = 1.0 - p_remiza
 
     return normalizuj(ocekavane * zbytek, p_remiza, (1.0 - ocekavane) * zbytek)
@@ -347,17 +447,57 @@ def normalizuj(p_domaci, p_remiza, p_hoste):
     return p_domaci / soucet, p_remiza / soucet, p_hoste / soucet
 
 
-def tip_z_pravdepodobnosti(p_domaci, p_remiza, p_hoste):
-    """Vybere sázkařský tip podle rozložení pravděpodobností."""
-    if p_domaci >= 0.55:
-        return "1 (Výhra domácích)"
-    if p_hoste >= 0.55:
-        return "2 (Výhra hostů)"
-    if p_remiza >= max(p_domaci, p_hoste):
-        return "0 (Remíza)"
-    if p_domaci > p_hoste:
-        return "1X (Neprohra domácích)"
-    return "02 (Neprohra hostů)"
+# Co má tip maximalizovat:
+#   "uspesnost" – aby vycházel co nejčastěji, klidně za cenu dvojité šance,
+#   "informace" – aby rovnou pojmenoval vítěze, když si tím model věří.
+CIL_USPESNOST = "uspesnost"
+CIL_INFORMACE = "informace"
+CIL_TIPU = CIL_USPESNOST
+
+# Nad touhle jistotou se při cíli "informace" tipuje jednoznačný výsledek.
+PRAH_JEDNOZNACNEHO_TIPU = 0.55
+
+POPISY_TIPU = {
+    "1": "1 (Výhra domácích)",
+    "0": "0 (Remíza)",
+    "2": "2 (Výhra hostů)",
+    "1X": "1X (Neprohra domácích)",
+    "02": "02 (Neprohra hostů)",
+    "12": "12 (Bez remízy)",
+}
+
+
+def dvojita_sance(p_domaci, p_remiza, p_hoste):
+    """Dvojitá šance, která vynechá nejméně pravděpodobný výsledek.
+
+    Tohle je tip s nejvyšší šancí, že vyjde – pokrývá dvě možnosti ze tří.
+    """
+    nejmensi = min(p_domaci, p_remiza, p_hoste)
+
+    if nejmensi == p_hoste:
+        return POPISY_TIPU["1X"]
+    if nejmensi == p_domaci:
+        return POPISY_TIPU["02"]
+    return POPISY_TIPU["12"]
+
+
+def tip_z_pravdepodobnosti(p_domaci, p_remiza, p_hoste, cil=None, prah=None):
+    """Vybere sázkařský tip podle rozložení pravděpodobností.
+
+    Při cíli "úspěšnost" vždycky vyjde dvojitá šance, protože dvě možnosti
+    ze tří trefí model podstatně častěji než jednu. Cíl "informace" řekne
+    konkrétního vítěze, jakmile mu dá aspoň ``prah`` pravděpodobnosti.
+    """
+    cil = CIL_TIPU if cil is None else cil
+    prah = PRAH_JEDNOZNACNEHO_TIPU if prah is None else prah
+
+    if cil == CIL_INFORMACE:
+        trojice = (p_domaci, p_remiza, p_hoste)
+        nejvyssi = max(trojice)
+        if nejvyssi >= prah:
+            return POPISY_TIPU[("1", "0", "2")[trojice.index(nejvyssi)]]
+
+    return dvojita_sance(p_domaci, p_remiza, p_hoste)
 
 
 def vyhodnot_tip(tip, skore):
@@ -379,6 +519,8 @@ def vyhodnot_tip(tip, skore):
         return goly_domaci >= goly_hoste
     if znacka == "02":
         return goly_hoste >= goly_domaci
+    if znacka == "12":
+        return goly_domaci != goly_hoste
     return None
 
 
@@ -593,10 +735,71 @@ def spocitej_metriky(zaznamy):
     }
 
 
+# --- KALIBRACE ---
+
+# Průměrování modelů dělá předpovědi sebejistější, než na kolik mají.
+# Hodnota pod 1 pravděpodobnosti stáhne k sobě, nad 1 je vyostří. Číslo
+# hledá skript ladeni.py na archivu.
+SILA_KALIBRACE = 1.0
+
+# Pásma jistoty pro tabulku spolehlivosti.
+PASMA_SPOLEHLIVOSTI = (0.0, 0.35, 0.45, 0.55, 0.65, 1.01)
+
+
+def kalibruj(p_domaci, p_remiza, p_hoste, sila=None):
+    """Upraví sebevědomí předpovědi, aniž by změnila pořadí možností."""
+    sila = SILA_KALIBRACE if sila is None else sila
+    if sila == 1.0:
+        return p_domaci, p_remiza, p_hoste
+
+    upravene = [max(p, 1e-12) ** sila for p in (p_domaci, p_remiza, p_hoste)]
+    return normalizuj(*upravene)
+
+
+def spolehlivost(zaznamy, pasma=PASMA_SPOLEHLIVOSTI):
+    """Porovná slíbenou jistotu se skutečnou úspěšností.
+
+    Když model v pásmu 55–65 % trefí jen polovinu zápasů, jsou jeho čísla
+    nafouknutá a tipy nad prahem vycházejí méně, než slibují.
+    """
+    kose = {}
+
+    for zaznam in zaznamy:
+        vysledek = zaznam.get("vysledek")
+        if vysledek not in ("1", "0", "2"):
+            continue
+
+        trojice = (zaznam["p_domaci"], zaznam["p_remiza"], zaznam["p_hoste"])
+        nejvyssi = max(trojice)
+        trefa = ("1", "0", "2")[trojice.index(nejvyssi)] == vysledek
+
+        for dolni, horni in zip(pasma, pasma[1:]):
+            if dolni <= nejvyssi < horni:
+                kos = kose.setdefault((dolni, horni), {"slibeno": [], "trefy": []})
+                kos["slibeno"].append(nejvyssi)
+                kos["trefy"].append(trefa)
+                break
+
+    return [
+        {
+            "pasmo": f"{dolni:.0%}–{min(horni, 1.0):.0%}",
+            "zapasu": len(kos["trefy"]),
+            "slibeno": sum(kos["slibeno"]) / len(kos["slibeno"]),
+            "skutecnost": sum(kos["trefy"]) / len(kos["trefy"]),
+        }
+        for (dolni, horni), kos in sorted(kose.items())
+    ]
+
+
 # --- ENSEMBLE ---
 
 # Dokud není naměřeno aspoň tolik zápasů, váhy se neodvozují z výsledků.
 MIN_ZAPASU_PRO_VAHY = 20
+
+# Váhy nalezené na archivu minulých sezón (skript ladeni.py). Poisson je
+# z trojice nejspolehlivější, tak dostal polovinu slova. Používají se,
+# dokud není dost živých predikcí na vlastní měření.
+VYCHOZI_VAHY = {"index_sily": 0.25, "poisson": 0.50, "elo": 0.25}
 
 
 def vahy_z_metrik(metriky_modelu):
@@ -633,6 +836,7 @@ def predikuj_vsemi(
     zraneni_domaci="Kompletní kádr",
     zraneni_hoste="Kompletní kádr",
     vahy=None,
+    cil_tipu=None,
 ):
     """Spočítá predikci všemi modely a složí je dohromady.
 
@@ -684,12 +888,15 @@ def predikuj_vsemi(
     vysledek["elo_domaci"] = sily["elo"].get(domaci)
     vysledek["elo_hoste"] = sily["elo"].get(hoste)
 
-    slozene = slozeni_predikci(vysledek["modely"], vahy)
+    slozene = slozeni_predikci(vysledek["modely"], vahy or VYCHOZI_VAHY)
     if slozene is None:
         return None
 
+    # Složená předpověď je sebejistější než jednotlivé modely, proto kalibrace.
+    slozene = kalibruj(*slozene)
+
     vysledek["p_domaci"], vysledek["p_remiza"], vysledek["p_hoste"] = slozene
-    vysledek["tip"] = tip_z_pravdepodobnosti(*slozene)
+    vysledek["tip"] = tip_z_pravdepodobnosti(*slozene, cil=cil_tipu)
     vysledek["jistota"] = jistota_predikce(*slozene)
     return vysledek
 

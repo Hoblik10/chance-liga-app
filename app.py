@@ -57,6 +57,23 @@ zvolene_kolo = st.sidebar.selectbox(
 st.sidebar.caption(zapasy_zdroj)
 
 st.sidebar.markdown("---")
+st.sidebar.subheader("🎯 Jaký chceš tip")
+CILE_TIPU = {
+    modely.CIL_USPESNOST: "Ať vychází co nejčastěji (dvojitá šance)",
+    modely.CIL_INFORMACE: "Ať řekne vítěze, když si věří",
+}
+cil_tipu = st.sidebar.radio(
+    "Co má tip maximalizovat:",
+    options=tuple(CILE_TIPU),
+    format_func=CILE_TIPU.get,
+    label_visibility="collapsed",
+)
+st.sidebar.caption(
+    "Dvojitá šance pokrývá dvě možnosti ze tří, takže vyjde podstatně častěji – "
+    "za cenu toho, že toho míň řekne."
+)
+
+st.sidebar.markdown("---")
 st.sidebar.subheader("🏆 Aktuální tabulka Chance Ligy")
 st.sidebar.caption(tabulka_zdroj)
 st.sidebar.dataframe(df_tabulka, width="stretch")
@@ -95,9 +112,16 @@ if vahy_modelu:
         for nazev, vaha in sorted(vahy_modelu.items(), key=lambda polozka: -polozka[1])
     )
 else:
+    vychozi = ", ".join(
+        f"{POPISKY_MODELU.get(nazev, nazev)} {vaha:.0%}"
+        for nazev, vaha in sorted(
+            modely.VYCHOZI_VAHY.items(), key=lambda polozka: -polozka[1]
+        )
+    )
     popis_vah = (
-        f"zatím stejné (na vážení podle přesnosti je potřeba "
-        f"aspoň {modely.MIN_ZAPASU_PRO_VAHY} vyhodnocených zápasů na model)"
+        f"{vychozi} – z archivu minulých sezón (na vážení podle živých "
+        f"výsledků je potřeba aspoň {modely.MIN_ZAPASU_PRO_VAHY} "
+        f"vyhodnocených zápasů na model)"
     )
 
 
@@ -123,6 +147,7 @@ predikce = hlaseni.predikce_kola(
     vahy_modelu,
     id_tymu_v_lize,
     rucni_vstupy,
+    cil_tipu=cil_tipu,
 )
 
 
@@ -471,6 +496,28 @@ else:
         st.caption(
             "Úspěšnost tipu je zavádějící metrika – model, který vždy tipne "
             "favorita, ji má vysokou i bez skutečné hodnoty. Rozhoduj se podle Brier score."
+        )
+
+    radky_spolehlivosti = zaznamy.spolehlivost_modelu()
+    if radky_spolehlivosti:
+        st.subheader("📏 Sedí slíbená jistota?")
+        st.table(
+            pd.DataFrame(
+                [
+                    {
+                        "Pásmo jistoty": radek["pasmo"],
+                        "Zápasů": radek["zapasu"],
+                        "Model sliboval": f"{radek['slibeno']:.0%}",
+                        "Skutečnost": f"{radek['skutecnost']:.0%}",
+                    }
+                    for radek in radky_spolehlivosti
+                ]
+            ).set_index("Pásmo jistoty")
+        )
+        st.caption(
+            "Kdyby model sliboval 60 % a trefoval polovinu, jsou jeho čísla "
+            "nafouknutá a tipy nad prahem vycházejí méně, než tvrdí. "
+            "Pár desítek zápasů ale ještě nic neprozradí – čti to až po delší době."
         )
 
 

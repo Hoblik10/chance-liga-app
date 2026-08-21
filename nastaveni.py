@@ -39,6 +39,17 @@ SPORTSDB_LIGA = "4631"  # Czech First League
 # TheSportsDB značí sezónu rozsahem let.
 SEZONA_SPORTSDB = nacti_secret("SEZONA", "2026-2027") or "2026-2027"
 
+# Starší ročníky stažené ve složce sezony/. Na začátku sezóny stojí Poisson
+# a Elo skoro jen na nich, protože z pár odehraných kol se nic spolehlivého
+# odvodit nedá.
+ARCHIVNI_SEZONY = (
+    "2021-2022",
+    "2022-2023",
+    "2023-2024",
+    "2024-2025",
+    "2025-2026",
+)
+
 # Kolik nadcházejících kol se má zobrazit.
 POCET_ZOBRAZENYCH_KOL = 2
 
