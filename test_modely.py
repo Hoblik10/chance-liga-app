@@ -10,6 +10,7 @@ from datetime import datetime
 
 import data
 import hlaseni
+import kurzy
 import modely
 import zaznamy
 
@@ -805,6 +806,87 @@ class TestKalibrace(unittest.TestCase):
         self.assertEqual(pasma[0]["zapasu"], 2)
         self.assertAlmostEqual(pasma[0]["slibeno"], 0.7)
         self.assertAlmostEqual(pasma[0]["skutecnost"], 0.5)
+
+
+class TestKurzy(unittest.TestCase):
+    def test_marze_vyjde_z_prehnane_knihy(self):
+        # Férová kniha 2.0 / 4.0 / 4.0 dá přesně jedničku.
+        self.assertAlmostEqual(kurzy.marze(2.0, 4.0, 4.0), 0.0, places=6)
+        self.assertGreater(kurzy.marze(1.9, 3.6, 3.8), 0.0)
+
+    def test_ocisteni_marze_da_jednicku(self):
+        trzni = kurzy.ocisti_marzi(1.9, 3.6, 3.8)
+        self.assertAlmostEqual(sum(trzni), 1.0, places=6)
+        self.assertGreater(trzni[0], trzni[1])
+
+    def test_hodnota_je_nulova_pri_ferovem_kurzu(self):
+        """Kurz přesně podle modelu nesmí vypadat jako příležitost."""
+        self.assertAlmostEqual(kurzy.hodnota_sazky(0.5, 2.0), 0.0, places=6)
+        self.assertAlmostEqual(kurzy.hodnota_sazky(0.5, 2.2), 0.1, places=6)
+        self.assertLess(kurzy.hodnota_sazky(0.5, 1.8), 0.0)
+
+    def test_kelly_neroste_do_zaporu(self):
+        self.assertEqual(kurzy.kelly(0.3, 2.0), 0.0)
+        self.assertGreater(kurzy.kelly(0.6, 2.0), 0.0)
+
+    def test_kelly_je_zlomkovy(self):
+        plny = kurzy.kelly(0.6, 2.0, podil=1.0)
+        ctvrtinovy = kurzy.kelly(0.6, 2.0, podil=0.25)
+        self.assertAlmostEqual(ctvrtinovy, plny * 0.25, places=6)
+
+    def test_nejlepsi_hodnota_respektuje_prah(self):
+        model = (0.55, 0.25, 0.20)
+
+        self.assertIsNone(kurzy.nejlepsi_hodnota(model, (1.80, 3.60, 4.50)))
+
+        nalezena = kurzy.nejlepsi_hodnota(model, (2.10, 3.60, 4.50))
+        self.assertEqual(nalezena["vysledek"], "1")
+        self.assertGreater(nalezena["hodnota"], kurzy.MIN_HODNOTA)
+
+    def test_rozdil_od_trhu(self):
+        shodny = kurzy.ocisti_marzi(2.0, 4.0, 4.0)
+        self.assertAlmostEqual(kurzy.rozdil_od_trhu(shodny, (2.0, 4.0, 4.0)), 0.0, places=6)
+        self.assertGreater(kurzy.rozdil_od_trhu((0.8, 0.1, 0.1), (2.0, 4.0, 4.0)), 0.0)
+
+    def test_neplatne_kurzy(self):
+        for kurz in (None, "", 0.5, 1.0, 200.0, "abc"):
+            self.assertFalse(kurzy.platny_kurz(kurz))
+        for kurz in (1.01, 2.5, "3.2", 99.0):
+            self.assertTrue(kurzy.platny_kurz(kurz))
+
+
+class TestUlozeneKurzy(unittest.TestCase):
+    def setUp(self):
+        self.docasny = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
+        self.docasny.close()
+        os.unlink(self.docasny.name)
+        self.cesta = self.docasny.name
+
+    def tearDown(self):
+        if os.path.exists(self.cesta):
+            os.unlink(self.cesta)
+
+    def test_chybejici_soubor_nevadi(self):
+        self.assertEqual(kurzy.nacti_kurzy(self.cesta), {})
+
+    def test_zapis_a_nacteni(self):
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 3.7, 4.2), cesta=self.cesta)
+        ulozene = kurzy.nacti_kurzy(self.cesta)
+
+        self.assertEqual(ulozene[(5, "Slavia", "Sparta")], (1.8, 3.7, 4.2))
+
+    def test_kurz_se_prepisuje(self):
+        """Kurzy se hýbou až do výkopu, platí ten poslední."""
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 3.7, 4.2), cesta=self.cesta)
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.7, 3.8, 4.5), cesta=self.cesta)
+
+        ulozene = kurzy.nacti_kurzy(self.cesta)
+        self.assertEqual(len(ulozene), 1)
+        self.assertEqual(ulozene[(5, "Slavia", "Sparta")], (1.7, 3.8, 4.5))
+
+    def test_neplatny_kurz_se_neulozi(self):
+        with self.assertRaises(ValueError):
+            kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 0.5, 4.2), cesta=self.cesta)
 
 
 if __name__ == "__main__":

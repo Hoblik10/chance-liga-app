@@ -5,6 +5,7 @@ import streamlit as st
 
 import data
 import hlaseni
+import kurzy
 import modely
 import nastaveni
 import zaznamy
@@ -186,6 +187,15 @@ def archivni_tip(zapas):
 
 souhrn = hlaseni.radky_souhrnu(zvolene_kolo, zápasy, predikce)
 
+# Kurzy se zadávají ručně u jednotlivých zápasů; tady se jen načtou.
+ulozene_kurzy = kurzy.nacti_kurzy()
+
+
+def kurzy_zapasu(zapas):
+    """Uložené kurzy zápasu ve zvoleném kole, nebo None."""
+    return ulozene_kurzy.get((zvolene_kolo, zapas["domaci"], zapas["hoste"]))
+
+
 if souhrn:
     # TLAČÍTKO PRO HROMADNÉ ODESLÁNÍ TIPŮ TOHOTO KOLA
     if st.button(f"📤 Odeslat zbývající tipy pro {zvolene_kolo}. kolo na Telegram", type="primary", width="stretch"):
@@ -218,6 +228,42 @@ if souhrn:
             ]
         ).set_index("Zápas")
     )
+
+    # --- HODNOTA PROTI KURZU ---
+    radky_hodnoty = []
+    for radek in souhrn:
+        zadane = ulozene_kurzy.get(
+            (zvolene_kolo, radek["domaci"], radek["hoste"])
+        )
+        if not zadane:
+            continue
+
+        trojice = (radek["p_domaci"], radek["p_remiza"], radek["p_hoste"])
+        nejlepsi = kurzy.nejlepsi_hodnota(trojice, zadane)
+        if not nejlepsi:
+            continue
+
+        radky_hodnoty.append(
+            {
+                "Zápas": f"{radek['domaci']} – {radek['hoste']}",
+                "Sázka": nejlepsi["vysledek"],
+                "Kurz": f"{nejlepsi['kurz']:.2f}",
+                "Model": f"{nejlepsi['model']:.0%}",
+                "Trh": f"{nejlepsi['trh']:.0%}",
+                "Výhoda": f"{nejlepsi['hodnota']:+.1%}",
+                "Kelly": f"{nejlepsi['kelly']:.1%} banku",
+            }
+        )
+
+    if radky_hodnoty:
+        st.subheader("💰 Kde má model výhodu proti kurzu")
+        st.table(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
+        st.caption(
+            f"Zobrazí se jen sázky s výhodou aspoň {kurzy.MIN_HODNOTA:.0%}. "
+            "Výhoda je očekávaný výnos na vsazenou korunu podle modelu – "
+            "a stojí a padá s tím, jestli má model pravdu. Trh vidí i sestavy, "
+            "takže velký rozdíl bývá spíš chyba modelu než příležitost."
+        )
 
 elif zápasy:
     st.subheader("📦 Archiv kola")
@@ -379,6 +425,83 @@ for i, z in enumerate(zápasy):
                                 "Index síly není k dispozici (tým chybí v tabulce), "
                                 "predikci nesou Poisson a Elo."
                             )
+
+                with st.expander("💰 Kurzy a hodnota sázky"):
+                    zadane = kurzy_zapasu(z)
+                    if p is None:
+                        st.caption(
+                            "Bez predikce nejde hodnotu spočítat – model tenhle "
+                            "zápas neumí."
+                        )
+                    else:
+                        st.caption(
+                            "Opiš kurzy ze sázkovky. Dokud tam zůstane kurz "
+                            "odpovídající modelu, žádná výhoda se neukáže."
+                        )
+                        trojice_modelu = (p["p_domaci"], p["p_remiza"], p["p_hoste"])
+                        vychozi = zadane or tuple(
+                            round(min(1 / max(hodnota, 0.01), 50.0), 2)
+                            for hodnota in trojice_modelu
+                        )
+
+                        sloupce_kurzu = st.columns(3)
+                        zadane_kurzy = tuple(
+                            sloupce_kurzu[poradi_kurzu].number_input(
+                                popisek,
+                                min_value=kurzy.MIN_KURZ,
+                                max_value=kurzy.MAX_KURZ,
+                                value=float(vychozi[poradi_kurzu]),
+                                step=0.05,
+                                key=f"kurz{popisek}_{zvolene_kolo}_{i}",
+                            )
+                            for poradi_kurzu, popisek in enumerate(("1", "X", "2"))
+                        )
+
+                        if st.button("💾 Uložit kurzy", key=f"ku_{zvolene_kolo}_{i}"):
+                            kurzy.uloz_kurz(
+                                zvolene_kolo, z["domaci"], z["hoste"], zadane_kurzy
+                            )
+                            st.success("Kurzy uloženy, projeví se v přehledu kola.")
+
+                        st.table(
+                            pd.DataFrame(
+                                [
+                                    {
+                                        "Výsledek": radek["vysledek"],
+                                        "Model": f"{radek['model']:.0%}",
+                                        "Trh (bez marže)": f"{radek['trh']:.0%}",
+                                        "Kurz": f"{radek['kurz']:.2f}",
+                                        "Výhoda": f"{radek['hodnota']:+.1%}",
+                                        "Kelly": f"{radek['kelly']:.1%}",
+                                    }
+                                    for radek in kurzy.prehled_hodnoty(
+                                        trojice_modelu, zadane_kurzy
+                                    )
+                                ]
+                            ).set_index("Výsledek")
+                        )
+
+                        nejlepsi_sazka = kurzy.nejlepsi_hodnota(
+                            trojice_modelu, zadane_kurzy
+                        )
+                        if nejlepsi_sazka:
+                            st.success(
+                                f"Podle modelu má výhodu **{nejlepsi_sazka['vysledek']}** "
+                                f"při kurzu {nejlepsi_sazka['kurz']:.2f}: "
+                                f"{nejlepsi_sazka['hodnota']:+.1%} na korunu, "
+                                f"Kelly doporučuje {nejlepsi_sazka['kelly']:.1%} banku."
+                            )
+                        else:
+                            st.info(
+                                f"Žádný výsledek nemá výhodu aspoň "
+                                f"{kurzy.MIN_HODNOTA:.0%} – tady se sázet nevyplatí."
+                            )
+
+                        st.caption(
+                            f"Marže kanceláře: {kurzy.marze(*zadane_kurzy):.1%} | "
+                            f"odchylka modelu od trhu: "
+                            f"{kurzy.rozdil_od_trhu(trojice_modelu, zadane_kurzy):.0%}"
+                        )
 
                 if st.button(f"📲 Poslat tento tip na Telegram", key=f"tg_{zvolene_kolo}_{i}"):
                     zprava = (
