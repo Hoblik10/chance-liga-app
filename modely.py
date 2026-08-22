@@ -189,6 +189,12 @@ MAX_GOLU = 8
 # zahodit starší ročník by na začátku sezóny nechalo modely bez dat.
 POLOCAS_DNU = 365.0
 
+# Kolik slova má mít síla týmu zvlášť doma a venku. Nula = jen celkový průměr.
+# Na pěti sezónách každý kladný podíl Poissonu uškodil (kontrolní log loss
+# 1.006 → 1.011 už při 0.25), proto zůstává vypnuté. Parametr a výpočet
+# domácí / venkovní síly tu jsou, kdyby se to na delší historii otočilo.
+PODIL_MISTA = 0.0
+
 
 def _vahy_stari(zapasy, polocas_dnu):
     """Váhy zápasů podle stáří – čerstvé výsledky váží víc než loňské."""
@@ -202,11 +208,26 @@ def _vahy_stari(zapasy, polocas_dnu):
     ]
 
 
+def _sila_z_golu(vstrelene, inkasovane, vaha, prumer):
+    """Útok a obrana stažené k ligovému průměru, když je zápasů málo."""
+    if vaha <= 0 or prumer <= 0:
+        return 1.0, 1.0
+
+    duvera = vaha / (vaha + VAHA_PRIORU_GOLY)
+    utok = 1.0 + ((vstrelene / vaha) / prumer - 1.0) * duvera
+    obrana = 1.0 + ((inkasovane / vaha) / prumer - 1.0) * duvera
+    return utok, obrana
+
+
 def spocitej_utok_obranu(databaze_kol, polocas_dnu=POLOCAS_DNU):
     """Síla útoku a obrany každého týmu vůči průměru ligy.
 
     Hodnota 1.0 znamená přesný ligový průměr, 1.2 o pětinu lepší útok.
     Starší zápasy se počítají s menší vahou podle ``polocas_dnu``.
+
+    Kromě celkového útoku a obrany se počítají i domácí a venkovní –
+    některé týmy umí hrát jen doma. Samotné použití rozhoduje
+    ``ocekavane_goly`` podle ``PODIL_MISTA``.
     """
     zapasy = odehrane_zapasy(databaze_kol)
     if not zapasy:
@@ -224,31 +245,56 @@ def spocitej_utok_obranu(databaze_kol, polocas_dnu=POLOCAS_DNU):
 
     statistiky = {}
     for vaha, zapas in zip(vahy, zapasy):
-        for tym, vstrelene, inkasovane in (
-            (zapas["domaci"], zapas["goly_domaci"], zapas["goly_hoste"]),
-            (zapas["hoste"], zapas["goly_hoste"], zapas["goly_domaci"]),
+        for tym, vstrelene, inkasovane, misto in (
+            (zapas["domaci"], zapas["goly_domaci"], zapas["goly_hoste"], "doma"),
+            (zapas["hoste"], zapas["goly_hoste"], zapas["goly_domaci"], "venku"),
         ):
             zaznam = statistiky.setdefault(
-                tym, {"zapasy": 0, "vaha": 0.0, "vstrelene": 0.0, "inkasovane": 0.0}
+                tym,
+                {
+                    "zapasy": 0,
+                    "vaha": 0.0,
+                    "vstrelene": 0.0,
+                    "inkasovane": 0.0,
+                    "doma": {"vaha": 0.0, "vstrelene": 0.0, "inkasovane": 0.0},
+                    "venku": {"vaha": 0.0, "vstrelene": 0.0, "inkasovane": 0.0},
+                },
             )
             zaznam["zapasy"] += 1
             zaznam["vaha"] += vaha
             zaznam["vstrelene"] += vaha * vstrelene
             zaznam["inkasovane"] += vaha * inkasovane
+            zaznam[misto]["vaha"] += vaha
+            zaznam[misto]["vstrelene"] += vaha * vstrelene
+            zaznam[misto]["inkasovane"] += vaha * inkasovane
 
     sily = {}
     for tym, zaznam in statistiky.items():
-        vaha_tymu = zaznam["vaha"]
-        utok_syrovy = (zaznam["vstrelene"] / vaha_tymu) / prumer_na_tym
-        obrana_syrova = (zaznam["inkasovane"] / vaha_tymu) / prumer_na_tym
+        utok, obrana = _sila_z_golu(
+            zaznam["vstrelene"], zaznam["inkasovane"], zaznam["vaha"], prumer_na_tym
+        )
+        utok_doma, obrana_doma = _sila_z_golu(
+            zaznam["doma"]["vstrelene"],
+            zaznam["doma"]["inkasovane"],
+            zaznam["doma"]["vaha"],
+            prumer_domaci,
+        )
+        utok_venku, obrana_venku = _sila_z_golu(
+            zaznam["venku"]["vstrelene"],
+            zaznam["venku"]["inkasovane"],
+            zaznam["venku"]["vaha"],
+            prumer_hoste,
+        )
 
-        # Po pár kolech jsou poměry divoké, proto se stahují k ligovému průměru.
-        duvera = vaha_tymu / (vaha_tymu + VAHA_PRIORU_GOLY)
         sily[tym] = {
-            "utok": 1.0 + (utok_syrovy - 1.0) * duvera,
-            "obrana": 1.0 + (obrana_syrova - 1.0) * duvera,
+            "utok": utok,
+            "obrana": obrana,
+            "utok_doma": utok_doma,
+            "obrana_doma": obrana_doma,
+            "utok_venku": utok_venku,
+            "obrana_venku": obrana_venku,
             "zapasy": zaznam["zapasy"],
-            "vaha": vaha_tymu,
+            "vaha": zaznam["vaha"],
         }
 
     return sily, prumer_domaci, prumer_hoste
@@ -283,29 +329,56 @@ def _korekce_dixon_coles(goly_domaci, goly_hoste, lambda_domaci, lambda_hoste):
     return max(korekce, 0.0)
 
 
-def ocekavane_goly(sily, prumer_domaci, prumer_hoste, domaci, hoste):
-    """Očekávaný počet gólů obou týmů v konkrétním zápase."""
+def ocekavane_goly(
+    sily, prumer_domaci, prumer_hoste, domaci, hoste, podil_mista=None
+):
+    """Očekávaný počet gólů obou týmů v konkrétním zápase.
+
+    ``podil_mista`` přimíchá domácí a venkovní sílu k celkovému průměru.
+    Nula nechává původní model, jednička bere jen zápasy na daném místě.
+    """
     sila_domaci = sily.get(domaci)
     sila_hoste = sily.get(hoste)
     if not sila_domaci or not sila_hoste:
         return None
 
-    lambda_domaci = sila_domaci["utok"] * sila_hoste["obrana"] * prumer_domaci
-    lambda_hoste = sila_hoste["utok"] * sila_domaci["obrana"] * prumer_hoste
+    podil = PODIL_MISTA if podil_mista is None else podil_mista
+    podil = min(max(podil, 0.0), 1.0)
+
+    utok_domaci = (1 - podil) * sila_domaci["utok"] + podil * sila_domaci.get(
+        "utok_doma", sila_domaci["utok"]
+    )
+    obrana_hoste = (1 - podil) * sila_hoste["obrana"] + podil * sila_hoste.get(
+        "obrana_venku", sila_hoste["obrana"]
+    )
+    utok_hoste = (1 - podil) * sila_hoste["utok"] + podil * sila_hoste.get(
+        "utok_venku", sila_hoste["utok"]
+    )
+    obrana_domaci = (1 - podil) * sila_domaci["obrana"] + podil * sila_domaci.get(
+        "obrana_doma", sila_domaci["obrana"]
+    )
+
+    lambda_domaci = utok_domaci * obrana_hoste * prumer_domaci
+    lambda_hoste = utok_hoste * obrana_domaci * prumer_hoste
 
     # Nulová lambda by rozbila Poissona, drobná podlaha to ošetří.
     return max(lambda_domaci, 0.05), max(lambda_hoste, 0.05)
 
 
-def predikuj_poissonem(sily, prumer_domaci, prumer_hoste, domaci, hoste):
-    """Pravděpodobnosti 1/X/2 z Dixon-Colesova modelu."""
+def matice_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste):
+    """Pravděpodobnosti všech skóre do ``MAX_GOLU``, seřazené od nejčastějšího.
+
+    Vrací ``None``, když některý tým v historii chybí. Jinak slovník
+    s maticí, očekávanými góly a součty 1/X/2.
+    """
     lambdy = ocekavane_goly(sily, prumer_domaci, prumer_hoste, domaci, hoste)
     if lambdy is None:
         return None
 
     lambda_domaci, lambda_hoste = lambdy
-
+    skore = []
     p_domaci = p_remiza = p_hoste = 0.0
+
     for goly_d in range(MAX_GOLU + 1):
         for goly_h in range(MAX_GOLU + 1):
             pravdepodobnost = (
@@ -313,6 +386,7 @@ def predikuj_poissonem(sily, prumer_domaci, prumer_hoste, domaci, hoste):
                 * _poissonova_pravdepodobnost(goly_h, lambda_hoste)
                 * _korekce_dixon_coles(goly_d, goly_h, lambda_domaci, lambda_hoste)
             )
+            skore.append(((goly_d, goly_h), pravdepodobnost))
 
             if goly_d > goly_h:
                 p_domaci += pravdepodobnost
@@ -321,29 +395,83 @@ def predikuj_poissonem(sily, prumer_domaci, prumer_hoste, domaci, hoste):
             else:
                 p_hoste += pravdepodobnost
 
-    return normalizuj(p_domaci, p_remiza, p_hoste)
+    soucet = p_domaci + p_remiza + p_hoste
+    if soucet > 0:
+        skore = [((g_d, g_h), p / soucet) for (g_d, g_h), p in skore]
+        p_domaci, p_remiza, p_hoste = normalizuj(p_domaci, p_remiza, p_hoste)
+
+    skore.sort(key=lambda polozka: (-polozka[1], polozka[0]))
+
+    return {
+        "skore": skore,
+        "ocekavane": (lambda_domaci, lambda_hoste),
+        "p_domaci": p_domaci,
+        "p_remiza": p_remiza,
+        "p_hoste": p_hoste,
+    }
+
+
+def predikuj_poissonem(sily, prumer_domaci, prumer_hoste, domaci, hoste):
+    """Pravděpodobnosti 1/X/2 z Dixon-Colesova modelu."""
+    matice = matice_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste)
+    if matice is None:
+        return None
+
+    return matice["p_domaci"], matice["p_remiza"], matice["p_hoste"]
 
 
 def nejpravdepodobnejsi_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste):
     """Nejpravděpodobnější přesný výsledek podle Poissona."""
-    lambdy = ocekavane_goly(sily, prumer_domaci, prumer_hoste, domaci, hoste)
-    if lambdy is None:
+    matice = matice_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste)
+    if matice is None:
         return None
 
-    lambda_domaci, lambda_hoste = lambdy
-    nejlepsi, nejlepsi_p = None, -1.0
+    return matice["skore"][0]
 
-    for goly_d in range(MAX_GOLU + 1):
-        for goly_h in range(MAX_GOLU + 1):
-            pravdepodobnost = (
-                _poissonova_pravdepodobnost(goly_d, lambda_domaci)
-                * _poissonova_pravdepodobnost(goly_h, lambda_hoste)
-                * _korekce_dixon_coles(goly_d, goly_h, lambda_domaci, lambda_hoste)
-            )
-            if pravdepodobnost > nejlepsi_p:
-                nejlepsi, nejlepsi_p = (goly_d, goly_h), pravdepodobnost
 
-    return nejlepsi, nejlepsi_p
+# Hranice pro over/under – v české lize padají v průměru 2,6 gólu na zápas.
+HRANICE_GOLU = (1.5, 2.5, 3.5)
+
+# Kolik nejčastějších skóre se ukáže v aplikaci.
+POCET_SKORE = 5
+
+
+def prehled_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste, pocet=POCET_SKORE):
+    """Nejčastější skóre a odvozené trhy z Poissonovy matice.
+
+    Over/under a „obě skórují“ jsou součty pravděpodobností konkrétních
+    buněk – model je počítá zadarmo, jakmile má matici skóre.
+    """
+    matice = matice_skore(sily, prumer_domaci, prumer_hoste, domaci, hoste)
+    if matice is None:
+        return None
+
+    over = {hranice: 0.0 for hranice in HRANICE_GOLU}
+    obe_skoruji = 0.0
+    ciste_vitezstvi_domaci = 0.0
+    ciste_vitezstvi_hoste = 0.0
+
+    for (goly_d, goly_h), p in matice["skore"]:
+        celkem = goly_d + goly_h
+        for hranice in HRANICE_GOLU:
+            if celkem > hranice:
+                over[hranice] += p
+
+        if goly_d > 0 and goly_h > 0:
+            obe_skoruji += p
+        if goly_d > 0 and goly_h == 0:
+            ciste_vitezstvi_domaci += p
+        if goly_h > 0 and goly_d == 0:
+            ciste_vitezstvi_hoste += p
+
+    return {
+        "nejcastejsi": matice["skore"][:pocet],
+        "ocekavane": matice["ocekavane"],
+        "over": over,
+        "obe_skoruji": obe_skoruji,
+        "ciste_vitezstvi_domaci": ciste_vitezstvi_domaci,
+        "ciste_vitezstvi_hoste": ciste_vitezstvi_hoste,
+    }
 
 
 # --- MODEL 3: ELO ---
@@ -381,11 +509,30 @@ def _je_letni_pauza(predchozi, aktualni):
     )
 
 
-def spocitej_elo(databaze_kol, prenos_pres_leto=PRENOS_PRES_LETO):
+def nasobitel_rozdilu(rozdil_golu):
+    """O kolik silněji se do ratingu promítne jednoznačná výhra.
+
+    Výhra 5:0 vypovídá o síle víc než 1:0, ale ne pětkrát – proto multiplikátor
+    roste pomalu. Odpovídá to škále World Football Elo Ratings.
+    """
+    rozdil = abs(rozdil_golu)
+
+    if rozdil <= 1:
+        return 1.0
+    if rozdil == 2:
+        return 1.5
+    return (11.0 + rozdil) / 8.0
+
+
+def spocitej_elo(
+    databaze_kol, prenos_pres_leto=PRENOS_PRES_LETO, vazit_rozdilem=True
+):
     """Projde odehrané zápasy chronologicky a vrátí aktuální rating týmů.
 
     Když historie sahá přes víc sezón, na přelomu ročníků se rating stáhne
     k průměru – jinak by si tým nesl loňskou formu beze změny.
+
+    ``vazit_rozdilem`` pouští do ratingu i výši výhry, ne jen její fakt.
     """
     rating = {}
     predchozi_cas = None
@@ -412,7 +559,13 @@ def spocitej_elo(databaze_kol, prenos_pres_leto=PRENOS_PRES_LETO):
         else:
             skutecne = 0.5
 
-        zmena = K_FAKTOR * (skutecne - ocekavane)
+        nasobitel = (
+            nasobitel_rozdilu(zapas["goly_domaci"] - zapas["goly_hoste"])
+            if vazit_rozdilem
+            else 1.0
+        )
+
+        zmena = K_FAKTOR * nasobitel * (skutecne - ocekavane)
         rating[domaci] += zmena
         rating[hoste] -= zmena
 
@@ -882,6 +1035,7 @@ def predikuj_vsemi(
     vysledek["modely"]["poisson"] = predikuj_poissonem(*argumenty_golu)
     vysledek["ocekavane_goly"] = ocekavane_goly(*argumenty_golu)
     vysledek["nejcastejsi_skore"] = nejpravdepodobnejsi_skore(*argumenty_golu)
+    vysledek["prehled_skore"] = prehled_skore(*argumenty_golu)
 
     # Model 3: Elo rating aktualizovaný po každém odehraném zápase.
     vysledek["modely"]["elo"] = predikuj_elem(sily["elo"], domaci, hoste)

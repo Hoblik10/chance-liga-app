@@ -275,6 +275,55 @@ class TestJistota(unittest.TestCase):
     def test_nejpravdepodobnejsi_skore_neznamy_tym(self):
         self.assertIsNone(modely.nejpravdepodobnejsi_skore({}, 1.5, 1.2, "A", "B"))
 
+    def test_prehled_skore_soucty(self):
+        databaze = {
+            1: [zapas("A", "B", "3:0"), zapas("C", "A", "0:2"), zapas("B", "C", "2:1")],
+            2: [zapas("A", "C", "4:0"), zapas("B", "A", "1:1"), zapas("C", "B", "0:0")],
+        }
+        sily, prumer_d, prumer_h = modely.spocitej_utok_obranu(databaze)
+        prehled = modely.prehled_skore(sily, prumer_d, prumer_h, "A", "C")
+
+        self.assertIsNotNone(prehled)
+        self.assertEqual(len(prehled["nejcastejsi"]), 5)
+        self.assertGreater(prehled["over"][1.5], prehled["over"][2.5])
+        self.assertGreater(prehled["over"][2.5], prehled["over"][3.5])
+        self.assertTrue(0 < prehled["obe_skoruji"] < 1)
+        self.assertAlmostEqual(
+            prehled["nejcastejsi"][0][1],
+            modely.nejpravdepodobnejsi_skore(sily, prumer_d, prumer_h, "A", "C")[1],
+            places=6,
+        )
+
+    def test_matice_skore_da_jednicku(self):
+        databaze = {1: [zapas("A", "B", "2:1")]}
+        sily, prumer_d, prumer_h = modely.spocitej_utok_obranu(databaze)
+        matice = modely.matice_skore(sily, prumer_d, prumer_h, "A", "B")
+
+        self.assertAlmostEqual(sum(p for _, p in matice["skore"]), 1.0, places=6)
+        self.assertAlmostEqual(
+            matice["p_domaci"] + matice["p_remiza"] + matice["p_hoste"], 1.0, places=6
+        )
+
+
+class TestEloRozdilSkore(unittest.TestCase):
+    def test_nasobitel_roste_s_rozdilem(self):
+        self.assertEqual(modely.nasobitel_rozdilu(1), 1.0)
+        self.assertEqual(modely.nasobitel_rozdilu(0), 1.0)
+        self.assertEqual(modely.nasobitel_rozdilu(2), 1.5)
+        self.assertGreater(modely.nasobitel_rozdilu(4), modely.nasobitel_rozdilu(2))
+
+    def test_velka_vyhra_pohne_ratingem_vic(self):
+        tesna = {1: [zapas("A", "B", "1:0", datum="2026-08-01 17:00")]}
+        jasna = {1: [zapas("A", "B", "5:0", datum="2026-08-01 17:00")]}
+
+        self.assertGreater(
+            modely.spocitej_elo(jasna)["A"], modely.spocitej_elo(tesna)["A"]
+        )
+        self.assertEqual(
+            modely.spocitej_elo(tesna, vazit_rozdilem=False)["A"],
+            modely.spocitej_elo(jasna, vazit_rozdilem=False)["A"],
+        )
+
 
 class TestPredikujVsemi(unittest.TestCase):
     def setUp(self):
@@ -302,6 +351,8 @@ class TestPredikujVsemi(unittest.TestCase):
         )
         self.assertGreater(vysledek["jistota"], 1 / 3)
         self.assertIsNotNone(vysledek["nejcastejsi_skore"])
+        self.assertIsNotNone(vysledek["prehled_skore"])
+        self.assertEqual(len(vysledek["prehled_skore"]["nejcastejsi"]), modely.POCET_SKORE)
 
     def test_chybejici_tym_v_jednom_modelu_nespadne(self):
         vysledek = modely.predikuj_vsemi(self.sily, "A", "Neznámý")
@@ -506,6 +557,13 @@ class TestHlaseni(unittest.TestCase):
         self.assertNotIn("<pre>", zprava)
         # Odehraný zápas do zprávy nepatří, i kdyby měl vyšší jistotu.
         self.assertNotIn("E – F", zprava)
+
+    def test_text_top_skore(self):
+        self.assertEqual(hlaseni.text_top_skore([]), "–")
+        self.assertEqual(
+            hlaseni.text_top_skore([((2, 1), 0.12), ((1, 1), 0.11)], pocet=2),
+            "2:1 (12%) · 1:1 (11%)",
+        )
 
     def test_zprava_vynecha_odlozeny_zapas(self):
         zapasy = self.zapasy + [

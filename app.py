@@ -210,7 +210,8 @@ if souhrn:
     st.subheader("🎯 Nejjistější tipy kola")
     st.caption(
         "Seřazeno od nejvyšší jistoty modelu. Jistota je jen nejvyšší z pravděpodobností "
-        "1/X/2 – bez kurzu z toho neplyne, že se sázka vyplatí."
+        "1/X/2 – bez kurzu z toho neplyne, že se sázka vyplatí. Přesné skóre na archivu "
+        "sedí v 12 % zápasů, pět nejčastějších dohromady v 49 %."
     )
     st.table(
         pd.DataFrame(
@@ -222,7 +223,15 @@ if souhrn:
                     "2": f"{r['p_hoste']:.0%}",
                     "Tip": r["tip"].split(" ")[0],
                     "Jistota": f"{r['jistota']:.0%}",
-                    "Nejčastější skóre": r["skore"],
+                    "Skóre": hlaseni.text_top_skore(r.get("top_skore"), pocet=2),
+                    "Přes 2.5": (
+                        f"{r['over_25']:.0%}" if r.get("over_25") is not None else "–"
+                    ),
+                    "Obě skórují": (
+                        f"{r['obe_skoruji']:.0%}"
+                        if r.get("obe_skoruji") is not None
+                        else "–"
+                    ),
                 }
                 for r in souhrn
             ]
@@ -515,6 +524,13 @@ for i, z in enumerate(zápasy):
                             f"\nPravděpodobnosti: 1 {p['p_domaci']:.0%} | "
                             f"X {p['p_remiza']:.0%} | 2 {p['p_hoste']:.0%}"
                         )
+                        prehled = p.get("prehled_skore")
+                        if prehled:
+                            zprava += (
+                                f"\nSkóre: {hlaseni.text_top_skore(prehled['nejcastejsi'])}"
+                                f"\nPřes 2.5: {prehled['over'][2.5]:.0%}"
+                                f" · obě skórují: {prehled['obe_skoruji']:.0%}"
+                            )
                     if nastaveni.poslat_na_telegram(zprava):
                         st.success("Odesláno na Telegram!")
                     else:
@@ -532,7 +548,37 @@ for i, z in enumerate(zápasy):
                     )
                     st.info(f"🎯 **Tip (ensemble):** {p['tip']}")
                     st.caption(f"Jistota modelu: **{p['jistota']:.0%}**")
-                    if p.get("nejcastejsi_skore"):
+
+                    prehled = p.get("prehled_skore")
+                    if prehled:
+                        ocekavane = prehled["ocekavane"]
+                        st.caption(
+                            f"Očekávané góly: **{ocekavane[0]:.1f} : {ocekavane[1]:.1f}**"
+                        )
+                        st.table(
+                            pd.DataFrame(
+                                [
+                                    {
+                                        "Skóre": f"{goly_d}:{goly_h}",
+                                        "Šance": f"{pravdepodobnost:.0%}",
+                                    }
+                                    for (goly_d, goly_h), pravdepodobnost in prehled[
+                                        "nejcastejsi"
+                                    ]
+                                ]
+                            ).set_index("Skóre")
+                        )
+                        st.caption(
+                            f"Přes 1.5: **{prehled['over'][1.5]:.0%}** · "
+                            f"přes 2.5: **{prehled['over'][2.5]:.0%}** · "
+                            f"přes 3.5: **{prehled['over'][3.5]:.0%}**"
+                        )
+                        st.caption(
+                            f"Obě skórují: **{prehled['obe_skoruji']:.0%}** · "
+                            f"čisté konto domácích: **{prehled['ciste_vitezstvi_domaci']:.0%}** · "
+                            f"hostů: **{prehled['ciste_vitezstvi_hoste']:.0%}**"
+                        )
+                    elif p.get("nejcastejsi_skore"):
                         (goly_d, goly_h), p_skore = p["nejcastejsi_skore"]
                         st.caption(
                             f"Nejčastější skóre podle Poissona: **{goly_d}:{goly_h}** "

@@ -701,7 +701,9 @@ def nacti_podklady(pocet_kol=None):
     }
 
 
-def spocitej_sily(podklady, polocas_dnu=None, prenos_pres_leto=None):
+def spocitej_sily(
+    podklady, polocas_dnu=None, prenos_pres_leto=None, vazit_rozdilem=True
+):
     """Z podkladů odvodí vstupy všech tří modelů."""
     databaze_kol = podklady["databaze_kol"]
     forma_tymu = dict(podklady["forma"])
@@ -742,5 +744,6 @@ def spocitej_sily(podklady, polocas_dnu=None, prenos_pres_leto=None):
             prenos_pres_leto=(
                 modely.PRENOS_PRES_LETO if prenos_pres_leto is None else prenos_pres_leto
             ),
+            vazit_rozdilem=vazit_rozdilem,
         ),
     }

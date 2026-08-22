@@ -176,6 +176,11 @@ def radky_souhrnu(kolo, zapasy, predikce):
         else:
             skore_text = "–"
 
+        prehled = vysledek.get("prehled_skore") or {}
+        nejcastejsi = prehled.get("nejcastejsi") or ([skore] if skore else [])
+        over = (prehled.get("over") or {}).get(2.5)
+        obe = prehled.get("obe_skoruji")
+
         radky.append(
             {
                 "poradi": poradi,
@@ -188,11 +193,26 @@ def radky_souhrnu(kolo, zapasy, predikce):
                 "tip": vysledek["tip"],
                 "jistota": vysledek["jistota"],
                 "skore": skore_text,
+                "top_skore": nejcastejsi,
+                "over_25": over,
+                "obe_skoruji": obe,
+                "ocekavane": prehled.get("ocekavane"),
             }
         )
 
     radky.sort(key=lambda r: r["jistota"], reverse=True)
     return radky
+
+
+def text_top_skore(nejcastejsi, pocet=3):
+    """2:1 (12%) · 1:1 (11%) · 2:0 (10%)"""
+    if not nejcastejsi:
+        return "–"
+
+    return " · ".join(
+        f"{goly_d}:{goly_h} ({p:.0%})"
+        for (goly_d, goly_h), p in nejcastejsi[:pocet]
+    )
 
 
 def kratky_nazev(tym):
@@ -239,7 +259,13 @@ def sestav_zpravu(kolo, zapasy, predikce):
             f"X {radek['p_remiza']:.0%} · "
             f"2 {radek['p_hoste']:.0%}"
         )
-        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%} · {radek['skore']}")
+        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%}")
+        bloky.append(f"skóre {text_top_skore(radek.get('top_skore'))}")
+        if radek.get("over_25") is not None and radek.get("obe_skoruji") is not None:
+            bloky.append(
+                f"přes 2.5 {radek['over_25']:.0%} · "
+                f"obě skórují {radek['obe_skoruji']:.0%}"
+            )
         bloky.append("")
 
     return "\n".join(bloky).strip()
