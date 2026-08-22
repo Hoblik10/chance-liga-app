@@ -1,0 +1,1892 @@
+[
+ {
+  "kolo": 1,
+  "datum": "2021-07-24 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-24 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "MFK Karviná",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-24 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-24 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-25 17:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-25 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FK Teplice",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-25 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "1. FC Slovácko",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2021-07-25 20:00",
+  "domaci": "FC Zlín",
+  "hoste": "SK Slavia Praha",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-07-30 20:00",
+  "domaci": "FK Teplice",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:3"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-07-31 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-07-31 17:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FK Pardubice",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-07-31 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FK Jablonec",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-07-31 20:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "AC Sparta Praha",
+  "skore": "0:5"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-08-01 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-08-01 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FC Zlín",
+  "skore": "5:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2021-08-01 20:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-07 16:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "MFK Karviná",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-07 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Teplice",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-07 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:3"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-07 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-08 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-08 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-08-08 20:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "1. FC Slovácko",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-14 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-14 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "SK Slavia Praha",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-14 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Zlín",
+  "skore": "2:3"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-14 20:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "AC Sparta Praha",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-15 17:00",
+  "domaci": "FK Teplice",
+  "hoste": "FK Jablonec",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-15 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FK Pardubice",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-15 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 4,
+  "datum": "2021-08-15 20:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-21 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-21 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:4"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-21 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FK Teplice",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-21 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Hradec Králové",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-22 17:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "MFK Karviná",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-22 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-22 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "1. FC Slovácko",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 5,
+  "datum": "2021-08-22 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Baník Ostrava",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-28 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-28 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FK Pardubice",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-28 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FC Zlín",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-28 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-29 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-29 17:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FK Jablonec",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-29 17:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FK Teplice",
+  "skore": "4:2"
+ },
+ {
+  "kolo": 6,
+  "datum": "2021-08-29 20:00",
+  "domaci": "MFK Karviná",
+  "hoste": "SK Slavia Praha",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-11 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Slovan Liberec",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-11 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:3"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-11 17:00",
+  "domaci": "FK Teplice",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-11 20:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "AC Sparta Praha",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-12 15:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FC Hradec Králové",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-12 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "MFK Karviná",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-12 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 7,
+  "datum": "2021-09-12 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "1. FC Slovácko",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-17 20:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FK Pardubice",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-17 20:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-18 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Zlín",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-18 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-18 20:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-19 16:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FK Jablonec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-19 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FK Teplice",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 8,
+  "datum": "2021-09-19 20:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:5"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-25 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "MFK Karviná",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-25 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-25 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-25 20:00",
+  "domaci": "FC Zlín",
+  "hoste": "AC Sparta Praha",
+  "skore": "2:5"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-26 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FC Slovan Liberec",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-26 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "1. FC Slovácko",
+  "skore": "3:5"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-26 17:00",
+  "domaci": "FK Teplice",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 9,
+  "datum": "2021-09-26 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Hradec Králové",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-02 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FK Pardubice",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-02 17:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-02 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FK Teplice",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-02 20:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FC Zlín",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-03 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FK Jablonec",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-03 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-03 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FC Baník Ostrava",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 10,
+  "datum": "2021-10-03 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-16 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-16 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-16 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "1. FC Slovácko",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-16 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Slovan Liberec",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-17 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "FC Hradec Králové",
+  "skore": "2:3"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-17 17:00",
+  "domaci": "FK Teplice",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-17 17:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "MFK Karviná",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 11,
+  "datum": "2021-10-17 20:00",
+  "domaci": "FK Pardubice",
+  "hoste": "AC Sparta Praha",
+  "skore": "2:4"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-23 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Zlín",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-23 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-23 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-24 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FK Teplice",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-24 17:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FK Jablonec",
+  "skore": "5:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-24 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "SK Slavia Praha",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-10-24 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 3,
+  "datum": "2021-10-27 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-30 16:00",
+  "domaci": "FC Zlín",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-30 16:00",
+  "domaci": "FK Teplice",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-30 19:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "1. FC Slovácko",
+  "skore": "0:3"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-31 15:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FK Pardubice",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-31 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FC Hradec Králové",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-31 15:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "AC Sparta Praha",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-10-31 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-06 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-06 15:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-06 15:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-06 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-07 15:00",
+  "domaci": "FK Pardubice",
+  "hoste": "SK Slavia Praha",
+  "skore": "0:5"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-07 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Jablonec",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-07 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "1. FC Slovácko",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 14,
+  "datum": "2021-11-07 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FK Teplice",
+  "skore": "4:2"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-20 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FC Zlín",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-20 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FC Hradec Králové",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-20 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-20 18:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-21 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "FK Pardubice",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-21 15:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "AC Sparta Praha",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-21 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 15,
+  "datum": "2021-11-21 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FK Jablonec",
+  "skore": "5:0"
+ },
+ {
+  "kolo": 12,
+  "datum": "2021-11-24 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-27 15:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "1. FC Slovácko",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-27 15:00",
+  "domaci": "FK Pardubice",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:5"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-27 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "FC Baník Ostrava",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-27 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "6:0"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-28 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "MFK Karviná",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-28 15:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-28 15:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FK Teplice",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 16,
+  "datum": "2021-11-28 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Slovan Liberec",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 13,
+  "datum": "2021-12-01 18:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "MFK Karviná",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-04 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "FC Zlín",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-04 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "AC Sparta Praha",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-04 15:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-04 18:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "SK Slavia Praha",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-05 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FK Pardubice",
+  "skore": "2:3"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-05 15:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-05 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FK Jablonec",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 17,
+  "datum": "2021-12-05 18:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-11 15:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Baník Ostrava",
+  "skore": "0:3"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-11 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "1. FC Slovácko",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-11 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "MFK Karviná",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-11 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FC Slovan Liberec",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-12 15:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-12 15:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FK Teplice",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-12 15:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 18,
+  "datum": "2021-12-12 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "5:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-18 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-18 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FK Pardubice",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-18 15:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FK Jablonec",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-18 18:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "AC Sparta Praha",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-19 15:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-19 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FC Zlín",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-19 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 19,
+  "datum": "2021-12-19 18:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "SK Slavia Praha",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-05 15:00",
+  "domaci": "FK Jablonec",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-05 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-05 15:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "MFK Karviná",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-05 18:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "AC Sparta Praha",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-06 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FC Baník Ostrava",
+  "skore": "2:3"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-06 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-12 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-12 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FC Zlín",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-12 18:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FK Teplice",
+  "skore": "2:4"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-13 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FK Jablonec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-13 15:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "SK Slavia Praha",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-13 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-02-13 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-15 16:30",
+  "domaci": "FC Zlín",
+  "hoste": "FC Slovan Liberec",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-19 15:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Hradec Králové",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-19 15:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-19 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "1. FC Slovácko",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-19 18:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-20 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "MFK Karviná",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-20 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FC Slovan Liberec",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-02-20 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 20,
+  "datum": "2022-02-22 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "1. FC Slovácko",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-26 15:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FK Jablonec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-26 15:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-26 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FC Baník Ostrava",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-26 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FK Pardubice",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-27 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-27 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:5"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-27 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FK Teplice",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 23,
+  "datum": "2022-02-27 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Zlín",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-05 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-05 15:00",
+  "domaci": "FK Pardubice",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "3:3"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-05 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-05 18:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-06 15:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-06 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "1. FC Slovácko",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-06 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "MFK Karviná",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 24,
+  "datum": "2022-03-06 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "AC Sparta Praha",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 21,
+  "datum": "2022-03-09 16:30",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FK Pardubice",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 22,
+  "datum": "2022-03-09 18:30",
+  "domaci": "FK Jablonec",
+  "hoste": "AC Sparta Praha",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-12 15:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FC Zlín",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-12 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-12 15:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Baník Ostrava",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-12 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FK Teplice",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-13 15:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FK Jablonec",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-13 15:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-13 15:00",
+  "domaci": "MFK Karviná",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 25,
+  "datum": "2022-03-13 18:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FK Pardubice",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-19 15:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Pardubice",
+  "skore": "4:1"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-19 15:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "1. FC Slovácko",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-19 15:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "MFK Karviná",
+  "skore": "1:3"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-19 18:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-20 15:00",
+  "domaci": "FK Teplice",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-20 15:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "AC Sparta Praha",
+  "skore": "0:3"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-20 15:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FC Slovan Liberec",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 26,
+  "datum": "2022-03-20 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-02 17:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "FC Zlín",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-02 17:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "FK Teplice",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-02 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-02 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Baník Ostrava",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-03 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FK Jablonec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-03 17:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-03 17:00",
+  "domaci": "MFK Karviná",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 27,
+  "datum": "2022-04-03 20:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-09 17:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-09 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "MFK Karviná",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-09 17:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FC Slovan Liberec",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-09 20:00",
+  "domaci": "FK Teplice",
+  "hoste": "AC Sparta Praha",
+  "skore": "0:3"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-10 17:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FC Hradec Králové",
+  "skore": "0:0"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-10 17:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-10 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FC Zlín",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 28,
+  "datum": "2022-04-10 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FK Pardubice",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 17:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "1. FC Slovácko",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FK Jablonec",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Mladá Boleslav",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FK Teplice",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FC Baník Ostrava",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "SK Sigma Olomouc",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "SK Dynamo České Budějovice",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 29,
+  "datum": "2022-04-17 18:00",
+  "domaci": "FC Slovan Liberec",
+  "hoste": "MFK Karviná",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "SK Sigma Olomouc",
+  "hoste": "AC Sparta Praha",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "FK Mladá Boleslav",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "FK Teplice",
+  "hoste": "SK Dynamo České Budějovice",
+  "skore": "2:1"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FK Pardubice",
+  "skore": "3:2"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Zlín",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FK Jablonec",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 30,
+  "datum": "2022-04-20 19:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Slovan Liberec",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-23 18:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FC Zlín",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-23 18:00",
+  "domaci": "FK Teplice",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-23 18:00",
+  "domaci": "FK Jablonec",
+  "hoste": "FK Pardubice",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-23 20:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Baník Ostrava",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-24 17:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "1. FC Slovácko",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 1,
+  "datum": "2022-04-24 20:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "SK Slavia Praha",
+  "skore": "4:3"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-04-30 17:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Baník Ostrava",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-04-30 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "FC Hradec Králové",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-05-01 17:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "FK Pardubice",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-05-01 17:00",
+  "domaci": "FK Jablonec",
+  "hoste": "MFK Karviná",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-05-01 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Teplice",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 2,
+  "datum": "2022-05-01 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-07 17:00",
+  "domaci": "FK Teplice",
+  "hoste": "FK Jablonec",
+  "skore": "0:1"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-07 17:00",
+  "domaci": "FC Zlín",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:4"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-07 17:00",
+  "domaci": "FK Pardubice",
+  "hoste": "MFK Karviná",
+  "skore": "2:0"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-07 20:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "FC Hradec Králové",
+  "skore": "3:1"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-08 17:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "AC Sparta Praha",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 3,
+  "datum": "2022-05-08 20:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "1. FC Slovácko",
+  "skore": "3:0"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-10 20:00",
+  "domaci": "FK Pardubice",
+  "hoste": "FC Zlín",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-10 20:00",
+  "domaci": "MFK Karviná",
+  "hoste": "FK Teplice",
+  "skore": "2:2"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-10 20:00",
+  "domaci": "FK Jablonec",
+  "hoste": "Bohemians Praha 1905",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-11 19:00",
+  "domaci": "AC Sparta Praha",
+  "hoste": "1. FC Slovácko",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-11 20:00",
+  "domaci": "FC Baník Ostrava",
+  "hoste": "SK Slavia Praha",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 4,
+  "datum": "2022-05-11 20:00",
+  "domaci": "FC Hradec Králové",
+  "hoste": "FC Viktoria Plzeň",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-14 19:00",
+  "domaci": "FC Zlín",
+  "hoste": "FK Jablonec",
+  "skore": "1:1"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-14 19:00",
+  "domaci": "FK Teplice",
+  "hoste": "FK Pardubice",
+  "skore": "0:2"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-14 19:00",
+  "domaci": "Bohemians Praha 1905",
+  "hoste": "MFK Karviná",
+  "skore": "4:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-15 18:00",
+  "domaci": "SK Slavia Praha",
+  "hoste": "AC Sparta Praha",
+  "skore": "1:2"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-15 18:00",
+  "domaci": "FC Viktoria Plzeň",
+  "hoste": "FC Baník Ostrava",
+  "skore": "1:0"
+ },
+ {
+  "kolo": 5,
+  "datum": "2022-05-15 18:00",
+  "domaci": "1. FC Slovácko",
+  "hoste": "FC Hradec Králové",
+  "skore": "3:0"
+ }
+]

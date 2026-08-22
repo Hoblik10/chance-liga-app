@@ -6,9 +6,11 @@ Spuštění:  python test_modely.py
 import os
 import tempfile
 import unittest
+from datetime import datetime
 
 import data
 import hlaseni
+import kurzy
 import modely
 import zaznamy
 
@@ -273,6 +275,55 @@ class TestJistota(unittest.TestCase):
     def test_nejpravdepodobnejsi_skore_neznamy_tym(self):
         self.assertIsNone(modely.nejpravdepodobnejsi_skore({}, 1.5, 1.2, "A", "B"))
 
+    def test_prehled_skore_soucty(self):
+        databaze = {
+            1: [zapas("A", "B", "3:0"), zapas("C", "A", "0:2"), zapas("B", "C", "2:1")],
+            2: [zapas("A", "C", "4:0"), zapas("B", "A", "1:1"), zapas("C", "B", "0:0")],
+        }
+        sily, prumer_d, prumer_h = modely.spocitej_utok_obranu(databaze)
+        prehled = modely.prehled_skore(sily, prumer_d, prumer_h, "A", "C")
+
+        self.assertIsNotNone(prehled)
+        self.assertEqual(len(prehled["nejcastejsi"]), 5)
+        self.assertGreater(prehled["over"][1.5], prehled["over"][2.5])
+        self.assertGreater(prehled["over"][2.5], prehled["over"][3.5])
+        self.assertTrue(0 < prehled["obe_skoruji"] < 1)
+        self.assertAlmostEqual(
+            prehled["nejcastejsi"][0][1],
+            modely.nejpravdepodobnejsi_skore(sily, prumer_d, prumer_h, "A", "C")[1],
+            places=6,
+        )
+
+    def test_matice_skore_da_jednicku(self):
+        databaze = {1: [zapas("A", "B", "2:1")]}
+        sily, prumer_d, prumer_h = modely.spocitej_utok_obranu(databaze)
+        matice = modely.matice_skore(sily, prumer_d, prumer_h, "A", "B")
+
+        self.assertAlmostEqual(sum(p for _, p in matice["skore"]), 1.0, places=6)
+        self.assertAlmostEqual(
+            matice["p_domaci"] + matice["p_remiza"] + matice["p_hoste"], 1.0, places=6
+        )
+
+
+class TestEloRozdilSkore(unittest.TestCase):
+    def test_nasobitel_roste_s_rozdilem(self):
+        self.assertEqual(modely.nasobitel_rozdilu(1), 1.0)
+        self.assertEqual(modely.nasobitel_rozdilu(0), 1.0)
+        self.assertEqual(modely.nasobitel_rozdilu(2), 1.5)
+        self.assertGreater(modely.nasobitel_rozdilu(4), modely.nasobitel_rozdilu(2))
+
+    def test_velka_vyhra_pohne_ratingem_vic(self):
+        tesna = {1: [zapas("A", "B", "1:0", datum="2026-08-01 17:00")]}
+        jasna = {1: [zapas("A", "B", "5:0", datum="2026-08-01 17:00")]}
+
+        self.assertGreater(
+            modely.spocitej_elo(jasna)["A"], modely.spocitej_elo(tesna)["A"]
+        )
+        self.assertEqual(
+            modely.spocitej_elo(tesna, vazit_rozdilem=False)["A"],
+            modely.spocitej_elo(jasna, vazit_rozdilem=False)["A"],
+        )
+
 
 class TestPredikujVsemi(unittest.TestCase):
     def setUp(self):
@@ -300,6 +351,8 @@ class TestPredikujVsemi(unittest.TestCase):
         )
         self.assertGreater(vysledek["jistota"], 1 / 3)
         self.assertIsNotNone(vysledek["nejcastejsi_skore"])
+        self.assertIsNotNone(vysledek["prehled_skore"])
+        self.assertEqual(len(vysledek["prehled_skore"]["nejcastejsi"]), modely.POCET_SKORE)
 
     def test_chybejici_tym_v_jednom_modelu_nespadne(self):
         vysledek = modely.predikuj_vsemi(self.sily, "A", "Neznámý")
@@ -505,6 +558,13 @@ class TestHlaseni(unittest.TestCase):
         # Odehraný zápas do zprávy nepatří, i kdyby měl vyšší jistotu.
         self.assertNotIn("E – F", zprava)
 
+    def test_text_top_skore(self):
+        self.assertEqual(hlaseni.text_top_skore([]), "–")
+        self.assertEqual(
+            hlaseni.text_top_skore([((2, 1), 0.12), ((1, 1), 0.11)], pocet=2),
+            "2:1 (12%) · 1:1 (11%)",
+        )
+
     def test_zprava_vynecha_odlozeny_zapas(self):
         zapasy = self.zapasy + [
             zapas("FC Hradec Králové", "FC Viktoria Plzeň", stav="🔴 Odloženo")
@@ -665,6 +725,226 @@ class TestCasVPraze(unittest.TestCase):
             "stav": "🕒 Nadcházející",
         }
         self.assertFalse(data._je_odklad_bez_terminu(zapas))
+
+
+class TestChronologie(unittest.TestCase):
+    def test_cas_zapasu_zvlada_oba_tvary(self):
+        self.assertEqual(
+            modely.cas_zapasu({"datum": "15.08.2026 17:00"}),
+            datetime(2026, 8, 15, 17, 0),
+        )
+        self.assertEqual(
+            modely.cas_zapasu({"datum": "2026-08-15 17:00"}),
+            datetime(2026, 8, 15, 17, 0),
+        )
+
+    def test_razeni_nejde_podle_retezce(self):
+        """Textově by '05.09.' předběhlo '30.08.', chronologicky ne."""
+        databaze = {
+            1: [zapas("A", "B", "1:0", datum="30.08.2026 17:00")],
+            2: [zapas("C", "D", "2:0", datum="05.09.2026 17:00")],
+        }
+        poradi = [z["domaci"] for z in modely.odehrane_zapasy(databaze)]
+        self.assertEqual(poradi, ["A", "C"])
+
+
+class TestUtlumHistorie(unittest.TestCase):
+    def test_starsi_zapasy_vazi_min(self):
+        """A i B daly čtyři góly, ale A nedávno – útlum musí A upřednostnit."""
+        databaze = {
+            1: [
+                zapas("A", "X", "0:0", datum="2024-08-01 17:00"),
+                zapas("B", "X", "4:0", datum="2024-08-01 17:00"),
+            ],
+            2: [
+                zapas("A", "Y", "4:0", datum="2026-08-01 17:00"),
+                zapas("B", "Y", "0:0", datum="2026-08-01 17:00"),
+            ],
+        }
+
+        s_utlumem, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=180.0)
+        bez_utlumu, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=None)
+
+        self.assertGreater(s_utlumem["A"]["utok"], s_utlumem["B"]["utok"])
+        self.assertAlmostEqual(
+            bez_utlumu["A"]["utok"], bez_utlumu["B"]["utok"], places=6
+        )
+
+    def test_bez_polocasu_vazi_vsechno_stejne(self):
+        databaze = {
+            1: [zapas("A", "B", "2:0", datum="2024-08-01 17:00")],
+            2: [zapas("B", "A", "2:0", datum="2026-08-01 17:00")],
+        }
+        sily, _, _ = modely.spocitej_utok_obranu(databaze, polocas_dnu=None)
+        self.assertAlmostEqual(sily["A"]["utok"], sily["B"]["utok"], places=6)
+
+
+class TestPrenosElo(unittest.TestCase):
+    def test_leto_stahne_rating_k_prumeru(self):
+        stara_sezona = {
+            1: [zapas("A", "B", "3:0", datum="2025-04-01 17:00")],
+        }
+        s_novou = {
+            **stara_sezona,
+            2: [zapas("C", "D", "1:1", datum="2025-07-20 17:00")],
+        }
+
+        pred_letem = modely.spocitej_elo(stara_sezona)["A"]
+        po_lete = modely.spocitej_elo(s_novou)["A"]
+
+        self.assertLess(po_lete, pred_letem)
+        self.assertGreater(po_lete, modely.VYCHOZI_ELO)
+
+    def test_zimni_pauza_rating_nestahuje(self):
+        databaze = {
+            1: [zapas("A", "B", "3:0", datum="2025-12-10 17:00")],
+            2: [zapas("C", "D", "1:1", datum="2026-02-10 17:00")],
+        }
+        jen_prvni = {1: databaze[1]}
+
+        self.assertEqual(
+            modely.spocitej_elo(databaze)["A"], modely.spocitej_elo(jen_prvni)["A"]
+        )
+
+
+class TestTipy(unittest.TestCase):
+    def test_dvojita_sance_vynecha_nejmene_pravdepodobne(self):
+        self.assertEqual(modely.dvojita_sance(0.5, 0.3, 0.2), modely.POPISY_TIPU["1X"])
+        self.assertEqual(modely.dvojita_sance(0.2, 0.3, 0.5), modely.POPISY_TIPU["02"])
+        self.assertEqual(modely.dvojita_sance(0.45, 0.1, 0.45), modely.POPISY_TIPU["12"])
+
+    def test_cil_uspesnost_tipuje_vzdy_dvojitou_sanci(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.8, 0.15, 0.05, cil=modely.CIL_USPESNOST
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1X"])
+
+    def test_cil_informace_rekne_viteze(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.8, 0.15, 0.05, cil=modely.CIL_INFORMACE
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1"])
+
+    def test_cil_informace_pod_prahem_couvne(self):
+        tip = modely.tip_z_pravdepodobnosti(
+            0.4, 0.35, 0.25, cil=modely.CIL_INFORMACE
+        )
+        self.assertEqual(tip, modely.POPISY_TIPU["1X"])
+
+    def test_vyhodnoceni_tipu_bez_remizy(self):
+        self.assertIs(modely.vyhodnot_tip(modely.POPISY_TIPU["12"], "2:1"), True)
+        self.assertIs(modely.vyhodnot_tip(modely.POPISY_TIPU["12"], "1:1"), False)
+
+
+class TestKalibrace(unittest.TestCase):
+    def test_zplosteni_snizi_jistotu(self):
+        trojice = modely.kalibruj(0.7, 0.2, 0.1, sila=0.5)
+        self.assertAlmostEqual(sum(trojice), 1.0, places=6)
+        self.assertLess(trojice[0], 0.7)
+
+    def test_vyostreni_zvysi_jistotu(self):
+        trojice = modely.kalibruj(0.7, 0.2, 0.1, sila=1.5)
+        self.assertGreater(trojice[0], 0.7)
+
+    def test_poradi_zustava(self):
+        trojice = modely.kalibruj(0.5, 0.3, 0.2, sila=0.4)
+        self.assertEqual(list(trojice), sorted(trojice, reverse=True))
+
+    def test_sila_jedna_nemeni_nic(self):
+        self.assertEqual(modely.kalibruj(0.5, 0.3, 0.2, sila=1.0), (0.5, 0.3, 0.2))
+
+    def test_spolehlivost_porovna_slib_se_skutecnosti(self):
+        zaznamy_pasma = [
+            {"p_domaci": 0.7, "p_remiza": 0.2, "p_hoste": 0.1, "vysledek": "1"},
+            {"p_domaci": 0.7, "p_remiza": 0.2, "p_hoste": 0.1, "vysledek": "2"},
+        ]
+        pasma = modely.spolehlivost(zaznamy_pasma)
+
+        self.assertEqual(len(pasma), 1)
+        self.assertEqual(pasma[0]["zapasu"], 2)
+        self.assertAlmostEqual(pasma[0]["slibeno"], 0.7)
+        self.assertAlmostEqual(pasma[0]["skutecnost"], 0.5)
+
+
+class TestKurzy(unittest.TestCase):
+    def test_marze_vyjde_z_prehnane_knihy(self):
+        # Férová kniha 2.0 / 4.0 / 4.0 dá přesně jedničku.
+        self.assertAlmostEqual(kurzy.marze(2.0, 4.0, 4.0), 0.0, places=6)
+        self.assertGreater(kurzy.marze(1.9, 3.6, 3.8), 0.0)
+
+    def test_ocisteni_marze_da_jednicku(self):
+        trzni = kurzy.ocisti_marzi(1.9, 3.6, 3.8)
+        self.assertAlmostEqual(sum(trzni), 1.0, places=6)
+        self.assertGreater(trzni[0], trzni[1])
+
+    def test_hodnota_je_nulova_pri_ferovem_kurzu(self):
+        """Kurz přesně podle modelu nesmí vypadat jako příležitost."""
+        self.assertAlmostEqual(kurzy.hodnota_sazky(0.5, 2.0), 0.0, places=6)
+        self.assertAlmostEqual(kurzy.hodnota_sazky(0.5, 2.2), 0.1, places=6)
+        self.assertLess(kurzy.hodnota_sazky(0.5, 1.8), 0.0)
+
+    def test_kelly_neroste_do_zaporu(self):
+        self.assertEqual(kurzy.kelly(0.3, 2.0), 0.0)
+        self.assertGreater(kurzy.kelly(0.6, 2.0), 0.0)
+
+    def test_kelly_je_zlomkovy(self):
+        plny = kurzy.kelly(0.6, 2.0, podil=1.0)
+        ctvrtinovy = kurzy.kelly(0.6, 2.0, podil=0.25)
+        self.assertAlmostEqual(ctvrtinovy, plny * 0.25, places=6)
+
+    def test_nejlepsi_hodnota_respektuje_prah(self):
+        model = (0.55, 0.25, 0.20)
+
+        self.assertIsNone(kurzy.nejlepsi_hodnota(model, (1.80, 3.60, 4.50)))
+
+        nalezena = kurzy.nejlepsi_hodnota(model, (2.10, 3.60, 4.50))
+        self.assertEqual(nalezena["vysledek"], "1")
+        self.assertGreater(nalezena["hodnota"], kurzy.MIN_HODNOTA)
+
+    def test_rozdil_od_trhu(self):
+        shodny = kurzy.ocisti_marzi(2.0, 4.0, 4.0)
+        self.assertAlmostEqual(kurzy.rozdil_od_trhu(shodny, (2.0, 4.0, 4.0)), 0.0, places=6)
+        self.assertGreater(kurzy.rozdil_od_trhu((0.8, 0.1, 0.1), (2.0, 4.0, 4.0)), 0.0)
+
+    def test_neplatne_kurzy(self):
+        for kurz in (None, "", 0.5, 1.0, 200.0, "abc"):
+            self.assertFalse(kurzy.platny_kurz(kurz))
+        for kurz in (1.01, 2.5, "3.2", 99.0):
+            self.assertTrue(kurzy.platny_kurz(kurz))
+
+
+class TestUlozeneKurzy(unittest.TestCase):
+    def setUp(self):
+        self.docasny = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
+        self.docasny.close()
+        os.unlink(self.docasny.name)
+        self.cesta = self.docasny.name
+
+    def tearDown(self):
+        if os.path.exists(self.cesta):
+            os.unlink(self.cesta)
+
+    def test_chybejici_soubor_nevadi(self):
+        self.assertEqual(kurzy.nacti_kurzy(self.cesta), {})
+
+    def test_zapis_a_nacteni(self):
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 3.7, 4.2), cesta=self.cesta)
+        ulozene = kurzy.nacti_kurzy(self.cesta)
+
+        self.assertEqual(ulozene[(5, "Slavia", "Sparta")], (1.8, 3.7, 4.2))
+
+    def test_kurz_se_prepisuje(self):
+        """Kurzy se hýbou až do výkopu, platí ten poslední."""
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 3.7, 4.2), cesta=self.cesta)
+        kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.7, 3.8, 4.5), cesta=self.cesta)
+
+        ulozene = kurzy.nacti_kurzy(self.cesta)
+        self.assertEqual(len(ulozene), 1)
+        self.assertEqual(ulozene[(5, "Slavia", "Sparta")], (1.7, 3.8, 4.5))
+
+    def test_neplatny_kurz_se_neulozi(self):
+        with self.assertRaises(ValueError):
+            kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 0.5, 4.2), cesta=self.cesta)
 
 
 if __name__ == "__main__":
