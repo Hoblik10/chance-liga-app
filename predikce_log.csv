@@ -15,34 +15,34 @@ klic,zapsano,kolo,datum,domaci,hoste,model,p_domaci,p_remiza,p_hoste,tip,skore,v
 4|Bohemians Praha 1905|FK Jablonec|poisson,2026-08-16 16:17:31,4,2026-09-02 18:00,Bohemians Praha 1905,FK Jablonec,poisson,0.249555,0.312893,0.437552,02 (Neprohra hostů),,
 4|Bohemians Praha 1905|FK Jablonec|elo,2026-08-16 16:17:31,4,2026-09-02 18:00,Bohemians Praha 1905,FK Jablonec,elo,0.386291,0.297725,0.315984,1X (Neprohra domácích),,
 4|Bohemians Praha 1905|FK Jablonec|ensemble,2026-08-16 16:17:31,4,2026-09-02 18:00,Bohemians Praha 1905,FK Jablonec,ensemble,0.276095,0.263135,0.46077,02 (Neprohra hostů),,
-5|FC Zlín|FC Slovan Liberec|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,index_sily,0.133254,0.106031,0.760715,2 (Výhra hostů),,
-5|FC Zlín|FC Slovan Liberec|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,poisson,0.188435,0.266143,0.545422,02 (Neprohra hostů),,
-5|FC Zlín|FC Slovan Liberec|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,elo,0.359245,0.299845,0.340911,1X (Neprohra domácích),,
-5|FC Zlín|FC Slovan Liberec|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,ensemble,0.226978,0.224006,0.549016,02 (Neprohra hostů),,
-5|FK Mladá Boleslav|1. FC Slovácko|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,index_sily,0.903595,0.030905,0.0655,1 (Výhra domácích),,
-5|FK Mladá Boleslav|1. FC Slovácko|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,poisson,0.676186,0.194293,0.129521,1 (Výhra domácích),,
-5|FK Mladá Boleslav|1. FC Slovácko|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,elo,0.471287,0.278226,0.250487,1X (Neprohra domácích),,
-5|FK Mladá Boleslav|1. FC Slovácko|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,ensemble,0.683689,0.167808,0.148503,1 (Výhra domácích),,
-5|SK Artis Brno|AC Sparta Praha|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,index_sily,0.25991,0.2452,0.49489,02 (Neprohra hostů),,
-5|SK Artis Brno|AC Sparta Praha|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,poisson,0.297942,0.232263,0.469795,02 (Neprohra hostů),,
-5|SK Artis Brno|AC Sparta Praha|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,elo,0.388977,0.297389,0.313634,1X (Neprohra domácích),,
-5|SK Artis Brno|AC Sparta Praha|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,ensemble,0.315609,0.258284,0.426107,02 (Neprohra hostů),,
-5|SK Slavia Praha|Bohemians Praha 1905|index_sily,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,index_sily,0.863909,0.050567,0.085524,1 (Výhra domácích),,
-5|SK Slavia Praha|Bohemians Praha 1905|poisson,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,poisson,0.639523,0.215917,0.14456,1 (Výhra domácích),,
-5|SK Slavia Praha|Bohemians Praha 1905|elo,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,elo,0.442633,0.286632,0.270735,1X (Neprohra domácích),,
-5|SK Slavia Praha|Bohemians Praha 1905|ensemble,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,ensemble,0.648689,0.184372,0.16694,1 (Výhra domácích),,
+5|FC Zlín|FC Slovan Liberec|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,index_sily,0.133254,0.106031,0.760715,2 (Výhra hostů),0:1,2
+5|FC Zlín|FC Slovan Liberec|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,poisson,0.188435,0.266143,0.545422,02 (Neprohra hostů),0:1,2
+5|FC Zlín|FC Slovan Liberec|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,elo,0.359245,0.299845,0.340911,1X (Neprohra domácích),0:1,2
+5|FC Zlín|FC Slovan Liberec|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,FC Zlín,FC Slovan Liberec,ensemble,0.226978,0.224006,0.549016,02 (Neprohra hostů),0:1,2
+5|FK Mladá Boleslav|1. FC Slovácko|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,index_sily,0.903595,0.030905,0.0655,1 (Výhra domácích),2:1,1
+5|FK Mladá Boleslav|1. FC Slovácko|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,poisson,0.676186,0.194293,0.129521,1 (Výhra domácích),2:1,1
+5|FK Mladá Boleslav|1. FC Slovácko|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,elo,0.471287,0.278226,0.250487,1X (Neprohra domácích),2:1,1
+5|FK Mladá Boleslav|1. FC Slovácko|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,FK Mladá Boleslav,1. FC Slovácko,ensemble,0.683689,0.167808,0.148503,1 (Výhra domácích),2:1,1
+5|SK Artis Brno|AC Sparta Praha|index_sily,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,index_sily,0.25991,0.2452,0.49489,02 (Neprohra hostů),0:4,2
+5|SK Artis Brno|AC Sparta Praha|poisson,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,poisson,0.297942,0.232263,0.469795,02 (Neprohra hostů),0:4,2
+5|SK Artis Brno|AC Sparta Praha|elo,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,elo,0.388977,0.297389,0.313634,1X (Neprohra domácích),0:4,2
+5|SK Artis Brno|AC Sparta Praha|ensemble,2026-08-16 16:17:31,5,2026-08-22 15:00,SK Artis Brno,AC Sparta Praha,ensemble,0.315609,0.258284,0.426107,02 (Neprohra hostů),0:4,2
+5|SK Slavia Praha|Bohemians Praha 1905|index_sily,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,index_sily,0.863909,0.050567,0.085524,1 (Výhra domácích),2:2,0
+5|SK Slavia Praha|Bohemians Praha 1905|poisson,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,poisson,0.639523,0.215917,0.14456,1 (Výhra domácích),2:2,0
+5|SK Slavia Praha|Bohemians Praha 1905|elo,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,elo,0.442633,0.286632,0.270735,1X (Neprohra domácích),2:2,0
+5|SK Slavia Praha|Bohemians Praha 1905|ensemble,2026-08-16 16:17:31,5,2026-08-22 18:00,SK Slavia Praha,Bohemians Praha 1905,ensemble,0.648689,0.184372,0.16694,1 (Výhra domácích),2:2,0
 5|FK Jablonec|FC Baník Ostrava|index_sily,2026-08-16 16:17:31,5,2026-08-23 13:00,FK Jablonec,FC Baník Ostrava,index_sily,0.729938,0.123083,0.146979,1 (Výhra domácích),,
 5|FK Jablonec|FC Baník Ostrava|poisson,2026-08-16 16:17:31,5,2026-08-23 13:00,FK Jablonec,FC Baník Ostrava,poisson,0.627913,0.240088,0.131999,1 (Výhra domácích),,
 5|FK Jablonec|FC Baník Ostrava|elo,2026-08-16 16:17:31,5,2026-08-23 13:00,FK Jablonec,FC Baník Ostrava,elo,0.453924,0.283513,0.262563,1X (Neprohra domácích),,
 5|FK Jablonec|FC Baník Ostrava|ensemble,2026-08-16 16:17:31,5,2026-08-23 13:00,FK Jablonec,FC Baník Ostrava,ensemble,0.603925,0.215561,0.180514,1 (Výhra domácích),,
-5|FK Teplice|FC Zbrojovka Brno|index_sily,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,index_sily,0.447369,0.263451,0.28918,1X (Neprohra domácích),,
-5|FK Teplice|FC Zbrojovka Brno|poisson,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,poisson,0.375712,0.23992,0.384368,02 (Neprohra hostů),,
-5|FK Teplice|FC Zbrojovka Brno|elo,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,elo,0.426135,0.290695,0.28317,1X (Neprohra domácích),,
-5|FK Teplice|FC Zbrojovka Brno|ensemble,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,ensemble,0.416405,0.264689,0.318906,1X (Neprohra domácích),,
-5|SK Sigma Olomouc|FK Pardubice|index_sily,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,index_sily,0.809009,0.079589,0.111402,1 (Výhra domácích),,
-5|SK Sigma Olomouc|FK Pardubice|poisson,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,poisson,0.534462,0.254397,0.211141,1X (Neprohra domácích),,
-5|SK Sigma Olomouc|FK Pardubice|elo,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,elo,0.460269,0.281647,0.258084,1X (Neprohra domácích),,
-5|SK Sigma Olomouc|FK Pardubice|ensemble,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,ensemble,0.601247,0.205211,0.193542,1 (Výhra domácích),,
+5|FK Teplice|FC Zbrojovka Brno|index_sily,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,index_sily,0.447369,0.263451,0.28918,1X (Neprohra domácích),0:2,2
+5|FK Teplice|FC Zbrojovka Brno|poisson,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,poisson,0.375712,0.23992,0.384368,02 (Neprohra hostů),0:2,2
+5|FK Teplice|FC Zbrojovka Brno|elo,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,elo,0.426135,0.290695,0.28317,1X (Neprohra domácích),0:2,2
+5|FK Teplice|FC Zbrojovka Brno|ensemble,2026-08-16 16:17:31,5,2026-08-23 15:00,FK Teplice,FC Zbrojovka Brno,ensemble,0.416405,0.264689,0.318906,1X (Neprohra domácích),0:2,2
+5|SK Sigma Olomouc|FK Pardubice|index_sily,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,index_sily,0.809009,0.079589,0.111402,1 (Výhra domácích),3:1,1
+5|SK Sigma Olomouc|FK Pardubice|poisson,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,poisson,0.534462,0.254397,0.211141,1X (Neprohra domácích),3:1,1
+5|SK Sigma Olomouc|FK Pardubice|elo,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,elo,0.460269,0.281647,0.258084,1X (Neprohra domácích),3:1,1
+5|SK Sigma Olomouc|FK Pardubice|ensemble,2026-08-16 16:17:31,5,2026-08-23 18:00,SK Sigma Olomouc,FK Pardubice,ensemble,0.601247,0.205211,0.193542,1 (Výhra domácích),3:1,1
 5|FC Hradec Králové|FC Viktoria Plzeň|index_sily,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,index_sily,0.717222,0.130143,0.152635,1 (Výhra domácích),,
 5|FC Hradec Králové|FC Viktoria Plzeň|poisson,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,poisson,0.551123,0.295021,0.153855,1 (Výhra domácích),,
 5|FC Hradec Králové|FC Viktoria Plzeň|elo,2026-08-16 21:59:14,5,2026-08-23 17:00,FC Hradec Králové,FC Viktoria Plzeň,elo,0.445066,0.285983,0.268952,1X (Neprohra domácích),,
@@ -79,3 +79,35 @@ klic,zapsano,kolo,datum,domaci,hoste,model,p_domaci,p_remiza,p_hoste,tip,skore,v
 6|AC Sparta Praha|SK Slavia Praha|poisson,2026-08-17 10:08:16,6,30.08.2026 20:00,AC Sparta Praha,SK Slavia Praha,poisson,0.215756,0.216378,0.567866,2 (Výhra hostů),,
 6|AC Sparta Praha|SK Slavia Praha|elo,2026-08-17 10:08:16,6,30.08.2026 20:00,AC Sparta Praha,SK Slavia Praha,elo,0.383084,0.298098,0.318818,1X (Neprohra domácích),,
 6|AC Sparta Praha|SK Slavia Praha|ensemble,2026-08-17 10:08:16,6,30.08.2026 20:00,AC Sparta Praha,SK Slavia Praha,ensemble,0.267205,0.235055,0.497741,02 (Neprohra hostů),,
+7|SK Slavia Praha|FC Zbrojovka Brno|index_sily,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Slavia Praha,FC Zbrojovka Brno,index_sily,0.646953,0.168923,0.184124,1 (Výhra domácích),,
+7|SK Slavia Praha|FC Zbrojovka Brno|poisson,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Slavia Praha,FC Zbrojovka Brno,poisson,0.469668,0.267763,0.26257,1X (Neprohra domácích),,
+7|SK Slavia Praha|FC Zbrojovka Brno|elo,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Slavia Praha,FC Zbrojovka Brno,elo,0.431027,0.289555,0.279418,1X (Neprohra domácích),,
+7|SK Slavia Praha|FC Zbrojovka Brno|ensemble,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Slavia Praha,FC Zbrojovka Brno,ensemble,0.515883,0.24208,0.242037,1X (Neprohra domácích),,
+7|SK Sigma Olomouc|Bohemians Praha 1905|index_sily,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Sigma Olomouc,Bohemians Praha 1905,index_sily,0.6398,0.172817,0.187383,1 (Výhra domácích),,
+7|SK Sigma Olomouc|Bohemians Praha 1905|poisson,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Sigma Olomouc,Bohemians Praha 1905,poisson,0.438118,0.268555,0.293328,1X (Neprohra domácích),,
+7|SK Sigma Olomouc|Bohemians Praha 1905|elo,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Sigma Olomouc,Bohemians Praha 1905,elo,0.432741,0.289142,0.278117,1X (Neprohra domácích),,
+7|SK Sigma Olomouc|Bohemians Praha 1905|ensemble,2026-08-24 10:26:50,7,05.09.2026 15:00,SK Sigma Olomouc,Bohemians Praha 1905,ensemble,0.503553,0.243505,0.252943,1X (Neprohra domácích),,
+7|1. FC Slovácko|FK Pardubice|index_sily,2026-08-24 10:26:50,7,05.09.2026 15:00,1. FC Slovácko,FK Pardubice,index_sily,0.392643,0.277311,0.330047,1X (Neprohra domácích),,
+7|1. FC Slovácko|FK Pardubice|poisson,2026-08-24 10:26:50,7,05.09.2026 15:00,1. FC Slovácko,FK Pardubice,poisson,0.343591,0.286626,0.369783,02 (Neprohra hostů),,
+7|1. FC Slovácko|FK Pardubice|elo,2026-08-24 10:26:50,7,05.09.2026 15:00,1. FC Slovácko,FK Pardubice,elo,0.413199,0.293435,0.293366,1X (Neprohra domácích),,
+7|1. FC Slovácko|FK Pardubice|ensemble,2026-08-24 10:26:50,7,05.09.2026 15:00,1. FC Slovácko,FK Pardubice,ensemble,0.383144,0.28579,0.331065,1X (Neprohra domácích),,
+7|SK Artis Brno|FC Viktoria Plzeň|index_sily,2026-08-24 10:26:50,7,05.09.2026 18:00,SK Artis Brno,FC Viktoria Plzeň,index_sily,0.190861,0.176935,0.632204,2 (Výhra hostů),,
+7|SK Artis Brno|FC Viktoria Plzeň|poisson,2026-08-24 10:26:50,7,05.09.2026 18:00,SK Artis Brno,FC Viktoria Plzeň,poisson,0.214134,0.195103,0.590763,2 (Výhra hostů),,
+7|SK Artis Brno|FC Viktoria Plzeň|elo,2026-08-24 10:26:50,7,05.09.2026 18:00,SK Artis Brno,FC Viktoria Plzeň,elo,0.373769,0.299001,0.32723,1X (Neprohra domácích),,
+7|SK Artis Brno|FC Viktoria Plzeň|ensemble,2026-08-24 10:26:50,7,05.09.2026 18:00,SK Artis Brno,FC Viktoria Plzeň,ensemble,0.259588,0.22368,0.516732,02 (Neprohra hostů),,
+7|FK Mladá Boleslav|FC Baník Ostrava|index_sily,2026-08-24 10:26:50,7,06.09.2026 13:00,FK Mladá Boleslav,FC Baník Ostrava,index_sily,0.71412,0.131865,0.154015,1 (Výhra domácích),,
+7|FK Mladá Boleslav|FC Baník Ostrava|poisson,2026-08-24 10:26:50,7,06.09.2026 13:00,FK Mladá Boleslav,FC Baník Ostrava,poisson,0.572166,0.24625,0.181584,1 (Výhra domácích),,
+7|FK Mladá Boleslav|FC Baník Ostrava|elo,2026-08-24 10:26:50,7,06.09.2026 13:00,FK Mladá Boleslav,FC Baník Ostrava,elo,0.446227,0.285668,0.268105,1X (Neprohra domácích),,
+7|FK Mladá Boleslav|FC Baník Ostrava|ensemble,2026-08-24 10:26:50,7,06.09.2026 13:00,FK Mladá Boleslav,FC Baník Ostrava,ensemble,0.577504,0.221261,0.201235,1 (Výhra domácích),,
+7|FC Zlín|FK Teplice|index_sily,2026-08-24 10:26:50,7,06.09.2026 15:00,FC Zlín,FK Teplice,index_sily,0.164352,0.144737,0.690911,2 (Výhra hostů),,
+7|FC Zlín|FK Teplice|poisson,2026-08-24 10:26:50,7,06.09.2026 15:00,FC Zlín,FK Teplice,poisson,0.235221,0.23338,0.531399,02 (Neprohra hostů),,
+7|FC Zlín|FK Teplice|elo,2026-08-24 10:26:50,7,06.09.2026 15:00,FC Zlín,FK Teplice,elo,0.363357,0.299678,0.336964,1X (Neprohra domácích),,
+7|FC Zlín|FK Teplice|ensemble,2026-08-24 10:26:50,7,06.09.2026 15:00,FC Zlín,FK Teplice,ensemble,0.25431,0.225932,0.519758,02 (Neprohra hostů),,
+7|FK Jablonec|FC Slovan Liberec|index_sily,2026-08-24 10:26:50,7,06.09.2026 15:00,FK Jablonec,FC Slovan Liberec,index_sily,0.644211,0.170417,0.185371,1 (Výhra domácích),,
+7|FK Jablonec|FC Slovan Liberec|poisson,2026-08-24 10:26:50,7,06.09.2026 15:00,FK Jablonec,FC Slovan Liberec,poisson,0.374119,0.343513,0.282368,1X (Neprohra domácích),,
+7|FK Jablonec|FC Slovan Liberec|elo,2026-08-24 10:26:50,7,06.09.2026 15:00,FK Jablonec,FC Slovan Liberec,elo,0.420709,0.291894,0.287397,1X (Neprohra domácích),,
+7|FK Jablonec|FC Slovan Liberec|ensemble,2026-08-24 10:26:50,7,06.09.2026 15:00,FK Jablonec,FC Slovan Liberec,ensemble,0.47968,0.268608,0.251712,1X (Neprohra domácích),,
+7|FC Hradec Králové|AC Sparta Praha|index_sily,2026-08-24 10:26:50,7,06.09.2026 18:00,FC Hradec Králové,AC Sparta Praha,index_sily,0.497577,0.244047,0.258376,1X (Neprohra domácích),,
+7|FC Hradec Králové|AC Sparta Praha|poisson,2026-08-24 10:26:50,7,06.09.2026 18:00,FC Hradec Králové,AC Sparta Praha,poisson,0.335198,0.274711,0.390091,02 (Neprohra hostů),,
+7|FC Hradec Králové|AC Sparta Praha|elo,2026-08-24 10:26:50,7,06.09.2026 18:00,FC Hradec Králové,AC Sparta Praha,elo,0.421272,0.291773,0.286954,1X (Neprohra domácích),,
+7|FC Hradec Králové|AC Sparta Praha|ensemble,2026-08-24 10:26:50,7,06.09.2026 18:00,FC Hradec Králové,AC Sparta Praha,ensemble,0.418016,0.270177,0.311807,1X (Neprohra domácích),,
