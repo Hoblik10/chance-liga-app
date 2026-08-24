@@ -1,12 +1,13 @@
-# Pondělní hlášení s tipy na další kolo.
+# Páteční hlášení s tipy na víkendové kolo.
 # Čas je v UTC: 06:00 UTC = 08:00 v Česku v létě, 07:00 v zimě.
+# Pátek ráno je blíž výkopu než pondělí – stihnou se zranění i čtvrteční poháry.
 # Úloha se spouští na strojích GitHubu, tvůj počítač u toho nemusí běžet.
 
-name: Pondělní tipy na Telegram
+name: Páteční tipy na Telegram
 
 on:
   schedule:
-    - cron: "0 6 * * 1"
+    - cron: "0 6 * * 5"
   workflow_dispatch:
 
 permissions:

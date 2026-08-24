@@ -14,7 +14,7 @@ import zaznamy
 
 VYCHOZI_ZRANENI = list(modely.POKUTA_ZRANENI)[0]
 
-# Pondělní hlášení pokrývá nadcházející víkend, ne zápasy za tři týdny.
+# Páteční hlášení pokrývá nadcházející víkend, ne zápasy za tři týdny.
 HORIZONT_DNU = 8
 
 
