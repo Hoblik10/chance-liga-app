@@ -160,32 +160,51 @@ def doplnit_vysledky(databaze_kol, cesta=SOUBOR_ZAZNAMU):
     return doplneno
 
 
-def metriky_podle_modelu(cesta=SOUBOR_ZAZNAMU):
-    """Přesnost jednotlivých modelů nad vyhodnocenými predikcemi."""
+def _zaznamy_z_radku(skupina):
+    """Řádky logu ve tvaru, který čekají funkce v ``modely``."""
+    return [
+        {
+            "p_domaci": float(radek["p_domaci"]),
+            "p_remiza": float(radek["p_remiza"]),
+            "p_hoste": float(radek["p_hoste"]),
+            "vysledek": str(radek["vysledek"]),
+            "tip": radek["tip"],
+            "skore": radek["skore"],
+        }
+        for _, radek in skupina.iterrows()
+    ]
+
+
+def _vyhodnocene(cesta):
+    """Zápisy, u kterých už je známý výsledek."""
     df = nacti_zaznamy(cesta)
     if df.empty:
-        return {}
+        return df
 
-    vyhodnocene = df[df["vysledek"].isin(["1", "0", "2"])]
+    return df[df["vysledek"].isin(["1", "0", "2"])]
+
+
+def metriky_podle_modelu(cesta=SOUBOR_ZAZNAMU):
+    """Přesnost jednotlivých modelů nad vyhodnocenými predikcemi."""
+    vyhodnocene = _vyhodnocene(cesta)
     if vyhodnocene.empty:
         return {}
 
-    metriky = {}
-    for nazev_modelu, skupina in vyhodnocene.groupby("model"):
-        zaznamy = [
-            {
-                "p_domaci": float(radek["p_domaci"]),
-                "p_remiza": float(radek["p_remiza"]),
-                "p_hoste": float(radek["p_hoste"]),
-                "vysledek": str(radek["vysledek"]),
-                "tip": radek["tip"],
-                "skore": radek["skore"],
-            }
-            for _, radek in skupina.iterrows()
-        ]
-        metriky[str(nazev_modelu)] = modely.spocitej_metriky(zaznamy)
+    return {
+        str(nazev_modelu): modely.spocitej_metriky(_zaznamy_z_radku(skupina))
+        for nazev_modelu, skupina in vyhodnocene.groupby("model")
+    }
 
-    return metriky
+
+def spolehlivost_modelu(nazev="ensemble", cesta=SOUBOR_ZAZNAMU):
+    """Porovná slíbenou jistotu se skutečnou úspěšností jednoho modelu."""
+    vyhodnocene = _vyhodnocene(cesta)
+    if vyhodnocene.empty:
+        return []
+
+    return modely.spolehlivost(
+        _zaznamy_z_radku(vyhodnocene[vyhodnocene["model"] == nazev])
+    )
 
 
 def zapsane_predikce_kola(kolo, cesta=SOUBOR_ZAZNAMU):

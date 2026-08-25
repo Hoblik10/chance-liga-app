@@ -5,7 +5,7 @@ Spuštění:
     python posli_hlaseni.py          # stáhne data, spočítá, pošle
     python posli_hlaseni.py --suchy  # jen vypíše zprávu, nic neposílá
 
-Naplánovaná úloha na GitHubu tohle spouští každé pondělí ráno.
+Naplánovaná úloha na GitHubu tohle spouští každý pátek ráno.
 """
 
 import argparse

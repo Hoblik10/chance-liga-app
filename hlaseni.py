@@ -14,7 +14,7 @@ import zaznamy
 
 VYCHOZI_ZRANENI = list(modely.POKUTA_ZRANENI)[0]
 
-# Pondělní hlášení pokrývá nadcházející víkend, ne zápasy za tři týdny.
+# Páteční hlášení pokrývá nadcházející víkend, ne zápasy za tři týdny.
 HORIZONT_DNU = 8
 
 
@@ -68,12 +68,17 @@ def najdi_dalsi_kolo(databaze_kol, kola, ted=None):
     return None
 
 
-def predikce_kola(sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=None):
+def predikce_kola(
+    sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=None, cil_tipu=None
+):
     """Predikce všech zápasů ve vybraných kolech.
 
     ``rucni_vstupy`` je volitelný slovník (kolo, pořadí) ->
     {pohary_d, pohary_h, zraneni_d, zraneni_h} z UI. Bez něj se použije
     odhad únavy z pohárů a kompletní kádr.
+
+    ``cil_tipu`` rozhoduje, jestli má tip vycházet co nejčastěji (dvojitá
+    šance), nebo rovnou pojmenovat vítěze.
     """
     rucni_vstupy = rucni_vstupy or {}
     predikce = {}
@@ -97,6 +102,7 @@ def predikce_kola(sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=N
                 zraneni_domaci=vstupy.get("zraneni_d", VYCHOZI_ZRANENI),
                 zraneni_hoste=vstupy.get("zraneni_h", VYCHOZI_ZRANENI),
                 vahy=vahy,
+                cil_tipu=cil_tipu,
             )
 
             if vysledek is None:
@@ -170,6 +176,11 @@ def radky_souhrnu(kolo, zapasy, predikce):
         else:
             skore_text = "–"
 
+        prehled = vysledek.get("prehled_skore") or {}
+        nejcastejsi = prehled.get("nejcastejsi") or ([skore] if skore else [])
+        over = (prehled.get("over") or {}).get(2.5)
+        obe = prehled.get("obe_skoruji")
+
         radky.append(
             {
                 "poradi": poradi,
@@ -182,11 +193,26 @@ def radky_souhrnu(kolo, zapasy, predikce):
                 "tip": vysledek["tip"],
                 "jistota": vysledek["jistota"],
                 "skore": skore_text,
+                "top_skore": nejcastejsi,
+                "over_25": over,
+                "obe_skoruji": obe,
+                "ocekavane": prehled.get("ocekavane"),
             }
         )
 
     radky.sort(key=lambda r: r["jistota"], reverse=True)
     return radky
+
+
+def text_top_skore(nejcastejsi, pocet=3):
+    """2:1 (12%) · 1:1 (11%) · 2:0 (10%)"""
+    if not nejcastejsi:
+        return "–"
+
+    return " · ".join(
+        f"{goly_d}:{goly_h} ({p:.0%})"
+        for (goly_d, goly_h), p in nejcastejsi[:pocet]
+    )
 
 
 def kratky_nazev(tym):
@@ -233,7 +259,13 @@ def sestav_zpravu(kolo, zapasy, predikce):
             f"X {radek['p_remiza']:.0%} · "
             f"2 {radek['p_hoste']:.0%}"
         )
-        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%} · {radek['skore']}")
+        bloky.append(f"Tip {tip} · jistota {radek['jistota']:.0%}")
+        bloky.append(f"skóre {text_top_skore(radek.get('top_skore'))}")
+        if radek.get("over_25") is not None and radek.get("obe_skoruji") is not None:
+            bloky.append(
+                f"přes 2.5 {radek['over_25']:.0%} · "
+                f"obě skórují {radek['obe_skoruji']:.0%}"
+            )
         bloky.append("")
 
     return "\n".join(bloky).strip()
