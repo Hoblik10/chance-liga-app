@@ -42,8 +42,12 @@ def main():
 
     if vysledek.get("odeslano"):
         print(f"Odesláno na Telegram ({vysledek['kolo']}. kolo).")
-    else:
+    elif argumenty.suchy:
         print("Suchý běh – zpráva se neodesílala.")
+    elif vysledek.get("duvod"):
+        print(vysledek["duvod"])
+    else:
+        print("Zpráva se neodesílala.")
 
     return 0
 

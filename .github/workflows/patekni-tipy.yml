@@ -7,8 +7,17 @@ name: Páteční tipy na Telegram
 
 on:
   schedule:
+    # GitHub cron často zpozdí nebo přeskočí první pátek po změně souboru.
+    # Záložní časy pošlou později, duplicitu hlídá telegram_odeslano.json.
     - cron: "0 6 * * 5"
+    - cron: "0 7 * * 5"
+    - cron: "0 8 * * 5"
+    - cron: "0 9 * * 5"
   workflow_dispatch:
+
+concurrency:
+  group: patekni-tipy
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -40,6 +49,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add predikce_log.csv
+          git add predikce_log.csv telegram_odeslano.json
           git diff --cached --quiet || git commit -m "Aktualizace logu predikcí"
           git push

@@ -590,6 +590,32 @@ class TestHlaseni(unittest.TestCase):
         self.assertEqual(hlaseni.najdi_dalsi_kolo(databaze, [4, 5]), 5)
         self.assertIsNone(hlaseni.najdi_dalsi_kolo(databaze, [4]))
 
+    def test_telegram_se_stejny_den_neduplikuje(self):
+        with tempfile.TemporaryDirectory() as slozka:
+            cesta = os.path.join(slozka, "telegram.json")
+            ted = datetime(2026, 8, 28, 8, 0)
+            hlaseni.uloz_odeslani_telegramu(
+                6, sezona="2026-2027", ted=ted, cesta=cesta
+            )
+            self.assertTrue(
+                hlaseni.uz_odeslano_dnes(
+                    6, sezona="2026-2027", ted=ted, cesta=cesta
+                )
+            )
+            self.assertFalse(
+                hlaseni.uz_odeslano_dnes(
+                    6,
+                    sezona="2026-2027",
+                    ted=datetime(2026, 8, 29, 8, 0),
+                    cesta=cesta,
+                )
+            )
+            self.assertFalse(
+                hlaseni.uz_odeslano_dnes(
+                    7, sezona="2026-2027", ted=ted, cesta=cesta
+                )
+            )
+
     def test_najdi_dalsi_kolo_preskoci_odlozene_zbytky(self):
         """Ve 4. kole zbývají jen zářijové odklady, 5. kolo je příští víkend."""
         from datetime import datetime

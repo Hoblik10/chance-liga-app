@@ -5,6 +5,8 @@ Naplánovaná úloha bere kolo, které se hraje v nejbližších dnech,
 ne odložené zbytky staršího kola.
 """
 
+import json
+import os
 from datetime import datetime, timedelta
 
 import data
@@ -12,6 +14,10 @@ import modely
 import nastaveni
 import sestavy
 import zaznamy
+
+SOUBOR_TELEGRAMU = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "telegram_odeslano.json"
+)
 
 VYCHOZI_ZRANENI = list(modely.POKUTA_ZRANENI)[0]
 
@@ -303,6 +309,49 @@ def sestav_zpravu(kolo, zapasy, predikce):
     return "\n".join(bloky).strip()
 
 
+def _datum_v_praze(ted=None):
+    ted = ted or datetime.now(data.PASMO_PRAHA)
+    if ted.tzinfo is None:
+        ted = ted.replace(tzinfo=data.PASMO_PRAHA)
+    return ted.astimezone(data.PASMO_PRAHA).strftime("%Y-%m-%d")
+
+
+def nacti_odeslani_telegramu(cesta=None):
+    """Poslední úspěšné páteční odeslání, nebo prázdný slovník."""
+    cesta = cesta or SOUBOR_TELEGRAMU
+    if not os.path.exists(cesta):
+        return {}
+    try:
+        with open(cesta, encoding="utf-8") as soubor:
+            return json.load(soubor) or {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def uz_odeslano_dnes(kolo, sezona=None, ted=None, cesta=None):
+    """Stejné kolo ve stejný den už na Telegram šlo – záložní cron nemá duplikovat."""
+    zaznam = nacti_odeslani_telegramu(cesta)
+    return (
+        str(zaznam.get("kolo")) == str(kolo)
+        and str(zaznam.get("sezona") or "") == str(sezona or nastaveni.SEZONA_SPORTSDB)
+        and str(zaznam.get("datum") or "") == _datum_v_praze(ted)
+    )
+
+
+def uloz_odeslani_telegramu(kolo, sezona=None, ted=None, cesta=None):
+    """Zapíše, že tohle kolo dnes na Telegram opravdu odešlo."""
+    cesta = cesta or SOUBOR_TELEGRAMU
+    obsah = {
+        "kolo": kolo,
+        "sezona": sezona or nastaveni.SEZONA_SPORTSDB,
+        "datum": _datum_v_praze(ted),
+        "cas": (ted or datetime.now(data.PASMO_PRAHA)).strftime("%Y-%m-%d %H:%M"),
+    }
+    with open(cesta, "w", encoding="utf-8") as soubor:
+        json.dump(obsah, soubor, ensure_ascii=False, indent=2)
+    return obsah
+
+
 def priprav_a_posli(odeslat=True):
     """Celý tok pro naplánovanou úlohu: stáhnout, spočítat, zapsat, poslat.
 
@@ -344,10 +393,21 @@ def priprav_a_posli(odeslat=True):
     if not odeslat:
         return {"ok": True, "odeslano": False, "kolo": kolo, "zprava": zprava, "log": log}
 
+    if uz_odeslano_dnes(kolo):
+        return {
+            "ok": True,
+            "odeslano": False,
+            "kolo": kolo,
+            "zprava": zprava,
+            "log": log,
+            "duvod": "Dnes už toto kolo na Telegram šlo.",
+        }
+
     if not nastaveni.telegram_nastaven():
         return {"ok": False, "duvod": "Telegram není nakonfigurován.", "zprava": zprava, "log": log}
 
     if not nastaveni.poslat_na_telegram(zprava):
         return {"ok": False, "duvod": "Odeslání na Telegram selhalo.", "zprava": zprava, "log": log}
 
+    uloz_odeslani_telegramu(kolo)
     return {"ok": True, "odeslano": True, "kolo": kolo, "zprava": zprava, "log": log}
