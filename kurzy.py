@@ -8,8 +8,9 @@ Kurz v sobě nese marži kanceláře – součet převrácených hodnot 1/X/2 vy
 kolem 1.05 až 1.08 místo jedničky. Marže se musí odečíst, jinak by model
 vypadal, že má výhodu, i když jen počítá to samé co kancelář.
 
-Kurzy se zadávají ručně; českou ligu žádné veřejné API zdarma nenabízí.
-Ukládají se do CSV vedle aplikace, takže přežijí restart i nasazení.
+Kurzy musí pocházet ze sázkovky. Aplikace je umí stáhnout z Tipsportu
+nebo z API-Football (viz ``kurz_zdroje.py``) a uložit do CSV vedle sebe,
+takže přežijí restart. Ruční opsání zůstává jako záloha.
 """
 
 import os
@@ -19,7 +20,17 @@ import pandas as pd
 
 SOUBOR_KURZU = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kurzy.csv")
 
-SLOUPCE = ["kolo", "domaci", "hoste", "kurz_1", "kurz_0", "kurz_2", "zapsano"]
+SLOUPCE = [
+    "kolo",
+    "domaci",
+    "hoste",
+    "kurz_1",
+    "kurz_0",
+    "kurz_2",
+    "zdroj",
+    "sazkovka",
+    "zapsano",
+]
 
 # Model není přesnější než trh, takže drobný rozdíl je šum, ne příležitost.
 # Pod touhle výhodou se sázka nedoporučuje.
@@ -171,7 +182,44 @@ def nacti_kurzy(cesta=SOUBOR_KURZU):
     return ulozene
 
 
-def uloz_kurz(kolo, domaci, hoste, kurzy, cesta=SOUBOR_KURZU, cas=None):
+def nacti_kurzy_info(cesta=SOUBOR_KURZU):
+    """Uložené kurzy včetně zdroje: (kolo, domácí, hosté) -> dict."""
+    df = nacti_tabulku(cesta)
+    ulozene = {}
+
+    for _, radek in df.iterrows():
+        trojice = (radek["kurz_1"], radek["kurz_0"], radek["kurz_2"])
+        if not all(platny_kurz(kurz) for kurz in trojice):
+            continue
+
+        try:
+            klic = (int(radek["kolo"]), str(radek["domaci"]), str(radek["hoste"]))
+        except (TypeError, ValueError):
+            continue
+
+        ulozene[klic] = {
+            "kurzy": tuple(float(kurz) for kurz in trojice),
+            "zdroj": "" if pd.isna(radek.get("zdroj")) else str(radek.get("zdroj") or ""),
+            "sazkovka": (
+                ""
+                if pd.isna(radek.get("sazkovka"))
+                else str(radek.get("sazkovka") or "")
+            ),
+        }
+
+    return ulozene
+
+
+def uloz_kurz(
+    kolo,
+    domaci,
+    hoste,
+    kurzy,
+    cesta=SOUBOR_KURZU,
+    cas=None,
+    zdroj="",
+    sazkovka="",
+):
     """Zapíše nebo přepíše kurzy jednoho zápasu.
 
     Na rozdíl od predikcí se kurzy přepisovat **musí** – hýbou se až do
@@ -197,6 +245,8 @@ def uloz_kurz(kolo, domaci, hoste, kurzy, cesta=SOUBOR_KURZU, cas=None):
                 "kurz_1": float(kurzy[0]),
                 "kurz_0": float(kurzy[1]),
                 "kurz_2": float(kurzy[2]),
+                "zdroj": zdroj or "",
+                "sazkovka": sazkovka or "",
                 "zapsano": (cas or datetime.now()).strftime("%Y-%m-%d %H:%M"),
             }
         ]
