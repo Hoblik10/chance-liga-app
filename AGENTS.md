@@ -11,7 +11,7 @@ This is a single Python 3.12 **Streamlit** app (Czech-language football predicti
 
 ### Run / test / build
 - Run the web app: `streamlit run app.py` → serves on port **8501**. It fetches live data from TheSportsDB (public test key `"123"` by default) and falls back to scraping / computed / static data, so it works with no secrets.
-- Tests: `python test_modely.py` (128 `unittest` cases, runs in <1s). This is the only automated test entry point.
+- Tests: `python test_modely.py` (131 `unittest` cases, runs in <1s). This is the only automated test entry point.
 - There is no configured linter/formatter; use `python -m py_compile <files>` for a quick syntax check if needed.
 - Telegram tips CLI (optional batch job, no server): `python posli_hlaseni.py --suchy` for a dry run that prints tips without sending. Sending requires `TELEGRAM_TOKEN` + `TELEGRAM_CHAT_ID`. GitHub Actions workflow `.github/workflows/telegram-tipy.yml` runs this on a schedule from `main` (computer does not need to be on).
 

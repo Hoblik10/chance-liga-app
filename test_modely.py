@@ -778,6 +778,35 @@ class TestCasVPraze(unittest.TestCase):
         }
         self.assertFalse(data._je_odklad_bez_terminu(zapas))
 
+    def test_odklad_bohemians_boleslav_bez_terminu(self):
+        praha = data.PASMO_PRAHA
+        zapas = {
+            "domaci": "Bohemians Praha 1905",
+            "hoste": "FK Mladá Boleslav",
+            "cas": datetime(2026, 8, 29, 17, 0, tzinfo=praha),
+            "stav": "🕒 Nadcházející",
+        }
+        self.assertTrue(data._je_odklad_bez_terminu(zapas))
+        vysledek = data.oznac_prelozene([zapas])
+        self.assertTrue(vysledek[0]["stav"].startswith("🔴"))
+
+    def test_parsuj_odlozene_z_chanceligy(self):
+        nalezene = data.parsuj_odlozene_zapasy(HTML_ODLOZENEHO_ZAPASU)
+        self.assertEqual(
+            nalezene, [("Bohemians Praha 1905", "FK Mladá Boleslav")]
+        )
+
+    def test_oznac_odklad_z_webu(self):
+        zapasy = [
+            zapas("Bohemians Praha 1905", "FK Mladá Boleslav"),
+            zapas("FK Pardubice", "SK Artis Brno"),
+        ]
+        data._oznac_odklady_z_webu(
+            zapasy, odklady=[("Bohemians Praha 1905", "FK Mladá Boleslav")]
+        )
+        self.assertTrue(zapasy[0]["stav"].startswith("🔴"))
+        self.assertEqual(zapasy[1]["stav"], "🕒 Nadcházející")
+
 
 class TestChronologie(unittest.TestCase):
     def test_cas_zapasu_zvlada_oba_tvary(self):
@@ -1011,6 +1040,24 @@ class TestUlozeneKurzy(unittest.TestCase):
         info = kurzy.nacti_kurzy_info(self.cesta)
         self.assertEqual(info[(6, "Slavia", "Sparta")]["sazkovka"], "Tipsport")
         self.assertEqual(info[(6, "Slavia", "Sparta")]["kurzy"], (1.85, 3.6, 4.1))
+
+
+HTML_ODLOZENEHO_ZAPASU = """
+<li>
+ <span class="game-container">
+  <span class="team"><a href="/klub/20-bohemians-praha-1905"><img alt="Bohemians Praha 1905"/><b>BOH</b></a></span>
+  <span class="score-container"><span class="info">odloženo</span></span>
+  <span class="team"><a href="/klub/8-fk-mlada-boleslav"><img alt="FK Mladá Boleslav"/><b>MBL</b></a></span>
+ </span>
+</li>
+<li>
+ <span class="game-container">
+  <span class="team"><a href="/klub/1"><img alt="FK Pardubice"/><b>FKP</b></a></span>
+  <span class="score-container"><span class="info">zítra 17:00</span></span>
+  <span class="team"><a href="/klub/2"><img alt="SK Artis Brno"/><b>ART</b></a></span>
+ </span>
+</li>
+"""
 
 
 HTML_SOUPISKY = """
