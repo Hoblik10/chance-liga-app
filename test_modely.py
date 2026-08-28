@@ -11,6 +11,7 @@ from datetime import datetime
 import data
 import hlaseni
 import kurzy
+import kurz_zdroje
 import modely
 import sestavy
 import zaznamy
@@ -616,6 +617,30 @@ class TestHlaseni(unittest.TestCase):
                 )
             )
 
+    def test_telegram_sobotni_zaloha_neduplikuje_patek(self):
+        with tempfile.TemporaryDirectory() as slozka:
+            cesta = os.path.join(slozka, "telegram.json")
+            patek = datetime(2026, 8, 28, 8, 15, tzinfo=data.PASMO_PRAHA)
+            hlaseni.uloz_odeslani_telegramu(
+                6, sezona="2026-2027", ted=patek, cesta=cesta
+            )
+            self.assertTrue(
+                hlaseni.uz_odeslano_nedavno(
+                    6,
+                    sezona="2026-2027",
+                    ted=datetime(2026, 8, 29, 8, 15, tzinfo=data.PASMO_PRAHA),
+                    cesta=cesta,
+                )
+            )
+            self.assertFalse(
+                hlaseni.uz_odeslano_nedavno(
+                    6,
+                    sezona="2026-2027",
+                    ted=datetime(2026, 9, 4, 8, 15, tzinfo=data.PASMO_PRAHA),
+                    cesta=cesta,
+                )
+            )
+
     def test_najdi_dalsi_kolo_preskoci_odlozene_zbytky(self):
         """Ve 4. kole zbývají jen zářijové odklady, 5. kolo je příští víkend."""
         from datetime import datetime
@@ -752,6 +777,35 @@ class TestCasVPraze(unittest.TestCase):
             "stav": "🕒 Nadcházející",
         }
         self.assertFalse(data._je_odklad_bez_terminu(zapas))
+
+    def test_odklad_bohemians_boleslav_bez_terminu(self):
+        praha = data.PASMO_PRAHA
+        zapas = {
+            "domaci": "Bohemians Praha 1905",
+            "hoste": "FK Mladá Boleslav",
+            "cas": datetime(2026, 8, 29, 17, 0, tzinfo=praha),
+            "stav": "🕒 Nadcházející",
+        }
+        self.assertTrue(data._je_odklad_bez_terminu(zapas))
+        vysledek = data.oznac_prelozene([zapas])
+        self.assertTrue(vysledek[0]["stav"].startswith("🔴"))
+
+    def test_parsuj_odlozene_z_chanceligy(self):
+        nalezene = data.parsuj_odlozene_zapasy(HTML_ODLOZENEHO_ZAPASU)
+        self.assertEqual(
+            nalezene, [("Bohemians Praha 1905", "FK Mladá Boleslav")]
+        )
+
+    def test_oznac_odklad_z_webu(self):
+        zapasy = [
+            zapas("Bohemians Praha 1905", "FK Mladá Boleslav"),
+            zapas("FK Pardubice", "SK Artis Brno"),
+        ]
+        data._oznac_odklady_z_webu(
+            zapasy, odklady=[("Bohemians Praha 1905", "FK Mladá Boleslav")]
+        )
+        self.assertTrue(zapasy[0]["stav"].startswith("🔴"))
+        self.assertEqual(zapasy[1]["stav"], "🕒 Nadcházející")
 
 
 class TestChronologie(unittest.TestCase):
@@ -973,6 +1027,38 @@ class TestUlozeneKurzy(unittest.TestCase):
         with self.assertRaises(ValueError):
             kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 0.5, 4.2), cesta=self.cesta)
 
+    def test_ulozene_kurzy_nesou_zdroj(self):
+        kurzy.uloz_kurz(
+            6,
+            "Slavia",
+            "Sparta",
+            (1.85, 3.6, 4.1),
+            cesta=self.cesta,
+            zdroj="tipsport",
+            sazkovka="Tipsport",
+        )
+        info = kurzy.nacti_kurzy_info(self.cesta)
+        self.assertEqual(info[(6, "Slavia", "Sparta")]["sazkovka"], "Tipsport")
+        self.assertEqual(info[(6, "Slavia", "Sparta")]["kurzy"], (1.85, 3.6, 4.1))
+
+
+HTML_ODLOZENEHO_ZAPASU = """
+<li>
+ <span class="game-container">
+  <span class="team"><a href="/klub/20-bohemians-praha-1905"><img alt="Bohemians Praha 1905"/><b>BOH</b></a></span>
+  <span class="score-container"><span class="info">odloženo</span></span>
+  <span class="team"><a href="/klub/8-fk-mlada-boleslav"><img alt="FK Mladá Boleslav"/><b>MBL</b></a></span>
+ </span>
+</li>
+<li>
+ <span class="game-container">
+  <span class="team"><a href="/klub/1"><img alt="FK Pardubice"/><b>FKP</b></a></span>
+  <span class="score-container"><span class="info">zítra 17:00</span></span>
+  <span class="team"><a href="/klub/2"><img alt="SK Artis Brno"/><b>ART</b></a></span>
+ </span>
+</li>
+"""
+
 
 HTML_SOUPISKY = """
 <table class="table">
@@ -1073,6 +1159,183 @@ class TestSestavy(unittest.TestCase):
     def test_nazev_tymu(self):
         self.assertEqual(data.nazev_tymu("1.FC Slovácko"), "1. FC Slovácko")
         self.assertEqual(data.nazev_tymu("SK Slavia Praha"), "SK Slavia Praha")
+
+
+TIPSPORT_NABIDKA = {
+    "matches": [
+        {
+            "name": "Slavia Praha - Sparta Praha",
+            "opp1": "Slavia Praha",
+            "opp2": "Sparta Praha",
+            "odds": [
+                {"opportunityName": "1", "odd": 2.05},
+                {"opportunityName": "X", "odd": 3.40},
+                {"opportunityName": "2", "odd": 3.55},
+            ],
+        },
+        {
+            "name": "Baník Ostrava - Sigma Olomouc",
+            "odds": [
+                {"opportunityName": "1", "currentOdd": 1.95},
+                {"opportunityName": "Remíza", "currentOdd": 3.50},
+                {"opportunityName": "2", "currentOdd": 3.80},
+            ],
+        },
+    ]
+}
+
+API_FOOTBALL_ODDS = [
+    {
+        "fixture": {"id": 111},
+        "bookmakers": [
+            {
+                "id": 6,
+                "name": "Bwin",
+                "bets": [
+                    {
+                        "id": 1,
+                        "name": "Match Winner",
+                        "values": [
+                            {"value": "Home", "odd": "2.20"},
+                            {"value": "Draw", "odd": "3.20"},
+                            {"value": "Away", "odd": "3.40"},
+                        ],
+                    }
+                ],
+            },
+            {
+                "id": 8,
+                "name": "Bet365",
+                "bets": [
+                    {
+                        "id": 1,
+                        "name": "Match Winner",
+                        "values": [
+                            {"value": "Home", "odd": "2.10"},
+                            {"value": "Draw", "odd": "3.30"},
+                            {"value": "Away", "odd": "3.50"},
+                        ],
+                    }
+                ],
+            },
+        ],
+    }
+]
+
+API_FOOTBALL_FIXTURES = [
+    {
+        "fixture": {"id": 111},
+        "teams": {
+            "home": {"name": "Sparta Prague"},
+            "away": {"name": "Slavia Prague"},
+        },
+    }
+]
+
+
+class TestKurzZdroje(unittest.TestCase):
+    def test_kanonicky_tym_slavi_tipsport_i_anglictinu(self):
+        znami = [
+            "SK Slavia Praha",
+            "AC Sparta Praha",
+            "FC Baník Ostrava",
+            "SK Sigma Olomouc",
+            "FC Viktoria Plzeň",
+            "SK Artis Brno",
+            "FC Zbrojovka Brno",
+        ]
+        self.assertEqual(
+            kurz_zdroje.kanonicky_tym("Slavia Praha", znami), "SK Slavia Praha"
+        )
+        self.assertEqual(
+            kurz_zdroje.kanonicky_tym("Sparta Prague", znami), "AC Sparta Praha"
+        )
+        self.assertEqual(kurz_zdroje.kanonicky_tym("Plzen", znami), "FC Viktoria Plzeň")
+        self.assertEqual(
+            kurz_zdroje.kanonicky_tym("Banik Ostrava", znami), "FC Baník Ostrava"
+        )
+        self.assertIsNone(kurz_zdroje.kanonicky_tym("Brno", znami))
+
+    def test_tipsport_json_da_1x2(self):
+        nabidka = kurz_zdroje.zapasy_z_nabidky(TIPSPORT_NABIDKA, "tipsport", "Tipsport")
+        self.assertEqual(len(nabidka), 2)
+        slavia = nabidka[0]
+        self.assertEqual(slavia["kurzy"], (2.05, 3.40, 3.55))
+        self.assertEqual(slavia["sazkovka"], "Tipsport")
+
+    def test_sparovani_s_kanonickymi_nazvy(self):
+        nabidka = kurz_zdroje.zapasy_z_nabidky(TIPSPORT_NABIDKA, "tipsport", "Tipsport")
+        zapasy = [
+            zapas("SK Slavia Praha", "AC Sparta Praha"),
+            zapas("FC Baník Ostrava", "SK Sigma Olomouc"),
+            zapas("FK Teplice", "FK Jablonec"),
+        ]
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, zapasy)
+        self.assertEqual(len(parovane), 2)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (2.05, 3.40, 3.55),
+        )
+        self.assertNotIn(("FK Teplice", "FK Jablonec"), parovane)
+
+    def test_api_football_bere_bet365_pred_bwin(self):
+        nabidka = kurz_zdroje.zapasy_z_api_football(
+            API_FOOTBALL_ODDS, API_FOOTBALL_FIXTURES
+        )
+        self.assertEqual(len(nabidka), 1)
+        self.assertEqual(nabidka[0]["sazkovka"], "Bet365")
+        self.assertEqual(nabidka[0]["kurzy"], (2.10, 3.30, 3.50))
+        self.assertEqual(nabidka[0]["domaci_surove"], "Sparta Prague")
+
+    def test_nacti_a_uloz_z_tipsportu(self):
+        class _Odpoved:
+            status_code = 200
+
+            def json(self):
+                return TIPSPORT_NABIDKA
+
+        class _Session:
+            def get(self, *args, **kwargs):
+                return _Odpoved()
+
+            def post(self, *args, **kwargs):
+                raise AssertionError("POST se nemá volat, GET už kurzy má")
+
+        docasny = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
+        docasny.close()
+        try:
+            zapasy = [zapas("SK Slavia Praha", "AC Sparta Praha")]
+            shrnuti = kurz_zdroje.nacti_a_uloz(
+                6, zapasy, session=_Session(), cesta=docasny.name
+            )
+            self.assertEqual(shrnuti["ulozeno"], 1)
+            self.assertEqual(shrnuti["zdroj"], "tipsport")
+            ulozene = kurzy.nacti_kurzy(docasny.name)
+            self.assertEqual(
+                ulozene[(6, "SK Slavia Praha", "AC Sparta Praha")],
+                (2.05, 3.40, 3.55),
+            )
+        finally:
+            os.unlink(docasny.name)
+
+    def test_bez_klice_api_football_rekne_proc(self):
+        nabidka, chyba = kurz_zdroje.stahni_api_football(klic="")
+        self.assertEqual(nabidka, [])
+        self.assertIn("API_FOOTBALL_KEY", chyba)
+
+    def test_popis_vysledku_odlisi_api_od_tipsportu(self):
+        text = kurz_zdroje.popis_vysledku(
+            {
+                "ulozeno": 8,
+                "nabidnuto": 8,
+                "nesparovano": 0,
+                "zdroj": "api-football",
+                "sazkovka": "Bet365",
+                "chyby": ["Tipsport z tohohle serveru nepustil (HTTP 403, Cloudflare)."],
+            }
+        )
+        self.assertIn("Bet365", text)
+        self.assertIn("nejsou kurzy Tipsportu", text)
 
 
 if __name__ == "__main__":

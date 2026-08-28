@@ -55,7 +55,11 @@ MAPA_TYMU = {
     "Pardubice": "FK Pardubice",
     "Zlín": "FC Zlín",
     "Slavia Prague": "SK Slavia Praha",
+    "Slavia Praha": "SK Slavia Praha",
+    "SK Slavia Praha": "SK Slavia Praha",
     "Sparta Prague": "AC Sparta Praha",
+    "Sparta Praha": "AC Sparta Praha",
+    "AC Sparta Praha": "AC Sparta Praha",
     "Viktoria Plzen": "FC Viktoria Plzeň",
     "Viktoria Plzeň": "FC Viktoria Plzeň",
     "Slovan Liberec": "FC Slovan Liberec",
@@ -69,6 +73,15 @@ MAPA_TYMU = {
     "Zlin": "FC Zlín",
     "Mlada Boleslav": "FK Mladá Boleslav",
     "Hradec Kralove": "FC Hradec Králové",
+    "Plzen": "FC Viktoria Plzeň",
+    "FK Jablonec": "FK Jablonec",
+    "FK Teplice": "FK Teplice",
+    "FK Pardubice": "FK Pardubice",
+    "SK Sigma Olomouc": "SK Sigma Olomouc",
+    "Bohemians-1905": "Bohemians Praha 1905",
+    "FK Mlada Boleslav": "FK Mladá Boleslav",
+    "FC Zlin": "FC Zlín",
+    "SK Artis Brno": "SK Artis Brno",
     # Týmy z minulých sezón – v aktuální lize nehrají, ale historie je nese.
     "Dukla Praha": "FK Dukla Praha",
     "Dynamo České Budějovice": "SK Dynamo České Budějovice",
@@ -261,6 +274,7 @@ DNU_PRO_PRELOZENI = 5
 # buď nový termín mimo kolo, nebo ostrý výkop.
 ODKLADY_BEZ_TERMINU = {
     ("FC Hradec Králové", "FC Viktoria Plzeň"): date(2026, 8, 23),
+    ("Bohemians Praha 1905", "FK Mladá Boleslav"): date(2026, 8, 29),
 }
 
 
@@ -298,6 +312,60 @@ def oznac_prelozene(zapasy):
         zapas["stav"] = "🔴 Odloženo"
         zapas["poznamka_termin"] = f"Přeloženo na {formatuj_vykop(cas)}"
 
+    return zapasy
+
+
+def parsuj_odlozene_zapasy(html):
+    """Odložené zápasy z lišty na ChanceLiga.cz (``BOH odloženo MBL``)."""
+    soup = BeautifulSoup(html, "html.parser")
+    nalezene = []
+
+    for kontejner in soup.select(".game-container"):
+        skore = kontejner.select_one(".score-container")
+        if skore is None:
+            continue
+        if "odlož" not in skore.get_text(" ", strip=True).lower():
+            continue
+
+        tymy = []
+        for blok in kontejner.select(".team"):
+            obrazek = blok.find("img")
+            surovy = (obrazek.get("alt") if obrazek else "") or blok.get_text(" ", strip=True)
+            nazev = nazev_tymu(surovy)
+            if nazev:
+                tymy.append(nazev)
+        if len(tymy) >= 2:
+            nalezene.append((tymy[0], tymy[1]))
+
+    return nalezene
+
+
+@_cachovane(1800)
+def nacti_odlozene_z_webu():
+    """Oficiální odklady z ChanceLiga.cz – TheSportsDB je často ještě nemá."""
+    try:
+        odpoved = requests.get(
+            "https://www.chanceliga.cz/zapasy",
+            headers=nastaveni.HTTP_HLAVICKY,
+            timeout=15,
+        )
+        odpoved.raise_for_status()
+        return parsuj_odlozene_zapasy(odpoved.content)
+    except requests.RequestException:
+        return []
+
+
+def _oznac_odklady_z_webu(zapasy, odklady=None):
+    """Doplní odklad, který LFA už vyhlásila, ale TheSportsDB ne."""
+    if odklady is None:
+        odklady = nacti_odlozene_z_webu()
+    znacky = set(odklady)
+    for zapas in zapasy:
+        if zapas["stav"] == modely.ODEHRANO or zapas["stav"].startswith("🔴"):
+            continue
+        if (zapas["domaci"], zapas["hoste"]) in znacky:
+            zapas["stav"] = "🔴 Odloženo"
+            zapas["poznamka_termin"] = "Odloženo, náhradní termín není znám"
     return zapasy
 
 
@@ -362,6 +430,7 @@ def nacti_kolo(cislo_kola, sezona=None):
 
     zapasy = [_preved_zapas(z) for z in (data.get("events") or [])]
     zapasy = oznac_prelozene(zapasy)
+    zapasy = _oznac_odklady_z_webu(zapasy)
     zapasy.sort(key=lambda z: z.get("cas") or datetime.min.replace(tzinfo=PASMO_PRAHA))
     return zapasy
 

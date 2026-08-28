@@ -36,6 +36,10 @@ TELEGRAM_CHAT_ID = nacti_secret("TELEGRAM_CHAT_ID")
 SPORTSDB_KEY = nacti_secret("SPORTSDB_KEY", "123") or "123"
 SPORTSDB_LIGA = "4631"  # Czech First League
 
+# API-Football (api-sports.io) – volitelné kurzy 1/X/2 na Chance Ligu (id 134).
+# Zdarma 100 dotazů denně. Tipsport v té sadě sázkovek není.
+API_FOOTBALL_KEY = nacti_secret("API_FOOTBALL_KEY")
+
 # TheSportsDB značí sezónu rozsahem let.
 SEZONA_SPORTSDB = nacti_secret("SEZONA", "2026-2027") or "2026-2027"
 
