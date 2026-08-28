@@ -1,22 +1,31 @@
-# Páteční hlášení s tipy na víkendové kolo.
-# Čas je v UTC: 06:00 UTC = 08:00 v Česku v létě, 07:00 v zimě.
-# Pátek ráno je blíž výkopu než pondělí – stihnou se zranění i čtvrteční poháry.
-# Úloha se spouští na strojích GitHubu, tvůj počítač u toho nemusí běžet.
+# Tipy na víkendové kolo. Běží na strojích GitHubu – tvůj počítač
+# u toho nemusí být zapnutý. Schedule čte jen soubor na větvi main.
+#
+# Soubor má nový název schválně: po přejmenování pondelni-tipy.yml →
+# patekni-tipy.yml GitHub založil novou úlohu a páteční cron dnes
+# ani jednou nespustil (0 běhů). Nová cesta ho donutí zaregistrovat
+# schedule znovu.
+#
+# Časy jsou v Europe/Prague, mimo celou hodinu – GitHub na :00 často
+# job zahodí kvůli zátěži.
 
-name: Páteční tipy na Telegram
+name: Telegram tipy
 
 on:
   schedule:
-    # GitHub cron často zpozdí nebo přeskočí první pátek po změně souboru.
-    # Záložní časy pošlou později, duplicitu hlídá telegram_odeslano.json.
-    - cron: "0 6 * * 5"
-    - cron: "0 7 * * 5"
-    - cron: "0 8 * * 5"
-    - cron: "0 9 * * 5"
+    - cron: "15 8 * * 5"
+      timezone: "Europe/Prague"
+    - cron: "15 9 * * 5"
+      timezone: "Europe/Prague"
+    - cron: "15 10 * * 5"
+      timezone: "Europe/Prague"
+    # Když pátek GitHub přeskočí, sobota ráno to ještě stihne před výkopem.
+    - cron: "15 8 * * 6"
+      timezone: "Europe/Prague"
   workflow_dispatch:
 
 concurrency:
-  group: patekni-tipy
+  group: telegram-tipy
   cancel-in-progress: false
 
 permissions:

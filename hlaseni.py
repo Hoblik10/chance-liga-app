@@ -329,13 +329,36 @@ def nacti_odeslani_telegramu(cesta=None):
 
 
 def uz_odeslano_dnes(kolo, sezona=None, ted=None, cesta=None):
-    """Stejné kolo ve stejný den už na Telegram šlo – záložní cron nemá duplikovat."""
+    """Stejné kolo ve stejný pražský den už na Telegram šlo."""
     zaznam = nacti_odeslani_telegramu(cesta)
     return (
         str(zaznam.get("kolo")) == str(kolo)
         and str(zaznam.get("sezona") or "") == str(sezona or nastaveni.SEZONA_SPORTSDB)
         and str(zaznam.get("datum") or "") == _datum_v_praze(ted)
     )
+
+
+def uz_odeslano_nedavno(kolo, sezona=None, ted=None, cesta=None, hodin=36):
+    """Stejné kolo v posledních hodinách už šlo – sobotní záloha nemá duplikovat pátek."""
+    zaznam = nacti_odeslani_telegramu(cesta)
+    if str(zaznam.get("kolo")) != str(kolo):
+        return False
+    if str(zaznam.get("sezona") or "") != str(sezona or nastaveni.SEZONA_SPORTSDB):
+        return False
+
+    ted = ted or datetime.now(data.PASMO_PRAHA)
+    if ted.tzinfo is None:
+        ted = ted.replace(tzinfo=data.PASMO_PRAHA)
+
+    cas_text = str(zaznam.get("cas") or "")
+    try:
+        odeslano = datetime.strptime(cas_text, "%Y-%m-%d %H:%M")
+    except ValueError:
+        return str(zaznam.get("datum") or "") == _datum_v_praze(ted)
+
+    if odeslano.tzinfo is None:
+        odeslano = odeslano.replace(tzinfo=data.PASMO_PRAHA)
+    return timedelta(0) <= (ted - odeslano) < timedelta(hours=hodin)
 
 
 def uloz_odeslani_telegramu(kolo, sezona=None, ted=None, cesta=None):
@@ -393,14 +416,14 @@ def priprav_a_posli(odeslat=True):
     if not odeslat:
         return {"ok": True, "odeslano": False, "kolo": kolo, "zprava": zprava, "log": log}
 
-    if uz_odeslano_dnes(kolo):
+    if uz_odeslano_nedavno(kolo):
         return {
             "ok": True,
             "odeslano": False,
             "kolo": kolo,
             "zprava": zprava,
             "log": log,
-            "duvod": "Dnes už toto kolo na Telegram šlo.",
+            "duvod": "Toto kolo už na Telegram nedávno šlo.",
         }
 
     if not nastaveni.telegram_nastaven():

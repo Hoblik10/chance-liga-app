@@ -617,6 +617,30 @@ class TestHlaseni(unittest.TestCase):
                 )
             )
 
+    def test_telegram_sobotni_zaloha_neduplikuje_patek(self):
+        with tempfile.TemporaryDirectory() as slozka:
+            cesta = os.path.join(slozka, "telegram.json")
+            patek = datetime(2026, 8, 28, 8, 15, tzinfo=data.PASMO_PRAHA)
+            hlaseni.uloz_odeslani_telegramu(
+                6, sezona="2026-2027", ted=patek, cesta=cesta
+            )
+            self.assertTrue(
+                hlaseni.uz_odeslano_nedavno(
+                    6,
+                    sezona="2026-2027",
+                    ted=datetime(2026, 8, 29, 8, 15, tzinfo=data.PASMO_PRAHA),
+                    cesta=cesta,
+                )
+            )
+            self.assertFalse(
+                hlaseni.uz_odeslano_nedavno(
+                    6,
+                    sezona="2026-2027",
+                    ted=datetime(2026, 9, 4, 8, 15, tzinfo=data.PASMO_PRAHA),
+                    cesta=cesta,
+                )
+            )
+
     def test_najdi_dalsi_kolo_preskoci_odlozene_zbytky(self):
         """Ve 4. kole zbývají jen zářijové odklady, 5. kolo je příští víkend."""
         from datetime import datetime
