@@ -12,6 +12,7 @@ import data
 import hlaseni
 import kurzy
 import modely
+import sestavy
 import zaznamy
 
 
@@ -945,6 +946,107 @@ class TestUlozeneKurzy(unittest.TestCase):
     def test_neplatny_kurz_se_neulozi(self):
         with self.assertRaises(ValueError):
             kurzy.uloz_kurz(5, "Slavia", "Sparta", (1.8, 0.5, 4.2), cesta=self.cesta)
+
+
+HTML_SOUPISKY = """
+<table class="table">
+<tr><th>#</th><th>Hráč</th><th>Po</th><th>Národnost</th><th>Narozen</th><th>Výška</th><th>Váha</th><th>Z</th><th>G</th></tr>
+<tr><td>44</td><td><a href="/hrac/4201-jakub-surovcik">Jakub Surovčík</a></td><td>B</td><td></td><td></td><td></td><td></td><td>5</td><td>-</td></tr>
+<tr><td>47</td><td><a href="/hrac/5159-krisztian-hegyi">Krisztián Hegyi</a></td><td>B</td><td></td><td></td><td></td><td></td><td>0</td><td>-</td></tr>
+<tr><td>10</td><td><a href="/hrac/3885-adam-karabec">Adam Karabec</a></td><td>Z</td><td></td><td></td><td></td><td></td><td>5</td><td>1</td></tr>
+<tr><td>-</td><td><a href="/hrac/4448-veljko-birmancevic">Veljko Birmančević</a></td><td>Z</td><td></td><td></td><td></td><td></td><td>0</td><td>0</td></tr>
+</table>
+"""
+
+HTML_SESTAVY = """
+<table class="table border-bottom">
+<tr><th></th><th>#</th><th>P</th><th>Jméno</th><th>G</th></tr>
+<tr><td></td><td>44</td><td>B</td><td><a href="/hrac/4201-jakub-surovcik">J. Surovčík</a></td><td></td></tr>
+<tr><td></td><td>10</td><td>Z</td><td><a href="/hrac/3885-adam-karabec">A. Karabec</a></td><td></td></tr>
+<tr><td colspan="5"></td></tr>
+<tr><td></td><td>47</td><td>B</td><td><a href="/hrac/5159-krisztian-hegyi">K. Hegyi</a></td><td></td></tr>
+</table>
+<table class="table border-bottom">
+<tr><th></th><th>#</th><th>P</th><th>Jméno</th><th>G</th></tr>
+<tr><td></td><td>1</td><td>B</td><td><a href="/hrac/1-host">H. Gólman</a></td><td></td></tr>
+<tr><td colspan="5"></td></tr>
+<tr><td></td><td>12</td><td>B</td><td><a href="/hrac/2-nahradnik">N. Náhradník</a></td><td></td></tr>
+</table>
+"""
+
+HTML_KLUBU = """
+<a href="/klub/2-ac-sparta-praha">AC Sparta Praha</a>
+<a href="/klub/5-sk-slavia-praha">SK Slavia Praha</a>
+<a href="/klub/16-1-fc-slovacko">1.FC Slovácko</a>
+"""
+
+
+class TestSestavy(unittest.TestCase):
+    def test_parsuj_soupisku(self):
+        hraci = sestavy.parsuj_soupisku(HTML_SOUPISKY)
+        self.assertEqual(len(hraci), 4)
+        surovcik = hraci[0]
+        self.assertEqual(surovcik["id"], "4201")
+        self.assertEqual(surovcik["jmeno"], "Jakub Surovčík")
+        self.assertEqual(surovcik["pozice"], "B")
+        self.assertEqual(surovcik["zapasy"], 5)
+
+    def test_parsuj_kluby_sjednoti_slovacko(self):
+        kluby = sestavy.parsuj_kluby(HTML_KLUBU)
+        nazvy = {k["nazev"] for k in kluby}
+        self.assertIn("AC Sparta Praha", nazvy)
+        self.assertIn("1. FC Slovácko", nazvy)
+        slugs = {k["slug"] for k in kluby}
+        self.assertIn("2-ac-sparta-praha", slugs)
+
+    def test_parsuj_sestavu_oddeli_lavicku(self):
+        sestava = sestavy.parsuj_sestavu_zapasu(HTML_SESTAVY)
+        self.assertIsNotNone(sestava)
+        self.assertEqual([h["id"] for h in sestava["domaci"]["zaklad"]], ["4201", "3885"])
+        self.assertEqual([h["id"] for h in sestava["domaci"]["nahradnici"]], ["5159"])
+        self.assertEqual(len(sestava["hoste"]["zaklad"]), 1)
+
+    def test_id_mimo_sestavu(self):
+        kadr = sestavy.parsuj_soupisku(HTML_SOUPISKY)
+        sestava = sestavy.parsuj_sestavu_zapasu(HTML_SESTAVY)
+        mimo = sestavy.id_mimo_sestavu(kadr, sestava["domaci"])
+        self.assertEqual(mimo, ["4448"])
+
+    def test_pokuta_gólmana_je_vyssi_nez_lavicky(self):
+        kadr = sestavy.parsuj_soupisku(HTML_SOUPISKY)
+        pokuta_gólman = modely.pokuta_z_absenci(kadr, ["4201"])
+        pokuta_nahradnik = modely.pokuta_z_absenci(kadr, ["5159"])
+        pokuta_opora = modely.pokuta_z_absenci(kadr, ["3885"])
+        self.assertGreater(pokuta_gólman, pokuta_nahradnik)
+        self.assertGreater(pokuta_opora, pokuta_nahradnik)
+        self.assertLess(pokuta_gólman, modely.MAX_POKUTA_ZRANENI)
+
+    def test_uprav_silu_bere_cislo(self):
+        sila, dopad = modely.uprav_silu(50.0, "Bez pohárů", 0.10)
+        self.assertAlmostEqual(sila, 45.0)
+        self.assertAlmostEqual(dopad, 10.0)
+
+    def test_uprav_silu_stary_popisek_funguje(self):
+        sila_komplet, _ = modely.uprav_silu(50.0, "Bez pohárů", "Kompletní kádr")
+        sila_opora, _ = modely.uprav_silu(50.0, "Bez pohárů", "Chybí 1 opora")
+        self.assertGreater(sila_komplet, sila_opora)
+
+    def test_absence_se_ulozi_a_nactou(self):
+        with tempfile.TemporaryDirectory() as slozka:
+            cesta = os.path.join(slozka, "absence.csv")
+            kadr = sestavy.parsuj_soupisku(HTML_SOUPISKY)
+            sestavy.uloz_absence_tymu(
+                "AC Sparta Praha", ["4201", "4448"], kadr, cesta=cesta
+            )
+            nactene = sestavy.nacti_absence(cesta)
+            self.assertEqual(nactene["AC Sparta Praha"], ["4201", "4448"])
+            sestavy.uloz_absence_tymu("AC Sparta Praha", ["3885"], kadr, cesta=cesta)
+            nactene = sestavy.nacti_absence(cesta)
+            self.assertEqual(nactene["AC Sparta Praha"], ["3885"])
+
+    def test_nazev_tymu(self):
+        self.assertEqual(data.nazev_tymu("1.FC Slovácko"), "1. FC Slovácko")
+        self.assertEqual(data.nazev_tymu("SK Slavia Praha"), "SK Slavia Praha")
 
 
 if __name__ == "__main__":

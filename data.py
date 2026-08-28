@@ -64,6 +64,8 @@ MAPA_TYMU = {
     "Zbrojovka Brno": "FC Zbrojovka Brno",
     "Bohemians 1905": "Bohemians Praha 1905",
     "Slovacko": "1. FC Slovácko",
+    "1.FC Slovácko": "1. FC Slovácko",
+    "1.FC Slovacko": "1. FC Slovácko",
     "Zlin": "FC Zlín",
     "Mlada Boleslav": "FK Mladá Boleslav",
     "Hradec Kralove": "FC Hradec Králové",
@@ -74,6 +76,13 @@ MAPA_TYMU = {
     "Karviná": "MFK Karviná",
     "Karvina": "MFK Karviná",
 }
+
+
+def nazev_tymu(surovy):
+    """Sjednotí název týmu na kanonický tvar používaný v aplikaci."""
+    text = " ".join(str(surovy or "").split())
+    return MAPA_TYMU.get(text, text)
+
 
 # Stavy zápasu podle pole strStatus.
 STAVY_API = {

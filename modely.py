@@ -46,12 +46,14 @@ POKUTA_POHARY = {
 }
 
 # Zranění: absence klíčových hráčů berou 10–15 % síly.
+# Vedle těchto hrubých stupňů umí model i číslo 0–MAX z konkrétních jmen.
 POKUTA_ZRANENI = {
     "Kompletní kádr": 0.00,
     "Chybí 1 opora": 0.05,
     "Chybí 2 opory": 0.10,
     "Chybí 3+ opor": 0.15,
 }
+MAX_POKUTA_ZRANENI = 0.20
 
 # Kolik dní odpočinku se ještě považuje za pohárovou zátěž.
 MAX_DNU_UNAVY = 4
@@ -151,10 +153,70 @@ def spocitej_index_sily(df_tabulka):
     return indexy
 
 
+def vyres_pokutu_zraneni(stav_zraneni):
+    """Převede popisek nebo konkrétní číslo na podíl, o který tým slábne."""
+    if isinstance(stav_zraneni, (int, float)):
+        return max(0.0, min(float(stav_zraneni), MAX_POKUTA_ZRANENI))
+    return POKUTA_ZRANENI.get(stav_zraneni, 0.0)
+
+
+def vaha_hrace(hrac, kadr):
+    """Jak moc tým bolelo, kdyby tenhle hráč chyběl.
+
+    Váha stojí na minutách v lize (sloupec Z na soupisce). Gólman s nejvíc
+    zápasy bere víc než třetí brankář, opora s půlkou zápasů víc než
+    hráč bez startu. Kdo má nula zápasů a přesto ho někdo zaškrtne
+    (typicky zraněný od léta), počítá se jako střídavý kádr, ne jako nula.
+    """
+    pozice = (hrac.get("pozice") or "").upper()[:1]
+    zapasy = int(hrac.get("zapasy") or 0)
+    kadr = list(kadr or [])
+
+    if pozice == "B":
+        max_brankar = max((int(h.get("zapasy") or 0) for h in kadr if (h.get("pozice") or "").upper()[:1] == "B"), default=0)
+        if max_brankar > 0 and zapasy == max_brankar:
+            return 0.08
+        return 0.03 if zapasy else 0.02
+
+    max_zapasu = max((int(h.get("zapasy") or 0) for h in kadr), default=0) or 1
+    podil = zapasy / max_zapasu
+    if podil >= 0.5:
+        return 0.055 if pozice in {"Z", "U"} else 0.045
+    if zapasy == 0:
+        return 0.03
+    return 0.02 + 0.03 * podil
+
+
+def pokuta_z_absenci(kadr, chybejici_ids):
+    """Složená pokuta za konkrétní jména; nenasčítává se do stropu natvrdo."""
+    hledane = {str(identita) for identita in (chybejici_ids or []) if identita}
+    if not kadr or not hledane:
+        return 0.0
+
+    soucin = 1.0
+    for hrac in kadr:
+        if str(hrac.get("id") or "") not in hledane:
+            continue
+        soucin *= 1.0 - min(vaha_hrace(hrac, kadr), 0.12)
+
+    return round(min(1.0 - soucin, MAX_POKUTA_ZRANENI), 4)
+
+
+def popisek_zraneni(pokuta):
+    """Hrubý stupeň z číselné pokuty – kvůli starému dropdownu a popiskům."""
+    if pokuta < 0.025:
+        return "Kompletní kádr"
+    if pokuta < 0.075:
+        return "Chybí 1 opora"
+    if pokuta < 0.125:
+        return "Chybí 2 opory"
+    return "Chybí 3+ opor"
+
+
 def uprav_silu(zakladni_sila, stav_poharu, stav_zraneni):
     """Sníží index síly o únavu z pohárů a o absence klíčových hráčů."""
     pokuta_pohary = POKUTA_POHARY.get(stav_poharu, 0.0)
-    pokuta_zraneni = POKUTA_ZRANENI.get(stav_zraneni, 0.0)
+    pokuta_zraneni = vyres_pokutu_zraneni(stav_zraneni)
 
     upravena = zakladni_sila * (1 - pokuta_pohary) * (1 - pokuta_zraneni)
     celkovy_dopad = 1 - (1 - pokuta_pohary) * (1 - pokuta_zraneni)

@@ -8,6 +8,7 @@ import hlaseni
 import kurzy
 import modely
 import nastaveni
+import sestavy
 import zaznamy
 
 st.set_page_config(
@@ -30,6 +31,8 @@ historie_je_ziva = podklady["historie_je_ziva"]
 zapasy_zdroj = podklady["zapasy_zdroj"]
 tabulka_zdroj = podklady["tabulka_zdroj"]
 historie_zdroj = podklady["historie_zdroj"]
+kadry, kadry_zdroj = sestavy.nacti_kadry()
+absence = sestavy.nacti_absence()
 
 # --- SIDEBAR (Výběr kola a Kompletní tabulka) ---
 st.sidebar.header("📌 Navigace")
@@ -78,6 +81,7 @@ st.sidebar.markdown("---")
 st.sidebar.subheader("🏆 Aktuální tabulka Chance Ligy")
 st.sidebar.caption(tabulka_zdroj)
 st.sidebar.dataframe(df_tabulka, width="stretch")
+st.sidebar.caption(kadry_zdroj)
 
 if nastaveni.SPORTSDB_KEY == "123":
     st.sidebar.markdown("---")
@@ -134,9 +138,31 @@ for _kolo in dostupna_kola:
             vstupy["pohary_d"] = st.session_state[f"pd_{_kolo}_{_poradi}"]
         if f"ph_{_kolo}_{_poradi}" in st.session_state:
             vstupy["pohary_h"] = st.session_state[f"ph_{_kolo}_{_poradi}"]
-        if f"zd_{_kolo}_{_poradi}" in st.session_state:
+        klic_d = f"abs_d_{_kolo}_{_poradi}"
+        klic_h = f"abs_h_{_kolo}_{_poradi}"
+        if kadry.get(_zapas["domaci"]):
+            if klic_d not in st.session_state:
+                st.session_state[klic_d] = list(absence.get(_zapas["domaci"]) or [])
+            ids_d = list(st.session_state[klic_d] or [])
+            vstupy["zraneni_d"] = modely.pokuta_z_absenci(
+                kadry.get(_zapas["domaci"]) or [], ids_d
+            )
+            vstupy["chybejici_d"] = sestavy.jmena_hracu(
+                kadry.get(_zapas["domaci"]) or [], ids_d
+            )
+        elif f"zd_{_kolo}_{_poradi}" in st.session_state:
             vstupy["zraneni_d"] = st.session_state[f"zd_{_kolo}_{_poradi}"]
-        if f"zh_{_kolo}_{_poradi}" in st.session_state:
+        if kadry.get(_zapas["hoste"]):
+            if klic_h not in st.session_state:
+                st.session_state[klic_h] = list(absence.get(_zapas["hoste"]) or [])
+            ids_h = list(st.session_state[klic_h] or [])
+            vstupy["zraneni_h"] = modely.pokuta_z_absenci(
+                kadry.get(_zapas["hoste"]) or [], ids_h
+            )
+            vstupy["chybejici_h"] = sestavy.jmena_hracu(
+                kadry.get(_zapas["hoste"]) or [], ids_h
+            )
+        elif f"zh_{_kolo}_{_poradi}" in st.session_state:
             vstupy["zraneni_h"] = st.session_state[f"zh_{_kolo}_{_poradi}"]
         if vstupy:
             rucni_vstupy[(_kolo, _poradi)] = vstupy
@@ -149,6 +175,8 @@ predikce = hlaseni.predikce_kola(
     id_tymu_v_lize,
     rucni_vstupy,
     cil_tipu=cil_tipu,
+    kadry=kadry,
+    absence=absence,
 )
 
 
@@ -158,6 +186,43 @@ def tip_zapasu(kolo, poradi):
     if vysledek:
         return vysledek["tip"]
     return "bez tipu (tým chybí v ligové tabulce)"
+
+
+def vyber_absenci(tym, klic, kadr):
+    """Zaškrtávací seznam hráčů, kteří nemají nastoupit.
+
+    Výběr se hned zapíše do ``sestavy/absence.csv``, aby ho vidělo i
+    páteční hlášení na Telegram.
+    """
+    if not kadr:
+        st.selectbox(
+            "Zranění (soupiska se nenačetla)",
+            list(modely.POKUTA_ZRANENI),
+            key=klic.replace("abs_d_", "zd_").replace("abs_h_", "zh_"),
+        )
+        return
+
+    popisky = {hrac["id"]: sestavy.popisek_hrace(hrac) for hrac in kadr}
+    volby = [hrac["id"] for hrac in sestavy.serad_hrace(kadr)]
+    st.multiselect(
+        "Kdo chybí (zraněný, trest, nehraje)",
+        volby,
+        format_func=lambda identita, _p=popisky: _p.get(identita, identita),
+        key=klic,
+    )
+    vybrani = [str(x) for x in (st.session_state.get(klic) or [])]
+    ulozene = [str(x) for x in (absence.get(tym) or [])]
+    if vybrani != ulozene:
+        sestavy.uloz_absence_tymu(tym, vybrani, kadr)
+        absence[tym] = vybrani
+
+
+def text_chybejicich(jmena):
+    if not jmena:
+        return ""
+    if len(jmena) <= 3:
+        return ", ".join(jmena)
+    return ", ".join(jmena[:3]) + f" +{len(jmena) - 3}"
 
 
 try:
@@ -389,8 +454,10 @@ for i, z in enumerate(zápasy):
                         )
                     else:
                         st.caption(
-                            "Únava se předvyplní z pohárových zápasů. Po ruční změně "
-                            "se predikce hned přepočítá."
+                            "Únava se předvyplní z pohárových zápasů. Soupisky se "
+                            "stahují z ChanceLiga.cz; zranění a tresty zaškrtni ručně "
+                            "– žádný volný zdroj je pro tuhle ligu nenesí. Výběr platí, "
+                            "dokud ho nesmažeš, i v dalším kole."
                         )
                         stupne_poharu = list(modely.POKUTA_POHARY)
 
@@ -405,8 +472,10 @@ for i, z in enumerate(zápasy):
                             )
                             if p["poznamka_domaci"]:
                                 st.caption(f"⚠️ {p['poznamka_domaci']}")
-                            st.selectbox(
-                                "Zranění", list(modely.POKUTA_ZRANENI), key=f"zd_{zvolene_kolo}_{i}"
+                            vyber_absenci(
+                                z["domaci"],
+                                f"abs_d_{zvolene_kolo}_{i}",
+                                kadry.get(z["domaci"]) or [],
                             )
                         with m2:
                             st.markdown(f"**{z['hoste']}** (hosté)")
@@ -418,16 +487,84 @@ for i, z in enumerate(zápasy):
                             )
                             if p["poznamka_hoste"]:
                                 st.caption(f"⚠️ {p['poznamka_hoste']}")
-                            st.selectbox(
-                                "Zranění", list(modely.POKUTA_ZRANENI), key=f"zh_{zvolene_kolo}_{i}"
+                            vyber_absenci(
+                                z["hoste"],
+                                f"abs_h_{zvolene_kolo}_{i}",
+                                kadry.get(z["hoste"]) or [],
                             )
 
+                        if st.button(
+                            "📋 Načíst oficiální sestavu zápasu",
+                            key=f"ns_{zvolene_kolo}_{i}",
+                        ):
+                            try:
+                                nactena = sestavy.stahni_sestavu_zapasu(
+                                    z["domaci"], z["hoste"]
+                                )
+                                st.session_state[f"sest_{zvolene_kolo}_{i}"] = (
+                                    nactena or {"prazdna": True}
+                                )
+                            except Exception as chyba_sestavy:
+                                st.session_state[f"sest_{zvolene_kolo}_{i}"] = {
+                                    "chyba": str(chyba_sestavy)
+                                }
+
+                        nactena_sestava = st.session_state.get(f"sest_{zvolene_kolo}_{i}")
+                        if nactena_sestava and nactena_sestava.get("chyba"):
+                            st.caption(
+                                f"Sestavu se nepodařilo stáhnout ({nactena_sestava['chyba']})."
+                            )
+                        elif nactena_sestava and nactena_sestava.get("prazdna"):
+                            st.caption(
+                                "Oficiální sestava na ChanceLiga.cz ještě není. "
+                                "Bývá až kolem výkopu, na páteční Telegram to nestihne."
+                            )
+                        elif nactena_sestava and nactena_sestava.get("domaci"):
+                            def _jmena(skupina):
+                                return ", ".join(
+                                    h["jmeno"] for h in (skupina or []) if h.get("jmeno")
+                                ) or "–"
+
+                            st.caption(
+                                f"Základ {z['domaci']}: {_jmena(nactena_sestava['domaci']['zaklad'])}"
+                            )
+                            st.caption(
+                                f"Základ {z['hoste']}: {_jmena(nactena_sestava['hoste']['zaklad'])}"
+                            )
+                            if st.button(
+                                "Označit, kdo v soupisce zápasu není",
+                                key=f"os_{zvolene_kolo}_{i}",
+                            ):
+                                for strana, tym in (
+                                    ("domaci", z["domaci"]),
+                                    ("hoste", z["hoste"]),
+                                ):
+                                    klic = (
+                                        f"abs_d_{zvolene_kolo}_{i}"
+                                        if strana == "domaci"
+                                        else f"abs_h_{zvolene_kolo}_{i}"
+                                    )
+                                    mimo = sestavy.id_mimo_sestavu(
+                                        kadry.get(tym) or [],
+                                        nactena_sestava.get(strana),
+                                    )
+                                    st.session_state[klic] = mimo
+                                    sestavy.uloz_absence_tymu(
+                                        tym, mimo, kadry.get(tym) or []
+                                    )
+                                    absence[tym] = mimo
+                                st.rerun()
+
                         if "sila_domaci" in p:
+                            chybi_d = text_chybejicich(p.get("chybejici_domaci") or [])
+                            chybi_h = text_chybejicich(p.get("chybejici_hoste") or [])
+                            dodatek_d = f" – {chybi_d}" if chybi_d else ""
+                            dodatek_h = f" – {chybi_h}" if chybi_h else ""
                             st.markdown(
                                 f"* **{z['domaci']}:** {p['sila_domaci_zaklad']} → **{p['sila_domaci']}** "
-                                f"(oslabení {p['dopad_domaci']} %)\n"
+                                f"(oslabení {p['dopad_domaci']} %{dodatek_d})\n"
                                 f"* **{z['hoste']}:** {p['sila_hoste_zaklad']} → **{p['sila_hoste']}** "
-                                f"(oslabení {p['dopad_hoste']} %)"
+                                f"(oslabení {p['dopad_hoste']} %{dodatek_h})"
                             )
                         else:
                             st.caption(

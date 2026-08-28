@@ -10,3 +10,6 @@ venv/
 # Pracovní soubory
 *.orig
 *.diff
+
+# Dočasná cache odkazů na zápasy – soupisky v sestavy/kadry.json v gitu zůstanou.
+sestavy/zapasy.json

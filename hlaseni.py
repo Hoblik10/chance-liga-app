@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import data
 import modely
 import nastaveni
+import sestavy
 import zaznamy
 
 VYCHOZI_ZRANENI = list(modely.POKUTA_ZRANENI)[0]
@@ -68,19 +69,38 @@ def najdi_dalsi_kolo(databaze_kol, kola, ted=None):
     return None
 
 
+def _zraneni_tymu(tym, vstupy, klic, kadry, absence):
+    """Číslo z UI, jinak z uložených absencí, jinak kompletní kádr."""
+    if klic in vstupy:
+        return vstupy[klic]
+    if kadry and tym in kadry:
+        return sestavy.pokuta_pro_tym(tym, kadry, absence)
+    return VYCHOZI_ZRANENI
+
+
 def predikce_kola(
-    sily, databaze_kol, kola, vahy, id_tymu_v_lize, rucni_vstupy=None, cil_tipu=None
+    sily,
+    databaze_kol,
+    kola,
+    vahy,
+    id_tymu_v_lize,
+    rucni_vstupy=None,
+    cil_tipu=None,
+    kadry=None,
+    absence=None,
 ):
     """Predikce všech zápasů ve vybraných kolech.
 
     ``rucni_vstupy`` je volitelný slovník (kolo, pořadí) ->
     {pohary_d, pohary_h, zraneni_d, zraneni_h} z UI. Bez něj se použije
-    odhad únavy z pohárů a kompletní kádr.
+    odhad únavy z pohárů a absence uložené v ``sestavy/absence.csv``.
 
     ``cil_tipu`` rozhoduje, jestli má tip vycházet co nejčastěji (dvojitá
     šance), nebo rovnou pojmenovat vítěze.
     """
     rucni_vstupy = rucni_vstupy or {}
+    kadry = kadry or {}
+    absence = absence or {}
     predikce = {}
 
     for kolo in kola:
@@ -93,14 +113,20 @@ def predikce_kola(
             )
 
             vstupy = rucni_vstupy.get((kolo, poradi), {})
+            zraneni_d = _zraneni_tymu(
+                zapas["domaci"], vstupy, "zraneni_d", kadry, absence
+            )
+            zraneni_h = _zraneni_tymu(
+                zapas["hoste"], vstupy, "zraneni_h", kadry, absence
+            )
             vysledek = modely.predikuj_vsemi(
                 sily,
                 zapas["domaci"],
                 zapas["hoste"],
                 pohary_domaci=vstupy.get("pohary_d", vychozi_d),
                 pohary_hoste=vstupy.get("pohary_h", vychozi_h),
-                zraneni_domaci=vstupy.get("zraneni_d", VYCHOZI_ZRANENI),
-                zraneni_hoste=vstupy.get("zraneni_h", VYCHOZI_ZRANENI),
+                zraneni_domaci=zraneni_d,
+                zraneni_hoste=zraneni_h,
                 vahy=vahy,
                 cil_tipu=cil_tipu,
             )
@@ -113,6 +139,12 @@ def predikce_kola(
             vysledek["vychozi_pohary_hoste"] = vychozi_h
             vysledek["poznamka_domaci"] = poznamka_d
             vysledek["poznamka_hoste"] = poznamka_h
+            vysledek["chybejici_domaci"] = vstupy.get("chybejici_d") or sestavy.jmena_hracu(
+                kadry.get(zapas["domaci"]) or [], absence.get(zapas["domaci"]) or []
+            )
+            vysledek["chybejici_hoste"] = vstupy.get("chybejici_h") or sestavy.jmena_hracu(
+                kadry.get(zapas["hoste"]) or [], absence.get(zapas["hoste"]) or []
+            )
             predikce[(kolo, poradi)] = vysledek
 
     return predikce
@@ -280,6 +312,8 @@ def priprav_a_posli(odeslat=True):
     sily = data.spocitej_sily(podklady)
     kola = dostupna_kola(podklady)
     vahy = modely.vahy_z_metrik(zaznamy.metriky_podle_modelu())
+    kadry, _ = sestavy.nacti_kadry()
+    absence = sestavy.nacti_absence()
 
     predikce = predikce_kola(
         sily,
@@ -287,6 +321,8 @@ def priprav_a_posli(odeslat=True):
         kola,
         vahy,
         podklady["id_tymu_v_lize"],
+        kadry=kadry,
+        absence=absence,
     )
 
     log = zapis_do_logu(

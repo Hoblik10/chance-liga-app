@@ -1,0 +1,4055 @@
+{
+  "aktualizovano": "2026-08-28T04:34:46",
+  "zdroj": "ChanceLiga.cz",
+  "sezona": "2026-2027",
+  "tymy": {
+    "1. FC Slovácko": {
+      "slug": "16-1-fc-slovacko",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/16-1-fc-slovacko",
+      "hraci": [
+        {
+          "id": "3193",
+          "jmeno": "Pavel Halouska",
+          "cislo": "34",
+          "pozice": "B",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "2080",
+          "jmeno": "Milan Heča",
+          "cislo": "29",
+          "pozice": "B",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4593",
+          "jmeno": "Alexandr Urban",
+          "cislo": "33",
+          "pozice": "B",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5202",
+          "jmeno": "Jocelin Behiratche",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5047",
+          "jmeno": "Paul Chiemela Ndubuisi",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "3608",
+          "jmeno": "Martin Koscelník",
+          "cislo": "24",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4469",
+          "jmeno": "Tomáš Král",
+          "cislo": "19",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3807",
+          "jmeno": "Gigli Ndefe",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5203",
+          "jmeno": "Leoš Prior",
+          "cislo": "28",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3710",
+          "jmeno": "Milan Rundič",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4849",
+          "jmeno": "Šimon Slončík",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3142",
+          "jmeno": "David Štěpánek",
+          "cislo": "23",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4810",
+          "jmeno": "Andrej Stojčevski",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4693",
+          "jmeno": "Filip Vaško",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4570",
+          "jmeno": "Patrik Blahút",
+          "cislo": "15",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4805",
+          "jmeno": "Artur Dolžnikov",
+          "cislo": "27",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "2745",
+          "jmeno": "Marek Havlík",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5209",
+          "jmeno": "Filip Hruška",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4224",
+          "jmeno": "Pavel Juroška",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "4928",
+          "jmeno": "Tihomir Kostadinov",
+          "cislo": "26",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4956",
+          "jmeno": "Alan Marinelli",
+          "cislo": "9",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5025",
+          "jmeno": "Gibril Sosseh",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4969",
+          "jmeno": "Martin Šviderský",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3147",
+          "jmeno": "Daniel Tetour",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2223",
+          "jmeno": "Michal Trávník",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4574",
+          "jmeno": "Lukáš Vorlický",
+          "cislo": "72",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4183",
+          "jmeno": "Filip Horský",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5201",
+          "jmeno": "Giannis Niarchos",
+          "cislo": "7",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3636",
+          "jmeno": "David Puškáč",
+          "cislo": "30",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        }
+      ]
+    },
+    "AC Sparta Praha": {
+      "slug": "2-ac-sparta-praha",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/2-ac-sparta-praha",
+      "hraci": [
+        {
+          "id": "5159",
+          "jmeno": "Krisztián Hegyi",
+          "cislo": "47",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4201",
+          "jmeno": "Jakub Surovčík",
+          "cislo": "44",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4766",
+          "jmeno": "Elias Cobbaut",
+          "cislo": "33",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5219",
+          "jmeno": "Tobias Guddal",
+          "cislo": "6",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "2178",
+          "jmeno": "Pavel Kadeřábek",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3961",
+          "jmeno": "Jakub Martinec",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4079",
+          "jmeno": "Matěj Ryneš",
+          "cislo": "11",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4595",
+          "jmeno": "Adam Ševínský",
+          "cislo": "19",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5234",
+          "jmeno": "Loic Mbe Soh",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4218",
+          "jmeno": "Martin Suchomel",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4313",
+          "jmeno": "Asger Sørensen",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4626",
+          "jmeno": "Emmanuel Uchenna Aririerisim",
+          "cislo": "16",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5160",
+          "jmeno": "Viktor Vitályos",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2090",
+          "jmeno": "Jaroslav Zelený",
+          "cislo": "30",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5184",
+          "jmeno": "Josimar Alcócer",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 3
+        },
+        {
+          "id": "4806",
+          "jmeno": "Magnus Kofod Andersen",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4448",
+          "jmeno": "Veljko Birmančević",
+          "cislo": "-",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4708",
+          "jmeno": "Santiago Eneme",
+          "cislo": "5",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5028",
+          "jmeno": "Joao Grimaldo",
+          "cislo": "21",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4600",
+          "jmeno": "Dominik Hollý",
+          "cislo": "24",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5026",
+          "jmeno": "Andrew Irving",
+          "cislo": "18",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 2
+        },
+        {
+          "id": "4038",
+          "jmeno": "Matěj Jurásek",
+          "cislo": "31",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3885",
+          "jmeno": "Adam Karabec",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "4967",
+          "jmeno": "Garang Kuol",
+          "cislo": "36",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4903",
+          "jmeno": "Roman Macek",
+          "cislo": "28",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4963",
+          "jmeno": "Sivert Mannsverk",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4960",
+          "jmeno": "John Mercado",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "5008",
+          "jmeno": "Ondřej Penxa",
+          "cislo": "52",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4579",
+          "jmeno": "Ebrima Singhateh",
+          "cislo": "27",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5064",
+          "jmeno": "Hugo Sochůrek",
+          "cislo": "38",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4255",
+          "jmeno": "Patrik Vydra",
+          "cislo": "26",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5214",
+          "jmeno": "Jonatan Brunes",
+          "cislo": "14",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4367",
+          "jmeno": "Matyáš Vojta",
+          "cislo": "29",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        }
+      ]
+    },
+    "Bohemians Praha 1905": {
+      "slug": "20-bohemians-praha-1905",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/20-bohemians-praha-1905",
+      "hraci": [
+        {
+          "id": "4774",
+          "jmeno": "Tomáš Frühwald",
+          "cislo": "23",
+          "pozice": "B",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "2658",
+          "jmeno": "Michal Reichl",
+          "cislo": "12",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3622",
+          "jmeno": "Jakub Šiman",
+          "cislo": "71",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5106",
+          "jmeno": "Mathews Banda",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "2793",
+          "jmeno": "Milan Havel",
+          "cislo": "24",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3935",
+          "jmeno": "David Heidenreich",
+          "cislo": "8",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4898",
+          "jmeno": "Dominik Javorček",
+          "cislo": "37",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4586",
+          "jmeno": "Matěj Kadlec",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4819",
+          "jmeno": "Peter Kareem",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3293",
+          "jmeno": "David Lischka",
+          "cislo": "27",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5049",
+          "jmeno": "Petr Mirvald",
+          "cislo": "32",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "5078",
+          "jmeno": "Jakub Tichý",
+          "cislo": "17",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3684",
+          "jmeno": "Denis Vala",
+          "cislo": "18",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3452",
+          "jmeno": "Jan Vondra",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "2714",
+          "jmeno": "Aleš Čermák",
+          "cislo": "47",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "4798",
+          "jmeno": "Šimon Černý",
+          "cislo": "70",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "1819",
+          "jmeno": "Jan Kovařík",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3396",
+          "jmeno": "Roman Květ",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "4918",
+          "jmeno": "Oliver Mikuda",
+          "cislo": "66",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2039",
+          "jmeno": "Václav Pilař",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3559",
+          "jmeno": "Dominik Pleštil",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4419",
+          "jmeno": "Benson Sakala",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3401",
+          "jmeno": "Vojtěch Smrž",
+          "cislo": "42",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5206",
+          "jmeno": "Matěj Šurýn",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4132",
+          "jmeno": "Ladislav Almási",
+          "cislo": "99",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 2
+        },
+        {
+          "id": "3900",
+          "jmeno": "Ladislav Krobot",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3463",
+          "jmeno": "Jan Matoušek",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4301",
+          "jmeno": "Vladimír Zeman",
+          "cislo": "13",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        }
+      ]
+    },
+    "FC Baník Ostrava": {
+      "slug": "14-fc-banik-ostrava",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/14-fc-banik-ostrava",
+      "hraci": [
+        {
+          "id": "4417",
+          "jmeno": "Matouš Babka",
+          "cislo": "77",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3320",
+          "jmeno": "Viktor Budinský",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4302",
+          "jmeno": "Martin Hrubý",
+          "cislo": "24",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3541",
+          "jmeno": "Martin Jedlička",
+          "cislo": "23",
+          "pozice": "B",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3249",
+          "jmeno": "Matěj Chaluš",
+          "cislo": "37",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "5182",
+          "jmeno": "Maksym Djačuk",
+          "cislo": "16",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "2035",
+          "jmeno": "Michal Frydrych",
+          "cislo": "17",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5183",
+          "jmeno": "Matúš Kmeť",
+          "cislo": "81",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4914",
+          "jmeno": "Jiří Míček",
+          "cislo": "42",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4728",
+          "jmeno": "Roan Nogha",
+          "cislo": "83",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4084",
+          "jmeno": "Vlasij Sinjavskij",
+          "cislo": "99",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5067",
+          "jmeno": "Jevgenij Skyba",
+          "cislo": "44",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4995",
+          "jmeno": "Abdullahi Bewene",
+          "cislo": "34",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4206",
+          "jmeno": "Jiří Boula",
+          "cislo": "5",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5050",
+          "jmeno": "Dantaye Gilbert",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "2283",
+          "jmeno": "Daniel Holzer",
+          "cislo": "95",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3659",
+          "jmeno": "Michal Kohút",
+          "cislo": "21",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "4973",
+          "jmeno": "Artur Musák",
+          "cislo": "55",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4807",
+          "jmeno": "Dennis Owusu",
+          "cislo": "25",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4713",
+          "jmeno": "David Planka",
+          "cislo": "18",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4818",
+          "jmeno": "Filip Šancl",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4508",
+          "jmeno": "Aboubacar Traoré",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4281",
+          "jmeno": "Abdallah Gning",
+          "cislo": "12",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3634",
+          "jmeno": "Václav Jurečka",
+          "cislo": "15",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "3239",
+          "jmeno": "Filip Kubala",
+          "cislo": "28",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4803",
+          "jmeno": "David Látal",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5122",
+          "jmeno": "Vít Škrkoň",
+          "cislo": "22",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        }
+      ]
+    },
+    "FC Hradec Králové": {
+      "slug": "11-fc-hradec-kralove",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/11-fc-hradec-kralove",
+      "hraci": [
+        {
+          "id": "4037",
+          "jmeno": "Matyáš Vágner",
+          "cislo": "20",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4122",
+          "jmeno": "Patrik Vízek",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4363",
+          "jmeno": "Adam Zadražil",
+          "cislo": "12",
+          "pozice": "B",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5229",
+          "jmeno": "Rodrigo Abajas",
+          "cislo": "33",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3449",
+          "jmeno": "František Čech",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "3574",
+          "jmeno": "Filip Čihák",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3922",
+          "jmeno": "Daniel Horák",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4665",
+          "jmeno": "David Ludvíček",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5228",
+          "jmeno": "Filip Mielke",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4735",
+          "jmeno": "Tomáš Petrášek",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4677",
+          "jmeno": "Jakub Uhrinčať",
+          "cislo": "7",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3562",
+          "jmeno": "Tomáš Wiesner",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5090",
+          "jmeno": "Viktor Zentrich",
+          "cislo": "8",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5036",
+          "jmeno": "Adam Binar",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3134",
+          "jmeno": "Juraj Chvátal",
+          "cislo": "30",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3582",
+          "jmeno": "Samuel Dancák",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "2029",
+          "jmeno": "Vladimír Darida",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5082",
+          "jmeno": "Elione Fernandes Neto",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4942",
+          "jmeno": "Lucas Kubr",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3248",
+          "jmeno": "Jakub Kučera",
+          "cislo": "28",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5117",
+          "jmeno": "Štěpán Ponikelský",
+          "cislo": "22",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4371",
+          "jmeno": "Tom Slončík",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 2
+        },
+        {
+          "id": "3044",
+          "jmeno": "Daniel Trubač",
+          "cislo": "27",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3649",
+          "jmeno": "Matěj Valenta",
+          "cislo": "9",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3144",
+          "jmeno": "Adam Vlkanova",
+          "cislo": "58",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5230",
+          "jmeno": "Herman Barkouski",
+          "cislo": "63",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4815",
+          "jmeno": "Jakub Hodek",
+          "cislo": "14",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3082",
+          "jmeno": "Ondřej Mihálik",
+          "cislo": "17",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5014",
+          "jmeno": "Marko Regža",
+          "cislo": "18",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5037",
+          "jmeno": "Abdullahi Umar",
+          "cislo": "40",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3303",
+          "jmeno": "Mick Van Buren",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 1
+        }
+      ]
+    },
+    "FC Slovan Liberec": {
+      "slug": "7-fc-slovan-liberec",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/7-fc-slovan-liberec",
+      "hraci": [
+        {
+          "id": "2121",
+          "jmeno": "Tomáš Koubek",
+          "cislo": "40",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5165",
+          "jmeno": "Dominik Kúdelčík",
+          "cislo": "31",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4730",
+          "jmeno": "Jindřich Musil",
+          "cislo": "47",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4034",
+          "jmeno": "Lukáš Pešl",
+          "cislo": "33",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4633",
+          "jmeno": "Aziz Abdu Kayondo",
+          "cislo": "27",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5022",
+          "jmeno": "Haris Berbić",
+          "cislo": "23",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "1988",
+          "jmeno": "Jan Bořil",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5035",
+          "jmeno": "Augustin Drakpe",
+          "cislo": "14",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3875",
+          "jmeno": "Šimon Gabriel",
+          "cislo": "32",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4816",
+          "jmeno": "Petr Hodouš",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "2681",
+          "jmeno": "Lukáš Hůlka",
+          "cislo": "29",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3728",
+          "jmeno": "Jan Knapík",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4067",
+          "jmeno": "Josef Koželuh",
+          "cislo": "18",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "2734",
+          "jmeno": "Jan Mikula",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4682",
+          "jmeno": "Martin Rýzek",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5166",
+          "jmeno": "Vénuste Baboula",
+          "cislo": "25",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "5191",
+          "jmeno": "Aleko Basiladze",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4408",
+          "jmeno": "Alexandr Bužek",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4683",
+          "jmeno": "Patrik Dulay",
+          "cislo": "24",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 2
+        },
+        {
+          "id": "5167",
+          "jmeno": "Fallou Faye",
+          "cislo": "60",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4464",
+          "jmeno": "Petr Juliš",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4368",
+          "jmeno": "Milan Lexa",
+          "cislo": "15",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4940",
+          "jmeno": "Ermin Mahmič",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2266",
+          "jmeno": "Lukáš Masopust",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4941",
+          "jmeno": "Afolabi Soliu",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "3896",
+          "jmeno": "Vojtěch Stránský",
+          "cislo": "12",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3991",
+          "jmeno": "Vojtěch Sychra",
+          "cislo": "28",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4694",
+          "jmeno": "Qëndrim Zyba",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4637",
+          "jmeno": "Raimonds Krollis",
+          "cislo": "99",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4366",
+          "jmeno": "Vasil Kušej",
+          "cislo": "19",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4565",
+          "jmeno": "Lukáš Letenay",
+          "cislo": "21",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4039",
+          "jmeno": "Lukáš Mašek",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4680",
+          "jmeno": "Daniel Rus",
+          "cislo": "29",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        }
+      ]
+    },
+    "FC Viktoria Plzeň": {
+      "slug": "6-fc-viktoria-plzen",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/6-fc-viktoria-plzen",
+      "hraci": [
+        {
+          "id": "4410",
+          "jmeno": "Viktor Baier",
+          "cislo": "30",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5015",
+          "jmeno": "Dominik Ťapaj",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4138",
+          "jmeno": "Marián Tvrdoň",
+          "cislo": "13",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4733",
+          "jmeno": "Florian Wiegele",
+          "cislo": "44",
+          "pozice": "B",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4297",
+          "jmeno": "Merchas Doski",
+          "cislo": "14",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4430",
+          "jmeno": "Sampson Dweh",
+          "cislo": "40",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "3295",
+          "jmeno": "Václav Jemelka",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4481",
+          "jmeno": "Dávid Krčík",
+          "cislo": "37",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "4468",
+          "jmeno": "Jan Paluska",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4233",
+          "jmeno": "Filip Prebsl",
+          "cislo": "98",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4585",
+          "jmeno": "Karel Spáčil",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4272",
+          "jmeno": "Sebastian Boháč",
+          "cislo": "66",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3873",
+          "jmeno": "Lukáš Červ",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "2783",
+          "jmeno": "Patrik Hrošovský",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "3502",
+          "jmeno": "Tomáš Ladra",
+          "cislo": "18",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4483",
+          "jmeno": "Amar Memič",
+          "cislo": "99",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4722",
+          "jmeno": "Jiří Panoš",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5156",
+          "jmeno": "Stefan Pirgić",
+          "cislo": "36",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4647",
+          "jmeno": "Alexandr Sojka",
+          "cislo": "12",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4440",
+          "jmeno": "Cheick Souaré",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4091",
+          "jmeno": "Denis Višinský",
+          "cislo": "9",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4755",
+          "jmeno": "Prince Kwabena Adu",
+          "cislo": "80",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "5157",
+          "jmeno": "Baboucarr Faal",
+          "cislo": "23",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4692",
+          "jmeno": "Christophe Kabongo",
+          "cislo": "7",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 3
+        },
+        {
+          "id": "5030",
+          "jmeno": "Salim Fago Lawal",
+          "cislo": "70",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5093",
+          "jmeno": "Mohamed Toure",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2005",
+          "jmeno": "Matěj Vydra",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 1
+        }
+      ]
+    },
+    "FC Zbrojovka Brno": {
+      "slug": "9-fc-zbrojovka-brno",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/9-fc-zbrojovka-brno",
+      "hraci": [
+        {
+          "id": "4370",
+          "jmeno": "Colin Andrew",
+          "cislo": "30",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5175",
+          "jmeno": "Adam Hrdina",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5174",
+          "jmeno": "Ondřej Prodělal",
+          "cislo": "78",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3384",
+          "jmeno": "Dominik Sváček",
+          "cislo": "24",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2744",
+          "jmeno": "Tomáš Břečka",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5208",
+          "jmeno": "Amadou Dante",
+          "cislo": "44",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3266",
+          "jmeno": "Denis Granečný",
+          "cislo": "18",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4863",
+          "jmeno": "Eric Hunal",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "2998",
+          "jmeno": "Jan Juroška",
+          "cislo": "32",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5181",
+          "jmeno": "Kauan Carneiro Da Silva Kaká",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3537",
+          "jmeno": "Jakub Klíma",
+          "cislo": "39",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "2025",
+          "jmeno": "Petr Mareš",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3483",
+          "jmeno": "Jakub Pokorný",
+          "cislo": "38",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3473",
+          "jmeno": "Filip Vedral",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3793",
+          "jmeno": "Patrik Čavoš",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5177",
+          "jmeno": "Martin Gjorgievski",
+          "cislo": "31",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3486",
+          "jmeno": "Jakub Janetzký",
+          "cislo": "68",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4264",
+          "jmeno": "Štěpán Langer",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4792",
+          "jmeno": "Lukáš Penxa",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5179",
+          "jmeno": "Martin Rymarenko",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5178",
+          "jmeno": "Lukas Saal",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3008",
+          "jmeno": "Petr Ševčík",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3496",
+          "jmeno": "Jiří Texl",
+          "cislo": "13",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4073",
+          "jmeno": "Tadeáš Vachoušek",
+          "cislo": "14",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "3441",
+          "jmeno": "Antonín Vaníček",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 2
+        },
+        {
+          "id": "4574",
+          "jmeno": "Lukáš Vorlický",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3436",
+          "jmeno": "Patrik Žitný",
+          "cislo": "29",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "2261",
+          "jmeno": "Jaromír Zmrhal",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4478",
+          "jmeno": "Lucky Ezeh",
+          "cislo": "77",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "4437",
+          "jmeno": "Bienvenue Kanakimana",
+          "cislo": "19",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4131",
+          "jmeno": "Daniel Vašulín",
+          "cislo": "15",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 2
+        },
+        {
+          "id": "5176",
+          "jmeno": "Filip Večeřa",
+          "cislo": "7",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3804",
+          "jmeno": "Oliver Velich",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        }
+      ]
+    },
+    "FC Zlín": {
+      "slug": "33-fc-zlin",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/33-fc-zlin",
+      "hraci": [
+        {
+          "id": "4534",
+          "jmeno": "Štěpán Bachůrek",
+          "cislo": "64",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "1878",
+          "jmeno": "Stanislav Dostál",
+          "cislo": "17",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3739",
+          "jmeno": "Milan Knobloch",
+          "cislo": "34",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3175",
+          "jmeno": "Lukáš Bartošák",
+          "cislo": "31",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3938",
+          "jmeno": "Jakub Černín",
+          "cislo": "24",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3613",
+          "jmeno": "Michal Fukala",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5128",
+          "jmeno": "David Grygera",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "2293",
+          "jmeno": "Jakub Jugas",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5169",
+          "jmeno": "Zvonimir Katalinić",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3822",
+          "jmeno": "Jakub Kolář",
+          "cislo": "28",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3200",
+          "jmeno": "Miloš Kopečný",
+          "cislo": "23",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3102",
+          "jmeno": "Antonín Křapka",
+          "cislo": "39",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4070",
+          "jmeno": "Ondřej Kukučka",
+          "cislo": "35",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5168",
+          "jmeno": "Prince Mbatshi Mukuba",
+          "cislo": "45",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5009",
+          "jmeno": "Jiří Štefan",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5170",
+          "jmeno": "Frank Appiah",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5199",
+          "jmeno": "Prince Emmanuel Chibuzor",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4932",
+          "jmeno": "Michal Cupák",
+          "cislo": "26",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4011",
+          "jmeno": "Joss Didiba",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4937",
+          "jmeno": "Filip Dorňák",
+          "cislo": "13",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5084",
+          "jmeno": "Tomáš Fojtů",
+          "cislo": "37",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5171",
+          "jmeno": "Adam Gaži",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4945",
+          "jmeno": "Tomáš Hellebrand",
+          "cislo": "53",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3240",
+          "jmeno": "David Machalík",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4571",
+          "jmeno": "Cletus Nombil",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5017",
+          "jmeno": "Kristers Penkevics",
+          "cislo": "5",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4935",
+          "jmeno": "Stanislav Petruta",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4934",
+          "jmeno": "Marián Pišoja",
+          "cislo": "82",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3621",
+          "jmeno": "Tom Ulbrich",
+          "cislo": "4",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4939",
+          "jmeno": "Stanley Kanu",
+          "cislo": "14",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3207",
+          "jmeno": "Tomáš Poznar",
+          "cislo": "88",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4105",
+          "jmeno": "Daniel Šmiga",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5205",
+          "jmeno": "Moustapha Toure",
+          "cislo": "18",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        }
+      ]
+    },
+    "FK Jablonec": {
+      "slug": "4-fk-jablonec",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/4-fk-jablonec",
+      "hraci": [
+        {
+          "id": "1963",
+          "jmeno": "Jan Hanuš",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5232",
+          "jmeno": "Michal Kukučka",
+          "cislo": "33",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4727",
+          "jmeno": "Klemen Mihelak",
+          "cislo": "99",
+          "pozice": "B",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3697",
+          "jmeno": "Martin Cedidla",
+          "cislo": "18",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 2
+        },
+        {
+          "id": "4906",
+          "jmeno": "Nassim Innocenti",
+          "cislo": "90",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4588",
+          "jmeno": "Kryštof Karban",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "1909",
+          "jmeno": "Filip Novák",
+          "cislo": "57",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4214",
+          "jmeno": "David Nykrín",
+          "cislo": "12",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5185",
+          "jmeno": "Dušan Pavlovič",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3568",
+          "jmeno": "Jiří Sláma",
+          "cislo": "20",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3516",
+          "jmeno": "Eduard Sobol",
+          "cislo": "23",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3644",
+          "jmeno": "Daniel Souček",
+          "cislo": "14",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4453",
+          "jmeno": "Nemanja Tekijaški",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5161",
+          "jmeno": "Hugo Ahl",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3711",
+          "jmeno": "Vachtang Čanturišvili",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4793",
+          "jmeno": "Roman Horák",
+          "cislo": "22",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4572",
+          "jmeno": "Sebastian Nebyla",
+          "cislo": "25",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4837",
+          "jmeno": "Nelson Okeke",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3700",
+          "jmeno": "Matěj Polidar",
+          "cislo": "21",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4771",
+          "jmeno": "Richard Sedláček",
+          "cislo": "13",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3095",
+          "jmeno": "Jan Suchan",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "3045",
+          "jmeno": "Filip Zorvan",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4444",
+          "jmeno": "Alexis Alégué Elandi",
+          "cislo": "77",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5233",
+          "jmeno": "Saidou Alioum",
+          "cislo": "-",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "1904",
+          "jmeno": "Jan Chramosta",
+          "cislo": "19",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "3777",
+          "jmeno": "Lamin Jawo",
+          "cislo": "44",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4968",
+          "jmeno": "Matej Malenšek",
+          "cislo": "42",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4808",
+          "jmeno": "Kevin-Prince Milla",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3398",
+          "jmeno": "Antonín Růsek",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3761",
+          "jmeno": "Filip Vecheta",
+          "cislo": "27",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        }
+      ]
+    },
+    "FK Mladá Boleslav": {
+      "slug": "8-fk-mlada-boleslav",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/8-fk-mlada-boleslav",
+      "hraci": [
+        {
+          "id": "3277",
+          "jmeno": "Jiří Floder",
+          "cislo": "59",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5192",
+          "jmeno": "Marek Obdržálek",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3106",
+          "jmeno": "Vojtěch Vorel",
+          "cislo": "42",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4123",
+          "jmeno": "Denis Donát",
+          "cislo": "13",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5052",
+          "jmeno": "Jan Harušťák",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2278",
+          "jmeno": "Matěj Hybš",
+          "cislo": "11",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4104",
+          "jmeno": "Adam Kadlec",
+          "cislo": "27",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3260",
+          "jmeno": "Ondřej Karafiát",
+          "cislo": "44",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5194",
+          "jmeno": "Filip Kolář",
+          "cislo": "38",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3928",
+          "jmeno": "Martin Králik",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4253",
+          "jmeno": "Dominik Mareš",
+          "cislo": "24",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4723",
+          "jmeno": "Filip Matoušek",
+          "cislo": "32",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4838",
+          "jmeno": "Matěj Zachoval",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4462",
+          "jmeno": "Samuel Grygar",
+          "cislo": "14",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4990",
+          "jmeno": "Marek Havran",
+          "cislo": "18",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4394",
+          "jmeno": "Vojtěch Hora",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5195",
+          "jmeno": "Jan Jinoch",
+          "cislo": "41",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4283",
+          "jmeno": "Solomon John",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "4944",
+          "jmeno": "Josef Kolářík",
+          "cislo": "49",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4669",
+          "jmeno": "David Kozel",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4063",
+          "jmeno": "Daniel Langhamer",
+          "cislo": "28",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4672",
+          "jmeno": "Filip Lehký",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3706",
+          "jmeno": "David Pech",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4167",
+          "jmeno": "Nicolas Penner",
+          "cislo": "15",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4982",
+          "jmeno": "Martin Šubert",
+          "cislo": "21",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 3
+        },
+        {
+          "id": "4860",
+          "jmeno": "Jan Zíka",
+          "cislo": "76",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4553",
+          "jmeno": "Jan Buryán",
+          "cislo": "70",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3299",
+          "jmeno": "Jiří Klíma",
+          "cislo": "23",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 3
+        },
+        {
+          "id": "4565",
+          "jmeno": "Lukáš Letenay",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4674",
+          "jmeno": "Filip Špatenka",
+          "cislo": "17",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5196",
+          "jmeno": "Roman Teterja",
+          "cislo": "16",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        }
+      ]
+    },
+    "FK Pardubice": {
+      "slug": "39-fk-pardubice",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/39-fk-pardubice",
+      "hraci": [
+        {
+          "id": "4987",
+          "jmeno": "Luka Charatišvili",
+          "cislo": "99",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2620",
+          "jmeno": "Aleš Mandous",
+          "cislo": "30",
+          "pozice": "B",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3844",
+          "jmeno": "Vladimír Neuman",
+          "cislo": "46",
+          "pozice": "B",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4152",
+          "jmeno": "Jáchym Šerák",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3459",
+          "jmeno": "Jan Stejskal",
+          "cislo": "13",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4953",
+          "jmeno": "Simon Bammens",
+          "cislo": "44",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5071",
+          "jmeno": "Tobias Boledovič",
+          "cislo": "40",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5016",
+          "jmeno": "Emmanuel Godwin",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4199",
+          "jmeno": "Marek Icha",
+          "cislo": "6",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4802",
+          "jmeno": "Ryan Mahuta",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "4734",
+          "jmeno": "Jason Noslin",
+          "cislo": "43",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5024",
+          "jmeno": "Bohdan Sliubyk",
+          "cislo": "92",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4972",
+          "jmeno": "Mouhamed Traore",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4539",
+          "jmeno": "Jan Trédl",
+          "cislo": "12",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4705",
+          "jmeno": "Giannis-Fivos Botos",
+          "cislo": "90",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3286",
+          "jmeno": "Michal Hlavatý",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5000",
+          "jmeno": "Tomáš Jelínek",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5220",
+          "jmeno": "Martin Reil",
+          "cislo": "27",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4950",
+          "jmeno": "Robi Saarma",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3970",
+          "jmeno": "Samuel Šimek",
+          "cislo": "26",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4741",
+          "jmeno": "Dominique Simon",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3954",
+          "jmeno": "Tomáš Solil",
+          "cislo": "24",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "5115",
+          "jmeno": "Jiří Zima",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "3575",
+          "jmeno": "Václav Drchal",
+          "cislo": "17",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3921",
+          "jmeno": "Vojtěch Patrák",
+          "cislo": "8",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "5005",
+          "jmeno": "Elem Victor Samuel",
+          "cislo": "35",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4254",
+          "jmeno": "Daniel Smékal",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4446",
+          "jmeno": "Abdullahi Tanko",
+          "cislo": "28",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4583",
+          "jmeno": "Kahuan Vinicius",
+          "cislo": "99",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        }
+      ]
+    },
+    "FK Teplice": {
+      "slug": "17-fk-teplice",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/17-fk-teplice",
+      "hraci": [
+        {
+          "id": "4325",
+          "jmeno": "Kryštof Lichtenberg",
+          "cislo": "31",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3627",
+          "jmeno": "Luděk Němeček",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3535",
+          "jmeno": "Matouš Trmal",
+          "cislo": "29",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4615",
+          "jmeno": "Nojus Vytis Audinis",
+          "cislo": "34",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4772",
+          "jmeno": "Daniel Danihel",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4146",
+          "jmeno": "Jaroslav Harušťák",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4961",
+          "jmeno": "Jakub Jakubko",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4916",
+          "jmeno": "Matej Riznič",
+          "cislo": "25",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "2970",
+          "jmeno": "Ladislav Takács",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5197",
+          "jmeno": "Denys Taraduda",
+          "cislo": "13",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3999",
+          "jmeno": "Dalibor Večerka",
+          "cislo": "28",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5198",
+          "jmeno": "Oskars Vientiess",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4861",
+          "jmeno": "John Auta",
+          "cislo": "46",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "4402",
+          "jmeno": "Marek Beránek",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4288",
+          "jmeno": "Michal Bílek",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4358",
+          "jmeno": "Marcel Čermák",
+          "cislo": "36",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4015",
+          "jmeno": "Jan Fortelný",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5216",
+          "jmeno": "Artěm Harža",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4025",
+          "jmeno": "Robert Jukl",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3234",
+          "jmeno": "Petr Kodeš",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "1996",
+          "jmeno": "Ladislav Krejčí",
+          "cislo": "14",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3888",
+          "jmeno": "Daniel Mareček",
+          "cislo": "37",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "1780",
+          "jmeno": "Lukáš Mareček",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 3
+        },
+        {
+          "id": "3730",
+          "jmeno": "Matěj Radosta",
+          "cislo": "35",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4143",
+          "jmeno": "Josef Švanda",
+          "cislo": "3",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5125",
+          "jmeno": "Idris Hopi",
+          "cislo": "21",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3934",
+          "jmeno": "Matyáš Kozák",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4493",
+          "jmeno": "Matěj Náprstek",
+          "cislo": "12",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3278",
+          "jmeno": "Matěj Pulkrab",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "4651",
+          "jmeno": "Pavel Svatek",
+          "cislo": "24",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3596",
+          "jmeno": "Tomáš Zlatohlávek",
+          "cislo": "7",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        }
+      ]
+    },
+    "SK Artis Brno": {
+      "slug": "41-sk-artis-brno",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/41-sk-artis-brno",
+      "hraci": [
+        {
+          "id": "4005",
+          "jmeno": "Jiří Borek",
+          "cislo": "31",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5142",
+          "jmeno": "Richard Kašík",
+          "cislo": "29",
+          "pozice": "B",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4061",
+          "jmeno": "Tadeáš Stoppen",
+          "cislo": "32",
+          "pozice": "B",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4248",
+          "jmeno": "Ondřej Čoudek",
+          "cislo": "24",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4913",
+          "jmeno": "Emmanuel Fully",
+          "cislo": "15",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3041",
+          "jmeno": "Jakub Fulnek",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5153",
+          "jmeno": "Neil Glossoa",
+          "cislo": "33",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3856",
+          "jmeno": "Štěpán Harazim",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5149",
+          "jmeno": "Michal Jeřábek",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5172",
+          "jmeno": "Danijel Kolarić",
+          "cislo": "16",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2250",
+          "jmeno": "Milan Lutonský",
+          "cislo": "-",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3724",
+          "jmeno": "Dominik Plechatý",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4203",
+          "jmeno": "Karel Pojezný",
+          "cislo": "-",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3034",
+          "jmeno": "Dominik Preisler",
+          "cislo": "27",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "3605",
+          "jmeno": "David Šimek",
+          "cislo": "28",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5212",
+          "jmeno": "Adam Carlén",
+          "cislo": "21",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4635",
+          "jmeno": "Issa Fomba",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5173",
+          "jmeno": "Sacha Komljenovic",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4587",
+          "jmeno": "Albert Labík",
+          "cislo": "9",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "1970",
+          "jmeno": "Jan Navrátil",
+          "cislo": "30",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4455",
+          "jmeno": "Hélio Alberto Delgado Silva Papalele",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3840",
+          "jmeno": "Adam Petrák",
+          "cislo": "14",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "2129",
+          "jmeno": "Martin Pospíšil",
+          "cislo": "26",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4229",
+          "jmeno": "Martin Rolinek",
+          "cislo": "-",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4113",
+          "jmeno": "Daniel Samek",
+          "cislo": "10",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "2846",
+          "jmeno": "Jan Sedlák",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5226",
+          "jmeno": "Pavel Sokol",
+          "cislo": "-",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5200",
+          "jmeno": "Ismael Sylla",
+          "cislo": "13",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2612",
+          "jmeno": "Vukadin Vukadinovič",
+          "cislo": "77",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4362",
+          "jmeno": "Quadri Adebayo Adediran",
+          "cislo": "6",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 2
+        },
+        {
+          "id": "4444",
+          "jmeno": "Alexis Alégué Elandi",
+          "cislo": "7",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4454",
+          "jmeno": "El Hadji Latyr Ndiaye",
+          "cislo": "12",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5227",
+          "jmeno": "Martin Tauš",
+          "cislo": "37",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4847",
+          "jmeno": "Daniel Toula",
+          "cislo": "19",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        }
+      ]
+    },
+    "SK Sigma Olomouc": {
+      "slug": "13-sk-sigma-olomouc",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/13-sk-sigma-olomouc",
+      "hraci": [
+        {
+          "id": "5186",
+          "jmeno": "Patrik Berka",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3423",
+          "jmeno": "Matúš Hruška",
+          "cislo": "98",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4689",
+          "jmeno": "Jan Koutný",
+          "cislo": "91",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "5187",
+          "jmeno": "Anthony Pavlešić",
+          "cislo": "31",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5222",
+          "jmeno": "Anton Ekeroth",
+          "cislo": "29",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4575",
+          "jmeno": "Jakub Elbel",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4116",
+          "jmeno": "Matěj Hadaš",
+          "cislo": "22",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4902",
+          "jmeno": "Tomáš Huk",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3595",
+          "jmeno": "Jan Král",
+          "cislo": "21",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4756",
+          "jmeno": "Louis Lurvink",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "4929",
+          "jmeno": "Matúš Malý",
+          "cislo": "33",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5188",
+          "jmeno": "Stephane Noumbissie",
+          "cislo": "26",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4215",
+          "jmeno": "Filip Slavíček",
+          "cislo": "16",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4629",
+          "jmeno": "Abdoulaye Sylla",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4931",
+          "jmeno": "Daniel Barát",
+          "cislo": "19",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "5038",
+          "jmeno": "Péter Baráth",
+          "cislo": "88",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "3796",
+          "jmeno": "Michal Beran",
+          "cislo": "7",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4205",
+          "jmeno": "Ahmad Ghali",
+          "cislo": "70",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 2
+        },
+        {
+          "id": "5039",
+          "jmeno": "Dario Grgić",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3509",
+          "jmeno": "Dominik Janošek",
+          "cislo": "39",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "5041",
+          "jmeno": "Fabijan Krivak",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 1
+        },
+        {
+          "id": "3887",
+          "jmeno": "Jáchym Šíp",
+          "cislo": "6",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5210",
+          "jmeno": "Marko Soldo",
+          "cislo": "14",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "3653",
+          "jmeno": "Jiří Spáčil",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4110",
+          "jmeno": "David Tkáč",
+          "cislo": "24",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4112",
+          "jmeno": "Filip Uriča",
+          "cislo": "27",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4930",
+          "jmeno": "Václav Zahradníček",
+          "cislo": "80",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5042",
+          "jmeno": "John Paul Dembe",
+          "cislo": "17",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4109",
+          "jmeno": "Jan Fiala",
+          "cislo": "18",
+          "pozice": "U",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "2624",
+          "jmeno": "Jan Kliment",
+          "cislo": "9",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5190",
+          "jmeno": "Hilmir Rafn Mikaelsson",
+          "cislo": "11",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4590",
+          "jmeno": "Matěj Mikulenka",
+          "cislo": "25",
+          "pozice": "U",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "4217",
+          "jmeno": "Václav Sejk",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4384",
+          "jmeno": "Mohamed Yasser",
+          "cislo": "35",
+          "pozice": "U",
+          "zapasy": 0,
+          "goly": 0
+        }
+      ]
+    },
+    "SK Slavia Praha": {
+      "slug": "5-sk-slavia-praha",
+      "url": "https://www.chanceliga.cz/klub/2027/soupiska/5-sk-slavia-praha",
+      "hraci": [
+        {
+          "id": "5152",
+          "jmeno": "Nazar Domčak",
+          "cislo": "29",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2607",
+          "jmeno": "Ondřej Kolář",
+          "cislo": "1",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "3809",
+          "jmeno": "Jakub Markovič",
+          "cislo": "35",
+          "pozice": "B",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "2789",
+          "jmeno": "Jindřich Staněk",
+          "cislo": "36",
+          "pozice": "B",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4814",
+          "jmeno": "Sahmkou Camara",
+          "cislo": "41",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4189",
+          "jmeno": "Štěpán Chaloupek",
+          "cislo": "2",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4296",
+          "jmeno": "Denis Halinský",
+          "cislo": "33",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "2205",
+          "jmeno": "Tomáš Holeš",
+          "cislo": "3",
+          "pozice": "O",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4925",
+          "jmeno": "Samuel Isife",
+          "cislo": "14",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4153",
+          "jmeno": "David Jurásek",
+          "cislo": "39",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4397",
+          "jmeno": "Mikuláš Konečný",
+          "cislo": "42",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "4952",
+          "jmeno": "Ange N'Guessan",
+          "cislo": "6",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "4361",
+          "jmeno": "Igoh Ogbu",
+          "cislo": "5",
+          "pozice": "O",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5001",
+          "jmeno": "Eliáš Piták",
+          "cislo": "43",
+          "pozice": "O",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "3725",
+          "jmeno": "Tomáš Vlček",
+          "cislo": "27",
+          "pozice": "O",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "3810",
+          "jmeno": "David Zima",
+          "cislo": "4",
+          "pozice": "O",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4544",
+          "jmeno": "Emmanuel Ayaosi",
+          "cislo": "20",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "4971",
+          "jmeno": "Toumani Diakité",
+          "cislo": "22",
+          "pozice": "Z",
+          "zapasy": 1,
+          "goly": 0
+        },
+        {
+          "id": "4546",
+          "jmeno": "Pavel Kačor",
+          "cislo": "32",
+          "pozice": "Z",
+          "zapasy": 3,
+          "goly": 0
+        },
+        {
+          "id": "5154",
+          "jmeno": "Oskar Kubiak",
+          "cislo": "8",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "4502",
+          "jmeno": "David Moses",
+          "cislo": "16",
+          "pozice": "Z",
+          "zapasy": 2,
+          "goly": 0
+        },
+        {
+          "id": "5155",
+          "jmeno": "Wiktor Nowak",
+          "cislo": "30",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 3
+        },
+        {
+          "id": "3786",
+          "jmeno": "Lukáš Provod",
+          "cislo": "17",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 0
+        },
+        {
+          "id": "4024",
+          "jmeno": "Michal Sadílek",
+          "cislo": "23",
+          "pozice": "Z",
+          "zapasy": 5,
+          "goly": 1
+        },
+        {
+          "id": "4896",
+          "jmeno": "Youssoupha Sanyang",
+          "cislo": "11",
+          "pozice": "Z",
+          "zapasy": 0,
+          "goly": 0
+        },
+        {
+          "id": "5068",
+          "jmeno": "Mubarak Emmanuel Suleiman",
+          "cislo": "15",
+          "pozice": "Z",
+          "zapasy": 4,
+          "goly": 1
+        },
+        {
+          "id": "2977",
+          "jmeno": "Tomáš Chorý",
+          "cislo": "25",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "3695",
+          "jmeno": "Mojmír Chytil",
+          "cislo": "13",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 4
+        },
+        {
+          "id": "5021",
+          "jmeno": "Adonija Ouanda",
+          "cislo": "18",
+          "pozice": "U",
+          "zapasy": 2,
+          "goly": 1
+        },
+        {
+          "id": "3135",
+          "jmeno": "Ivan Schranz",
+          "cislo": "26",
+          "pozice": "U",
+          "zapasy": 4,
+          "goly": 0
+        },
+        {
+          "id": "5020",
+          "jmeno": "Danijel Šturm",
+          "cislo": "10",
+          "pozice": "U",
+          "zapasy": 5,
+          "goly": 0
+        }
+      ]
+    }
+  }
+}
