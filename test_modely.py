@@ -1112,6 +1112,46 @@ class TestUlozeneKurzy(unittest.TestCase):
         self.assertTrue(kurzy.kurzy_se_lisi(None, (1.8, 3.5, 4.2)))
         self.assertFalse(kurzy.kurzy_se_lisi(None, None))
 
+    def test_dopln_prazdna_pole_po_ocr(self):
+        """Prázdný number_input po fotce dostane hodnoty z CSV, ruční kurz nechá."""
+        zapasy = [
+            {"domaci": "Slavia", "hoste": "Sparta"},
+            {"domaci": "Plzeň", "hoste": "Baník"},
+        ]
+        ulozene = {
+            (6, "Slavia", "Sparta"): (1.55, 4.20, 5.80),
+            (6, "Plzeň", "Baník"): (1.90, 3.50, 3.80),
+        }
+        session = {
+            kurzy.klic_pole_kurzu(6, 0, "1"): None,
+            kurzy.klic_pole_kurzu(6, 0, "X"): None,
+            kurzy.klic_pole_kurzu(6, 0, "2"): None,
+            kurzy.klic_pole_kurzu(6, 1, "1"): 2.05,
+            kurzy.klic_pole_kurzu(6, 1, "X"): 3.40,
+            kurzy.klic_pole_kurzu(6, 1, "2"): 3.50,
+        }
+
+        kurzy.dopln_prazdna_pole(session, 6, zapasy, ulozene)
+
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 0, "1")], 1.55)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 0, "X")], 4.20)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 0, "2")], 5.80)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 1, "1")], 2.05)
+
+        kurzy.dopln_prazdna_pole(session, 6, zapasy, ulozene, prepsat=True)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 1, "1")], 1.90)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 1, "X")], 3.50)
+
+    def test_dopln_prazdna_pole_prepise_neplatny_zbytek(self):
+        zapasy = [{"domaci": "Slavia", "hoste": "Sparta"}]
+        ulozene = {(6, "Slavia", "Sparta"): (1.70, 3.80, 4.90)}
+        session = {kurzy.klic_pole_kurzu(6, 0, "1"): 0.0}
+
+        kurzy.dopln_prazdna_pole(session, 6, zapasy, ulozene)
+
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 0, "1")], 1.70)
+        self.assertEqual(session[kurzy.klic_pole_kurzu(6, 0, "X")], 3.80)
+
 
 class TestUlozisteKurzu(unittest.TestCase):
     def test_kodovani_prezije_cestu_tam_a_zpet(self):

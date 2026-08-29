@@ -48,6 +48,8 @@ MIN_KURZ = 1.01
 MAX_KURZ = 100.0
 
 NAZVY_VYSLEDKU = ("1", "0", "2")
+# Popisky polí v UI – remíza je X, v CSV zůstává sloupec kurz_0.
+POPISKY_POLI_KURZU = ("1", "X", "2")
 
 
 def platny_kurz(kurz):
@@ -286,6 +288,30 @@ def kurzy_se_lisi(stare, nove):
         return any(abs(float(a) - float(b)) > 0.001 for a, b in zip(stare, nove))
     except (TypeError, ValueError):
         return True
+
+
+def klic_pole_kurzu(kolo, index_zapasu, vysledek):
+    """Klíč Streamlit ``number_input`` pro jeden výsledek zápasu."""
+    return f"kurz_trh_{vysledek}_{kolo}_{index_zapasu}"
+
+
+def dopln_prazdna_pole(session_state, kolo, zapasy, ulozene, prepsat=False):
+    """Doplní prázdná pole 1/X/2 z CSV.
+
+    Streamlit si u ``number_input`` pamatuje první hodnotu – i prázdné
+    pole. Po nahrání fotky by jinak CSV bylo plné a inputy prázdné.
+    ``prepsat=True`` po OCR / stažení trhu, ať fotka přepíše i zbytky
+    z min_value.
+    """
+    for index, zapas in enumerate(zapasy):
+        ulozena = ulozene.get((kolo, zapas["domaci"], zapas["hoste"]))
+        if not ulozena:
+            continue
+        for poradi, popisek in enumerate(POPISKY_POLI_KURZU):
+            klic = klic_pole_kurzu(kolo, index, popisek)
+            aktualni = session_state.get(klic)
+            if prepsat or aktualni is None or not platny_kurz(aktualni):
+                session_state[klic] = float(ulozena[poradi])
 
 
 def radek_z_serie(radek):

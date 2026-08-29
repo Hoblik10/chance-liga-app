@@ -313,6 +313,12 @@ ulozene_kurzy = {
     klic: info["kurzy"] for klic, info in ulozene_kurzy_info.items()
 }
 
+# Streamlit si u number_input pamatuje prázdné pole. Po nahrání fotky
+# by jinak zůstalo prázdné, i když CSV už kurzy má.
+kurzy.dopln_prazdna_pole(
+    st.session_state, zvolene_kolo, zápasy, ulozene_kurzy
+)
+
 
 def kurzy_zapasu(zapas):
     """Uložené kurzy zápasu ve zvoleném kole, nebo None."""
@@ -385,6 +391,13 @@ if souhrn:
         zprava = kurz_zdroje.popis_vysledku(shrnuti)
         if shrnuti["ulozeno"]:
             zalohuj_kurzy_po_ulozeni()
+            kurzy.dopln_prazdna_pole(
+                st.session_state,
+                zvolene_kolo,
+                zápasy,
+                kurzy.nacti_kurzy(),
+                prepsat=True,
+            )
             st.success(zprava)
             st.rerun()
         else:
@@ -414,6 +427,13 @@ if souhrn:
             st.session_state[f"_ocr_vysledek_{zvolene_kolo}"] = shrnuti_fotek
             if shrnuti_fotek["ulozeno"]:
                 zalohuj_kurzy_po_ulozeni()
+                kurzy.dopln_prazdna_pole(
+                    st.session_state,
+                    zvolene_kolo,
+                    zápasy,
+                    kurzy.nacti_kurzy(),
+                    prepsat=True,
+                )
                 st.rerun()
         shrnuti_fotek = st.session_state.get(f"_ocr_vysledek_{zvolene_kolo}") or {}
         zprava_fotek = kurz_obrazky.popis_vysledku(shrnuti_fotek) if shrnuti_fotek else ""
@@ -458,6 +478,27 @@ if souhrn:
         (zvolene_kolo, radek["domaci"], radek["hoste"]) in ulozene_kurzy
         for radek in souhrn
     )
+    radky_ulozenych = []
+    for zapas_kola in zápasy:
+        info = ulozene_kurzy_info.get(
+            (zvolene_kolo, zapas_kola["domaci"], zapas_kola["hoste"])
+        )
+        if not info or not info.get("kurzy"):
+            continue
+        k1, kx, k2 = info["kurzy"]
+        radky_ulozenych.append(
+            {
+                "Zápas": f"{zapas_kola['domaci']} – {zapas_kola['hoste']}",
+                "1": f"{k1:.2f}",
+                "X": f"{kx:.2f}",
+                "2": f"{k2:.2f}",
+                "Zdroj": info.get("sazkovka") or info.get("zdroj") or "–",
+            }
+        )
+    if radky_ulozenych:
+        st.markdown("**Uložené kurzy tohoto kola**")
+        vzhled.siroka_tabulka(pd.DataFrame(radky_ulozenych).set_index("Zápas"))
+
     if radky_hodnoty:
         st.markdown("**Kde má model výhodu proti kurzu**")
         vzhled.siroka_tabulka(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
@@ -470,6 +511,12 @@ if souhrn:
     elif not ma_kurzy_kola:
         st.caption(
             "Zatím tu není žádný kurz ze sázkovky, takže není co porovnávat."
+        )
+    else:
+        st.caption(
+            f"Kurzy jsou uložené, ale žádná sázka nemá výhodu aspoň "
+            f"{kurzy.MIN_HODNOTA:.0%} – proto tu není tabulka příležitostí. "
+            "Jednotlivé 1/X/2 jsou v tabulce nad tím a v expandéru zápasu."
         )
 
 elif zápasy:
@@ -714,12 +761,18 @@ for i, z in enumerate(zápasy):
                             "zápas neumí."
                         )
                     else:
-                        st.caption(
-                            "Sem patří kurz ze sázkovky. Prázdné pole je záměr – "
-                            "modelové 1/p by vypadalo jako trh, ale nic takového "
-                            "vsadit nejde. Po vyplnění všech tří se kurzy uloží "
-                            "samy (Enter stačí)."
-                        )
+                        if zadane:
+                            st.caption(
+                                "Kurzy ze sázkovky (fotka, trh nebo ručně). "
+                                "Úprava se uloží sama."
+                            )
+                        else:
+                            st.caption(
+                                "Sem patří kurz ze sázkovky. Prázdné pole je záměr – "
+                                "modelové 1/p by vypadalo jako trh, ale nic takového "
+                                "vsadit nejde. Po vyplnění všech tří se kurzy uloží "
+                                "samy (Enter stačí)."
+                            )
                         if info.get("sazkovka") or info.get("zdroj"):
                             st.caption(
                                 f"Uloženo z: {info.get('sazkovka') or info.get('zdroj')}"
@@ -727,20 +780,32 @@ for i, z in enumerate(zápasy):
                         trojice_modelu = (p["p_domaci"], p["p_remiza"], p["p_hoste"])
 
                         sloupce_kurzu = st.columns(3)
-                        zadane_kurzy = tuple(
-                            sloupce_kurzu[poradi_kurzu].number_input(
-                                popisek,
-                                min_value=kurzy.MIN_KURZ,
-                                max_value=kurzy.MAX_KURZ,
-                                value=(
-                                    float(zadane[poradi_kurzu]) if zadane else None
-                                ),
-                                step=0.05,
-                                placeholder="ze sázkovky",
-                                key=f"kurz_trh_{popisek}_{zvolene_kolo}_{i}",
+                        zadane_kurzy = []
+                        for poradi_kurzu, popisek in enumerate(
+                            kurzy.POPISKY_POLI_KURZU
+                        ):
+                            klic_pole = kurzy.klic_pole_kurzu(
+                                zvolene_kolo, i, popisek
                             )
-                            for poradi_kurzu, popisek in enumerate(("1", "X", "2"))
-                        )
+                            argumenty = {
+                                "min_value": kurzy.MIN_KURZ,
+                                "max_value": kurzy.MAX_KURZ,
+                                "step": 0.05,
+                                "placeholder": "ze sázkovky",
+                                "key": klic_pole,
+                            }
+                            if klic_pole not in st.session_state:
+                                argumenty["value"] = (
+                                    float(zadane[poradi_kurzu])
+                                    if zadane
+                                    else None
+                                )
+                            zadane_kurzy.append(
+                                sloupce_kurzu[poradi_kurzu].number_input(
+                                    popisek, **argumenty
+                                )
+                            )
+                        zadane_kurzy = tuple(zadane_kurzy)
                         platne_kurzy = all(
                             kurzy.platny_kurz(hodnota) for hodnota in zadane_kurzy
                         )
