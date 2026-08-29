@@ -8,18 +8,22 @@ import streamlit.components.v1 as components
 import data
 import hlaseni
 import kurzy
+import kurz_obrazky
 import kurz_zdroje
 import modely
 import nastaveni
 import sestavy
 import uloziste
+import vzhled
 import zaznamy
 
 st.set_page_config(
     page_title="Chance Liga - AI Sázkařský Portál",
     page_icon="⚽",
     layout="wide",
+    initial_sidebar_state="auto",
 )
+vzhled.vloz_styly()
 
 
 def obnov_ulozene_kurzy():
@@ -337,7 +341,7 @@ if souhrn:
         "1/X/2 – bez kurzu z toho neplyne, že se sázka vyplatí. Přesné skóre na archivu "
         "sedí v 12 % zápasů, pět nejčastějších dohromady v 49 %."
     )
-    st.table(
+    vzhled.siroka_tabulka(
         pd.DataFrame(
             [
                 {
@@ -359,7 +363,7 @@ if souhrn:
                 }
                 for r in souhrn
             ]
-        ).set_index("Zápas")
+        )
     )
 
     # --- HODNOTA PROTI KURZU ---
@@ -369,7 +373,7 @@ if souhrn:
         "Hodnota sázky dává smysl jen proti kurzu ze sázkovky – ne proti "
         "převrácené pravděpodobnosti modelu. Tlačítko zkusí Tipsport; když "
         "Cloudflare server nepustí, sáhne po API-Football (Bet365 a další, "
-        "ne Tipsport). Ruční opsání u jednotlivých zápasů pořád jde."
+        "ne Tipsport). Jinak nahraj screenshot nabídky, nebo kurzy opiš."
     )
     if st.session_state.get("_kurzy_github_chyba"):
         st.warning(
@@ -385,6 +389,39 @@ if souhrn:
             st.rerun()
         else:
             st.warning(zprava)
+
+    st.caption(
+        "Když trh nejde stáhnout, nahraj screenshot nabídky 1/X/2 "
+        "(Tipsport, Chance, Fortuna…). Jde i víc fotek najednou – "
+        "celé kolo, nebo zápasy po jednom."
+    )
+    fotky_kurzu = st.file_uploader(
+        "Screenshot kurzů (PNG nebo JPG, i víc fotek najednou)",
+        type=("png", "jpg", "jpeg", "webp"),
+        accept_multiple_files=True,
+        key=f"fotky_kurzu_{zvolene_kolo}",
+    )
+    if fotky_kurzu:
+        podpis_fotek = tuple((soubor.name, soubor.size) for soubor in fotky_kurzu)
+        if st.session_state.get(f"_ocr_podpis_{zvolene_kolo}") != podpis_fotek:
+            with st.spinner("Čtu kurzy z fotek…"):
+                shrnuti_fotek = kurz_obrazky.nacti_a_uloz(
+                    zvolene_kolo, zápasy, fotky_kurzu
+                )
+            st.session_state[f"_ocr_podpis_{zvolene_kolo}"] = podpis_fotek
+            st.session_state[f"_ocr_vysledek_{zvolene_kolo}"] = shrnuti_fotek
+            if shrnuti_fotek["ulozeno"]:
+                zalohuj_kurzy_po_ulozeni()
+                st.rerun()
+        shrnuti_fotek = st.session_state.get(f"_ocr_vysledek_{zvolene_kolo}") or {}
+        zprava_fotek = kurz_obrazky.popis_vysledku(shrnuti_fotek) if shrnuti_fotek else ""
+        if shrnuti_fotek.get("ulozeno"):
+            st.success(zprava_fotek)
+        elif zprava_fotek:
+            st.warning(zprava_fotek)
+        if shrnuti_fotek.get("text"):
+            with st.expander("Text, který se z fotky podařilo přečíst"):
+                st.code(shrnuti_fotek["text"])
 
     radky_hodnoty = []
     for radek in souhrn:
@@ -421,7 +458,7 @@ if souhrn:
     )
     if radky_hodnoty:
         st.markdown("**Kde má model výhodu proti kurzu**")
-        st.table(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
+        vzhled.siroka_tabulka(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
         st.caption(
             f"Zobrazí se jen sázky s výhodou aspoň {kurzy.MIN_HODNOTA:.0%}. "
             "Výhoda je očekávaný výnos na vsazenou korunu podle modelu – "
@@ -439,7 +476,7 @@ elif zápasy:
         "Tipy pocházejí z logu – jsou to ty, které vznikly před výkopem, "
         "ne dnešní přepočet."
     )
-    st.table(
+    vzhled.siroka_tabulka(
         pd.DataFrame(
             [
                 {
@@ -935,7 +972,7 @@ else:
         )
 
     if radky_presnosti:
-        st.table(
+        vzhled.siroka_tabulka(
             pd.DataFrame(radky_presnosti).sort_values("Brier").set_index("Model")
         )
         st.caption(
