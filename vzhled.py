@@ -20,11 +20,17 @@ STYLY = """
 
 /* Tabulky se na úzkém displeji posouvají, místo aby uřízly sloupce. */
 [data-testid="stTable"],
-[data-testid="stDataFrame"] {
-  overflow-x: auto;
+[data-testid="stDataFrame"],
+div[data-testid="stTableContainer"] {
+  overflow-x: auto !important;
+  max-width: 100%;
+}
+[data-testid="stTable"] {
+  display: block;
 }
 [data-testid="stTable"] table {
-  min-width: 28rem;
+  min-width: 36rem;
+  width: max-content;
 }
 
 /* Tablet */
@@ -62,7 +68,7 @@ STYLY = """
     min-width: 100% !important;
   }
   [data-testid="stTable"] table {
-    min-width: 22rem;
+    min-width: 34rem;
     font-size: 0.85rem;
   }
   [data-testid="stSidebar"] [data-testid="stDataFrame"],
@@ -75,6 +81,11 @@ STYLY = """
     height: auto;
     padding-top: 0.55rem;
     padding-bottom: 0.55rem;
+  }
+  /* Trojice 1/X/2 ať se vejde vedle sebe, ne přeteče. */
+  div[data-testid="stHorizontalBlock"]:has(> div:nth-child(3):last-child) > div {
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
   }
 }
 
@@ -93,3 +104,10 @@ def vloz_styly():
     import streamlit as st
 
     st.markdown(STYLY, unsafe_allow_html=True)
+
+
+def siroka_tabulka(df):
+    """Široká tabulka s vodorovným posunem na telefonu."""
+    import streamlit as st
+
+    st.dataframe(df, width="stretch")

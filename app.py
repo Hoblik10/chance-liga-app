@@ -341,7 +341,7 @@ if souhrn:
         "1/X/2 – bez kurzu z toho neplyne, že se sázka vyplatí. Přesné skóre na archivu "
         "sedí v 12 % zápasů, pět nejčastějších dohromady v 49 %."
     )
-    st.table(
+    vzhled.siroka_tabulka(
         pd.DataFrame(
             [
                 {
@@ -363,7 +363,7 @@ if souhrn:
                 }
                 for r in souhrn
             ]
-        ).set_index("Zápas")
+        )
     )
 
     # --- HODNOTA PROTI KURZU ---
@@ -396,11 +396,10 @@ if souhrn:
         "celé kolo, nebo zápasy po jednom."
     )
     fotky_kurzu = st.file_uploader(
-        "Screenshot kurzů",
+        "Screenshot kurzů (PNG nebo JPG, i víc fotek najednou)",
         type=("png", "jpg", "jpeg", "webp"),
         accept_multiple_files=True,
         key=f"fotky_kurzu_{zvolene_kolo}",
-        label_visibility="collapsed",
     )
     if fotky_kurzu:
         podpis_fotek = tuple((soubor.name, soubor.size) for soubor in fotky_kurzu)
@@ -459,7 +458,7 @@ if souhrn:
     )
     if radky_hodnoty:
         st.markdown("**Kde má model výhodu proti kurzu**")
-        st.table(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
+        vzhled.siroka_tabulka(pd.DataFrame(radky_hodnoty).set_index("Zápas"))
         st.caption(
             f"Zobrazí se jen sázky s výhodou aspoň {kurzy.MIN_HODNOTA:.0%}. "
             "Výhoda je očekávaný výnos na vsazenou korunu podle modelu – "
@@ -477,7 +476,7 @@ elif zápasy:
         "Tipy pocházejí z logu – jsou to ty, které vznikly před výkopem, "
         "ne dnešní přepočet."
     )
-    st.table(
+    vzhled.siroka_tabulka(
         pd.DataFrame(
             [
                 {
@@ -973,7 +972,7 @@ else:
         )
 
     if radky_presnosti:
-        st.table(
+        vzhled.siroka_tabulka(
             pd.DataFrame(radky_presnosti).sort_values("Brier").set_index("Model")
         )
         st.caption(

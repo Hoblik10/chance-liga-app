@@ -1379,6 +1379,7 @@ class TestKurzObrazky(unittest.TestCase):
         self.assertIn("max-width: 768px", vzhled.STYLY)
         self.assertIn("max-width: 1100px", vzhled.STYLY)
         self.assertIn("stHorizontalBlock", vzhled.STYLY)
+        self.assertIn("overflow-x", vzhled.STYLY)
 
 
 HTML_ODLOZENEHO_ZAPASU = """
