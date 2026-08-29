@@ -4,20 +4,24 @@ Spuštění:  python test_modely.py
 """
 
 import base64
+import io
 import os
 import tempfile
 import unittest
 from datetime import datetime
 
 import pandas as pd
+from PIL import Image
 
 import data
 import hlaseni
 import kurzy
+import kurz_obrazky
 import kurz_zdroje
 import modely
 import sestavy
 import uloziste
+import vzhled
 import zaznamy
 
 
@@ -1269,6 +1273,112 @@ class TestUlozisteKurzu(unittest.TestCase):
         self.assertEqual(len(put_tela), 1)
         self.assertEqual(put_tela[0]["branch"], "data")
         self.assertIn("content", put_tela[0])
+
+
+ZAPASY_PRO_FOTKU = [
+    {"domaci": "SK Slavia Praha", "hoste": "AC Sparta Praha"},
+    {"domaci": "FC Viktoria Plzeň", "hoste": "FC Baník Ostrava"},
+    {"domaci": "Bohemians Praha 1905", "hoste": "FK Mladá Boleslav"},
+]
+
+
+def _png_bajty():
+    buf = io.BytesIO()
+    Image.new("RGB", (16, 16), "white").save(buf, format="PNG")
+    return buf.getvalue()
+
+
+class TestKurzObrazky(unittest.TestCase):
+    def test_radek_s_pomlckou_a_carkou(self):
+        text = "SK Slavia Praha - AC Sparta Praha 1,55 4,20 5,80"
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        self.assertEqual(len(nabidka), 1)
+        self.assertEqual(nabidka[0]["domaci_surove"], "SK Slavia Praha")
+        self.assertEqual(nabidka[0]["hoste_surove"], "AC Sparta Praha")
+        self.assertEqual(nabidka[0]["kurzy"], (1.55, 4.20, 5.80))
+
+    def test_mobilni_dva_radky_a_kurzy_pod_nimi(self):
+        text = (
+            "Slavia Praha\n"
+            "Sparta Praha\n"
+            "1.55  4.20  5.80\n"
+            "Viktoria Plzeň\n"
+            "Baník Ostrava\n"
+            "1.90 3.50 3.80\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (1.55, 4.20, 5.80),
+        )
+        self.assertEqual(
+            parovane[("FC Viktoria Plzeň", "FC Baník Ostrava")]["kurzy"],
+            (1.90, 3.50, 3.80),
+        )
+
+    def test_zkratky_z_chanceligy(self):
+        text = "BOH - MBL 2.10 3.30 3.40"
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        self.assertEqual(len(nabidka), 1)
+        self.assertEqual(nabidka[0]["domaci_surove"], "Bohemians Praha 1905")
+        self.assertEqual(nabidka[0]["hoste_surove"], "FK Mladá Boleslav")
+        self.assertEqual(nabidka[0]["kurzy"], (2.10, 3.30, 3.40))
+
+    def test_cele_kolo_z_pozic(self):
+        text = (
+            "Chance Liga\n"
+            "Slavia 1.55 4.20 5.80 Sparta\n"
+            "Plzeň 1.90 3.50 3.80 Ostrava\n"
+            "Bohemians 2.05 3.25 3.60 Boleslav\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(len(parovane), 3)
+        self.assertEqual(
+            parovane[("Bohemians Praha 1905", "FK Mladá Boleslav")]["kurzy"][0],
+            2.05,
+        )
+
+    def test_nacti_a_uloz_pres_falesne_ocr(self):
+        text = "Slavia Praha - Sparta Praha 1.70 3.80 4.90"
+        docasny = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
+        docasny.close()
+        try:
+            shrnuti = kurz_obrazky.nacti_a_uloz(
+                6,
+                ZAPASY_PRO_FOTKU,
+                [_png_bajty()],
+                cesta=docasny.name,
+                ocr=lambda _obrazek: text,
+            )
+            self.assertEqual(shrnuti["ulozeno"], 1)
+            self.assertEqual(shrnuti["zdroj"], "screenshot")
+            ulozene = kurzy.nacti_kurzy(docasny.name)
+            self.assertEqual(
+                ulozene[(6, "SK Slavia Praha", "AC Sparta Praha")],
+                (1.70, 3.80, 4.90),
+            )
+            self.assertIn("uloženo", kurz_obrazky.popis_vysledku(shrnuti).lower())
+        finally:
+            os.unlink(docasny.name)
+
+    def test_prazdny_text_neulozi_nic(self):
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu("", ZAPASY_PRO_FOTKU)
+        self.assertEqual(nabidka, [])
+        self.assertIn("fotce", kurz_obrazky.popis_vysledku(
+            {
+                "ulozeno": 0,
+                "nabidnuto": 0,
+                "nesparovano": 0,
+                "chyby": ["Na fotce se kurzy 1/X/2 nepodařilo přečíst."],
+            }
+        ))
+
+    def test_vzhled_ma_zlomy_pro_telefon_i_tablet(self):
+        self.assertIn("max-width: 768px", vzhled.STYLY)
+        self.assertIn("max-width: 1100px", vzhled.STYLY)
+        self.assertIn("stHorizontalBlock", vzhled.STYLY)
 
 
 HTML_ODLOZENEHO_ZAPASU = """
