@@ -405,8 +405,8 @@ if souhrn:
 
     st.caption(
         "Když trh nejde stáhnout, nahraj screenshot nabídky 1/X/2 "
-        "(Tipsport, Chance, Fortuna…). Jde i víc fotek najednou – "
-        "celé kolo, nebo zápasy po jednom."
+        "(Tipsport, Chance, Fortuna…). U každého zápasu tři kurzy pod sebou: "
+        "nahoře domácí, pod ním remíza, dole hosté. Jde i víc fotek najednou."
     )
     fotky_kurzu = st.file_uploader(
         "Screenshot kurzů (fotka z galerie, JPG i PNG, i víc najednou)",
@@ -626,6 +626,12 @@ for i, z in enumerate(zápasy):
                     )
 
                 p = predikce.get((zvolene_kolo, i))
+                ulozena_trojice = kurzy_zapasu(z)
+                if ulozena_trojice:
+                    k1, kx, k2 = ulozena_trojice
+                    st.markdown(
+                        f"**Kurzy sázkovky:** 1 `{k1:.2f}` · X `{kx:.2f}` · 2 `{k2:.2f}`"
+                    )
 
                 with st.expander("📐 Vstupy modelu (únava z pohárů + zranění)"):
                     if p is None:
@@ -752,9 +758,11 @@ for i, z in enumerate(zápasy):
                                 "predikci nesou Poisson a Elo."
                             )
 
-                with st.expander("💰 Kurzy a hodnota sázky"):
-                    info = info_kurzu(z)
-                    zadane = info.get("kurzy") or kurzy_zapasu(z)
+                info = info_kurzu(z)
+                zadane = info.get("kurzy") or kurzy_zapasu(z)
+                with st.expander(
+                    "💰 Kurzy a hodnota sázky", expanded=bool(zadane)
+                ):
                     if p is None:
                         st.caption(
                             "Bez predikce nejde hodnotu spočítat – model tenhle "

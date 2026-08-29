@@ -1380,6 +1380,101 @@ class TestKurzObrazky(unittest.TestCase):
             2.05,
         )
 
+    def test_tri_kurzy_pod_sebou_u_zapasu(self):
+        """Na fotce je 1 nahoře, remíza, 2 dole – ne vedle sebe přes zápasy."""
+        text = (
+            "SK Slavia Praha\n"
+            "AC Sparta Praha\n"
+            "1.55\n"
+            "4.20\n"
+            "5.80\n"
+            "FC Viktoria Plzeň\n"
+            "FC Baník Ostrava\n"
+            "1.90\n"
+            "3.50\n"
+            "3.80\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (1.55, 4.20, 5.80),
+        )
+        self.assertEqual(
+            parovane[("FC Viktoria Plzeň", "FC Baník Ostrava")]["kurzy"],
+            (1.90, 3.50, 3.80),
+        )
+
+    def test_ocr_nejdriv_nazvy_pak_sloupec_kurzu(self):
+        text = (
+            "Slavia Praha\n"
+            "Sparta Praha\n"
+            "Viktoria Plzeň\n"
+            "Baník Ostrava\n"
+            "1.55\n"
+            "4.20\n"
+            "5.80\n"
+            "1.90\n"
+            "3.50\n"
+            "3.80\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (1.55, 4.20, 5.80),
+        )
+        self.assertEqual(
+            parovane[("FC Viktoria Plzeň", "FC Baník Ostrava")]["kurzy"],
+            (1.90, 3.50, 3.80),
+        )
+
+    def test_dva_sloupce_zapasu_vedle_sebe(self):
+        text = (
+            "Slavia Praha  Viktoria Plzeň\n"
+            "Sparta Praha  Baník Ostrava\n"
+            "1.55 1.90\n"
+            "4.20 3.50\n"
+            "5.80 3.80\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (1.55, 4.20, 5.80),
+        )
+        self.assertEqual(
+            parovane[("FC Viktoria Plzeň", "FC Baník Ostrava")]["kurzy"],
+            (1.90, 3.50, 3.80),
+        )
+
+    def test_svisle_1x2_s_nazvem_tymu_u_kurzu(self):
+        text = (
+            "1 SK Slavia Praha 1.55\n"
+            "X 4.20\n"
+            "2 AC Sparta Praha 5.80\n"
+        )
+        nabidka = kurz_obrazky.parsuj_nabidku_z_textu(text, ZAPASY_PRO_FOTKU)
+        self.assertEqual(len(nabidka), 1)
+        self.assertEqual(nabidka[0]["kurzy"], (1.55, 4.20, 5.80))
+        self.assertEqual(nabidka[0]["domaci_surove"], "SK Slavia Praha")
+        self.assertEqual(nabidka[0]["hoste_surove"], "AC Sparta Praha")
+
+    def test_boxy_tri_kurzy_pod_sebou(self):
+        slova = [
+            {"text": "Slavia", "left": 10, "top": 10, "width": 80, "height": 16},
+            {"text": "Sparta", "left": 10, "top": 40, "width": 80, "height": 16},
+            {"text": "1.55", "left": 200, "top": 10, "width": 40, "height": 16},
+            {"text": "4.20", "left": 200, "top": 40, "width": 40, "height": 16},
+            {"text": "5.80", "left": 200, "top": 70, "width": 40, "height": 16},
+        ]
+        nabidka = kurz_obrazky.parsuj_nabidku_z_boxu(slova, ZAPASY_PRO_FOTKU)
+        parovane = kurz_zdroje.sparuj_nabidku(nabidka, ZAPASY_PRO_FOTKU)
+        self.assertEqual(
+            parovane[("SK Slavia Praha", "AC Sparta Praha")]["kurzy"],
+            (1.55, 4.20, 5.80),
+        )
+
     def test_nacti_a_uloz_pres_falesne_ocr(self):
         text = "Slavia Praha - Sparta Praha 1.70 3.80 4.90"
         docasny = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
