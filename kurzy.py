@@ -9,8 +9,11 @@ kolem 1.05 až 1.08 místo jedničky. Marže se musí odečíst, jinak by model
 vypadal, že má výhodu, i když jen počítá to samé co kancelář.
 
 Kurzy musí pocházet ze sázkovky. Aplikace je umí stáhnout z Tipsportu
-nebo z API-Football (viz ``kurz_zdroje.py``) a uložit do CSV vedle sebe,
-takže přežijí restart. Ruční opsání zůstává jako záloha.
+nebo z API-Football (viz ``kurz_zdroje.py``) a uložit do CSV vedle sebe.
+
+CSV na disku Streamlit Cloudu po restartu zmizí – trvalou zálohu řeší
+``uloziste.py`` (prohlížeč a volitelně větev ``data`` na GitHubu).
+Ruční opsání zůstává jako záloha, když trh nejde stáhnout.
 """
 
 import os
@@ -253,5 +256,140 @@ def uloz_kurz(
     )
 
     vysledek = pd.concat([df, novy], ignore_index=True)
+    return uloz_tabulku(vysledek, cesta)
+
+
+def parsuj_cas(hodnota):
+    """Čas zapsání kurzu; chybějící nebo divný údaj je nejstarší možný."""
+    if hodnota is None or (isinstance(hodnota, float) and pd.isna(hodnota)):
+        return datetime.min
+    if isinstance(hodnota, datetime):
+        return hodnota
+    text = str(hodnota).strip()
+    if not text or text.lower() == "nan":
+        return datetime.min
+    for format_casu in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text, format_casu)
+        except ValueError:
+            continue
+    return datetime.min
+
+
+def kurzy_se_lisi(stare, nove):
+    """True, když trojice 1/X/2 není stejná (včetně chybějící proti vyplněné)."""
+    if stare is None and nove is None:
+        return False
+    if stare is None or nove is None:
+        return True
+    try:
+        return any(abs(float(a) - float(b)) > 0.001 for a, b in zip(stare, nove))
+    except (TypeError, ValueError):
+        return True
+
+
+def radek_z_serie(radek):
+    """Jeden zápas z tabulky, nebo None když kurzy nedávají smysl."""
+    trojice = (radek["kurz_1"], radek["kurz_0"], radek["kurz_2"])
+    if not all(platny_kurz(kurz) for kurz in trojice):
+        return None
+    try:
+        kolo = int(radek["kolo"])
+    except (TypeError, ValueError):
+        return None
+    return {
+        "kolo": kolo,
+        "domaci": str(radek["domaci"]),
+        "hoste": str(radek["hoste"]),
+        "kurz_1": float(trojice[0]),
+        "kurz_0": float(trojice[1]),
+        "kurz_2": float(trojice[2]),
+        "zdroj": "" if pd.isna(radek.get("zdroj")) else str(radek.get("zdroj") or ""),
+        "sazkovka": (
+            "" if pd.isna(radek.get("sazkovka")) else str(radek.get("sazkovka") or "")
+        ),
+        "zapsano": (
+            "" if pd.isna(radek.get("zapsano")) else str(radek.get("zapsano") or "")
+        ),
+    }
+
+
+def tabulka_na_zaznamy(df):
+    """Tabulka kurzů jako seznam slovníků – pro JSON zálohu."""
+    if df is None or df.empty:
+        return []
+    zaznamy = []
+    for _, radek in df.iterrows():
+        prevedeny = radek_z_serie(radek)
+        if prevedeny:
+            zaznamy.append(prevedeny)
+    return zaznamy
+
+
+def tabulka_z_zaznamu(zaznamy):
+    """JSON záloha zpět na tabulku."""
+    if not zaznamy:
+        return pd.DataFrame(columns=SLOUPCE)
+    radky = []
+    for zaznam in zaznamy:
+        try:
+            radek = radek_z_serie(
+                {
+                    "kolo": zaznam["kolo"],
+                    "domaci": zaznam["domaci"],
+                    "hoste": zaznam["hoste"],
+                    "kurz_1": zaznam["kurz_1"],
+                    "kurz_0": zaznam["kurz_0"],
+                    "kurz_2": zaznam["kurz_2"],
+                    "zdroj": zaznam.get("zdroj", ""),
+                    "sazkovka": zaznam.get("sazkovka", ""),
+                    "zapsano": zaznam.get("zapsano", ""),
+                }
+            )
+        except (KeyError, TypeError):
+            continue
+        if radek:
+            radky.append(radek)
+    if not radky:
+        return pd.DataFrame(columns=SLOUPCE)
+    return pd.DataFrame(radky)[SLOUPCE]
+
+
+def uloz_tabulku(df, cesta=SOUBOR_KURZU):
+    """Přepíše CSV tabulkou kurzů. Prázdná tabulka zapíše jen hlavičku."""
+    if df is None or df.empty:
+        vysledek = pd.DataFrame(columns=SLOUPCE)
+    else:
+        vysledek = df[SLOUPCE].copy()
+    adresar = os.path.dirname(os.path.abspath(cesta))
+    if adresar:
+        os.makedirs(adresar, exist_ok=True)
     vysledek.to_csv(cesta, index=False, encoding="utf-8")
     return vysledek
+
+
+def sluc_tabulky(*tabulky):
+    """Sloučí tabulky. Stejný zápas vyhraje ten s novějším časem zápisu."""
+    nejnovejsi = {}
+    for df in tabulky:
+        if df is None or getattr(df, "empty", True):
+            continue
+        for _, radek in df.iterrows():
+            prevedeny = radek_z_serie(radek)
+            if not prevedeny:
+                continue
+            klic = (prevedeny["kolo"], prevedeny["domaci"], prevedeny["hoste"])
+            stary = nejnovejsi.get(klic)
+            if stary is None or parsuj_cas(prevedeny["zapsano"]) >= parsuj_cas(
+                stary["zapsano"]
+            ):
+                nejnovejsi[klic] = prevedeny
+    if not nejnovejsi:
+        return pd.DataFrame(columns=SLOUPCE)
+    return pd.DataFrame(list(nejnovejsi.values()))[SLOUPCE]
+
+
+def sluc_do_souboru(df_nove, cesta=SOUBOR_KURZU):
+    """Doplní CSV o nové/novější kurzy a soubor uloží."""
+    sloucene = sluc_tabulky(nacti_tabulku(cesta), df_nove)
+    return uloz_tabulku(sloucene, cesta)
