@@ -396,8 +396,10 @@ if souhrn:
         "celé kolo, nebo zápasy po jednom."
     )
     fotky_kurzu = st.file_uploader(
-        "Screenshot kurzů (PNG nebo JPG, i víc fotek najednou)",
-        type=("png", "jpg", "jpeg", "webp"),
+        "Screenshot kurzů (fotka z galerie, JPG i PNG, i víc najednou)",
+        # „image“ = image/* — na Windows jinak .jpg / .jfif / image/jpeg
+        # často neprojde, i když na telefonu stejný soubor jde.
+        type=["image", ".jpg", ".jpeg", ".jfif", ".png", ".webp"],
         accept_multiple_files=True,
         key=f"fotky_kurzu_{zvolene_kolo}",
     )
