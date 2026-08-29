@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import streamlit as st
 
+import streamlit.components.v1 as components
+
 import data
 import hlaseni
 import kurzy
@@ -10,6 +12,7 @@ import kurz_zdroje
 import modely
 import nastaveni
 import sestavy
+import uloziste
 import zaznamy
 
 st.set_page_config(
@@ -17,6 +20,44 @@ st.set_page_config(
     page_icon="⚽",
     layout="wide",
 )
+
+
+def obnov_ulozene_kurzy():
+    """Doplní CSV z GitHubu a z prohlížeče, než se z něj čte UI."""
+    if not st.session_state.get("_kurzy_github_ok"):
+        if kurzy.nacti_tabulku().empty:
+            vzdalene = uloziste.nacti_z_githubu()
+            if vzdalene is not None and not vzdalene.empty:
+                kurzy.sluc_do_souboru(vzdalene)
+        st.session_state["_kurzy_github_ok"] = True
+
+    try:
+        raw = st.query_params.get(uloziste.PARAMETR_URL)
+    except Exception:
+        raw = None
+    if raw and not st.session_state.get("_kurzy_kjson_ok"):
+        z_url = uloziste.dekoduj_zalohu(raw)
+        if z_url is not None and not z_url.empty:
+            kurzy.sluc_do_souboru(z_url)
+        st.session_state["_kurzy_kjson_ok"] = True
+
+    uloziste.sync_prohlizec(st, components, kurzy.nacti_tabulku())
+
+
+def zalohuj_kurzy_po_ulozeni():
+    """Po zápisu CSV zkopíruje kurzy do prohlížeče a volitelně na GitHub."""
+    df = kurzy.nacti_tabulku()
+    uloziste.sync_prohlizec(st, components, df)
+    if not uloziste.github_nastaven():
+        return
+    ok, zprava = uloziste.uloz_na_github(df)
+    if ok:
+        st.session_state.pop("_kurzy_github_chyba", None)
+    else:
+        st.session_state["_kurzy_github_chyba"] = zprava
+
+
+obnov_ulozene_kurzy()
 
 # --- NAČTENÍ DAT A SÍL ---
 podklady = data.nacti_podklady()
@@ -323,16 +364,23 @@ if souhrn:
 
     # --- HODNOTA PROTI KURZU ---
     st.subheader("💰 Kurzy z trhu")
+    st.caption(uloziste.popis_zalohy())
     st.caption(
         "Hodnota sázky dává smysl jen proti kurzu ze sázkovky – ne proti "
         "převrácené pravděpodobnosti modelu. Tlačítko zkusí Tipsport; když "
         "Cloudflare server nepustí, sáhne po API-Football (Bet365 a další, "
         "ne Tipsport). Ruční opsání u jednotlivých zápasů pořád jde."
     )
+    if st.session_state.get("_kurzy_github_chyba"):
+        st.warning(
+            "Kurzy jsou v tomhle prohlížeči, na GitHub se záloha "
+            f"nepropsala: {st.session_state['_kurzy_github_chyba']}"
+        )
     if st.button("📥 Načíst kurzy tohoto kola", key=f"nacti_kurzy_{zvolene_kolo}"):
         shrnuti = kurz_zdroje.nacti_a_uloz(zvolene_kolo, zápasy)
         zprava = kurz_zdroje.popis_vysledku(shrnuti)
         if shrnuti["ulozeno"]:
+            zalohuj_kurzy_po_ulozeni()
             st.success(zprava)
             st.rerun()
         else:
@@ -630,7 +678,8 @@ for i, z in enumerate(zápasy):
                         st.caption(
                             "Sem patří kurz ze sázkovky. Prázdné pole je záměr – "
                             "modelové 1/p by vypadalo jako trh, ale nic takového "
-                            "vsadit nejde."
+                            "vsadit nejde. Po vyplnění všech tří se kurzy uloží "
+                            "samy (Enter stačí)."
                         )
                         if info.get("sazkovka") or info.get("zdroj"):
                             st.caption(
@@ -657,6 +706,22 @@ for i, z in enumerate(zápasy):
                             kurzy.platny_kurz(hodnota) for hodnota in zadane_kurzy
                         )
 
+                        if platne_kurzy and kurzy.kurzy_se_lisi(zadane, zadane_kurzy):
+                            kurzy.uloz_kurz(
+                                zvolene_kolo,
+                                z["domaci"],
+                                z["hoste"],
+                                zadane_kurzy,
+                                zdroj="rucne",
+                                sazkovka="",
+                            )
+                            zalohuj_kurzy_po_ulozeni()
+                            st.session_state[f"kurz_ulozen_{zvolene_kolo}_{i}"] = True
+                            st.rerun()
+
+                        if st.session_state.get(f"kurz_ulozen_{zvolene_kolo}_{i}"):
+                            st.caption("Uloženo – po obnovení stránky tu zůstanou.")
+
                         if st.button("💾 Uložit kurzy", key=f"ku_{zvolene_kolo}_{i}"):
                             if not platne_kurzy:
                                 st.error("Doplň všechny tři kurzy 1 / X / 2.")
@@ -669,9 +734,12 @@ for i, z in enumerate(zápasy):
                                     zdroj="rucne",
                                     sazkovka="",
                                 )
+                                zalohuj_kurzy_po_ulozeni()
+                                st.session_state[f"kurz_ulozen_{zvolene_kolo}_{i}"] = True
                                 st.success(
                                     "Kurzy uloženy, projeví se v přehledu kola."
                                 )
+                                st.rerun()
 
                         if not platne_kurzy:
                             st.info(

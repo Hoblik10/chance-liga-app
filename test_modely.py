@@ -3,10 +3,13 @@
 Spuštění:  python test_modely.py
 """
 
+import base64
 import os
 import tempfile
 import unittest
 from datetime import datetime
+
+import pandas as pd
 
 import data
 import hlaseni
@@ -14,6 +17,7 @@ import kurzy
 import kurz_zdroje
 import modely
 import sestavy
+import uloziste
 import zaznamy
 
 
@@ -1040,6 +1044,231 @@ class TestUlozeneKurzy(unittest.TestCase):
         info = kurzy.nacti_kurzy_info(self.cesta)
         self.assertEqual(info[(6, "Slavia", "Sparta")]["sazkovka"], "Tipsport")
         self.assertEqual(info[(6, "Slavia", "Sparta")]["kurzy"], (1.85, 3.6, 4.1))
+
+    def test_novejsi_kurz_pri_slouceni_vyhraje(self):
+        starsi = pd.DataFrame(
+            [
+                {
+                    "kolo": 6,
+                    "domaci": "Slavia",
+                    "hoste": "Sparta",
+                    "kurz_1": 1.8,
+                    "kurz_0": 3.5,
+                    "kurz_2": 4.4,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-28 10:00",
+                }
+            ]
+        )
+        novejsi = pd.DataFrame(
+            [
+                {
+                    "kolo": 6,
+                    "domaci": "Slavia",
+                    "hoste": "Sparta",
+                    "kurz_1": 1.7,
+                    "kurz_0": 3.6,
+                    "kurz_2": 4.6,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-29 01:00",
+                }
+            ]
+        )
+        sloucene = kurzy.sluc_tabulky(starsi, novejsi)
+        self.assertEqual(len(sloucene), 1)
+        self.assertEqual(float(sloucene.iloc[0]["kurz_1"]), 1.7)
+
+    def test_sluc_do_souboru_doplni_jiny_zapas(self):
+        kurzy.uloz_kurz(6, "Slavia", "Sparta", (1.8, 3.7, 4.2), cesta=self.cesta)
+        dalsi = pd.DataFrame(
+            [
+                {
+                    "kolo": 6,
+                    "domaci": "Plzeň",
+                    "hoste": "Baník",
+                    "kurz_1": 2.1,
+                    "kurz_0": 3.3,
+                    "kurz_2": 3.4,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-29 02:00",
+                }
+            ]
+        )
+        kurzy.sluc_do_souboru(dalsi, cesta=self.cesta)
+        ulozene = kurzy.nacti_kurzy(self.cesta)
+        self.assertEqual(len(ulozene), 2)
+        self.assertEqual(ulozene[(6, "Plzeň", "Baník")], (2.1, 3.3, 3.4))
+
+    def test_kurzy_se_lisi(self):
+        self.assertFalse(kurzy.kurzy_se_lisi((1.8, 3.5, 4.2), (1.8, 3.5, 4.2)))
+        self.assertTrue(kurzy.kurzy_se_lisi((1.8, 3.5, 4.2), (1.85, 3.5, 4.2)))
+        self.assertTrue(kurzy.kurzy_se_lisi(None, (1.8, 3.5, 4.2)))
+        self.assertFalse(kurzy.kurzy_se_lisi(None, None))
+
+
+class TestUlozisteKurzu(unittest.TestCase):
+    def test_kodovani_prezije_cestu_tam_a_zpet(self):
+        df = pd.DataFrame(
+            [
+                {
+                    "kolo": 6,
+                    "domaci": "Bohemians Praha 1905",
+                    "hoste": "FK Mladá Boleslav",
+                    "kurz_1": 1.85,
+                    "kurz_0": 3.6,
+                    "kurz_2": 4.1,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-29 01:40",
+                }
+            ]
+        )
+        kod = uloziste.zakoduj_zalohu(df)
+        zpet = uloziste.dekoduj_zalohu(kod)
+        self.assertTrue(kod)
+        self.assertEqual(
+            kurzy.tabulka_na_zaznamy(zpet)[0]["kurz_1"],
+            1.85,
+        )
+        self.assertEqual(
+            kurzy.tabulka_na_zaznamy(zpet)[0]["domaci"],
+            "Bohemians Praha 1905",
+        )
+        self.assertIsNone(uloziste.dekoduj_zalohu(""))
+        self.assertIsNone(uloziste.dekoduj_zalohu("neni-base64%%%"))
+
+    def test_html_obsahuje_zalohu(self):
+        html = uloziste.html_prohlizece("abc123")
+        self.assertIn("chance_liga_kurzy_v1", html)
+        self.assertIn("abc123", html)
+        self.assertIn("kjson", html)
+
+    def test_sync_prohlizece_zapise_parametr(self):
+        df = pd.DataFrame(
+            [
+                {
+                    "kolo": 5,
+                    "domaci": "Slavia",
+                    "hoste": "Sparta",
+                    "kurz_1": 1.9,
+                    "kurz_0": 3.5,
+                    "kurz_2": 4.0,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-29 03:00",
+                }
+            ]
+        )
+
+        class DummySt:
+            def __init__(self):
+                self.query_params = {}
+
+        class DummyComponents:
+            def __init__(self):
+                self.htmls = []
+
+            def html(self, zdroj, height=0):
+                self.htmls.append(zdroj)
+
+        st_modul = DummySt()
+        komponenty = DummyComponents()
+        kod = uloziste.sync_prohlizec(st_modul, komponenty, df)
+        self.assertTrue(kod)
+        self.assertEqual(st_modul.query_params[uloziste.PARAMETR_URL], kod)
+        self.assertEqual(len(komponenty.htmls), 1)
+        self.assertIn(kod, komponenty.htmls[0])
+
+    def test_nacteni_z_githubu(self):
+        csv_text = (
+            "kolo,domaci,hoste,kurz_1,kurz_0,kurz_2,zdroj,sazkovka,zapsano\n"
+            "6,Slavia,Sparta,1.75,3.6,4.5,rucne,,2026-08-29 01:00\n"
+        )
+        obsah = base64.b64encode(csv_text.encode("utf-8")).decode("ascii")
+
+        class Odpoved:
+            status_code = 200
+
+            def json(self):
+                return {"content": obsah, "sha": "abc"}
+
+        df = uloziste.nacti_z_githubu(get=lambda *args, **kwargs: Odpoved())
+        self.assertEqual(float(df.iloc[0]["kurz_1"]), 1.75)
+        self.assertEqual(df.iloc[0]["domaci"], "Slavia")
+
+    def test_github_bez_tokenu_nezapisuje(self):
+        original = uloziste.github_token
+        uloziste.github_token = lambda: ""
+        try:
+            ok, zprava = uloziste.uloz_na_github(pd.DataFrame(columns=kurzy.SLOUPCE))
+        finally:
+            uloziste.github_token = original
+        self.assertFalse(ok)
+        self.assertIn("GITHUB_TOKEN", zprava)
+
+    def test_popis_zalohy_zmeni_se_s_tokenem(self):
+        original = uloziste.github_token
+        uloziste.github_token = lambda: ""
+        try:
+            bez = uloziste.popis_zalohy()
+        finally:
+            uloziste.github_token = original
+        self.assertIn("prohlížeči", bez)
+        uloziste.github_token = lambda: "token"
+        try:
+            s_tokenem = uloziste.popis_zalohy()
+        finally:
+            uloziste.github_token = original
+        self.assertIn("GitHubu", s_tokenem)
+
+    def test_uloz_na_github_zapise_soubor(self):
+        put_tela = []
+
+        class Odpoved:
+            def __init__(self, code, data=None):
+                self.status_code = code
+                self._data = data or {}
+
+            def json(self):
+                return self._data
+
+        def get(url, **kwargs):
+            if url.endswith("/git/ref/heads/data"):
+                return Odpoved(200, {"object": {"sha": "data-sha"}})
+            return Odpoved(404)
+
+        def put(url, **kwargs):
+            put_tela.append(kwargs.get("json") or {})
+            return Odpoved(201)
+
+        df = pd.DataFrame(
+            [
+                {
+                    "kolo": 6,
+                    "domaci": "Slavia",
+                    "hoste": "Sparta",
+                    "kurz_1": 1.8,
+                    "kurz_0": 3.5,
+                    "kurz_2": 4.2,
+                    "zdroj": "rucne",
+                    "sazkovka": "",
+                    "zapsano": "2026-08-29 04:00",
+                }
+            ]
+        )
+        original = uloziste.github_token
+        uloziste.github_token = lambda: "token"
+        try:
+            ok, zprava = uloziste.uloz_na_github(df, get=get, put=put)
+        finally:
+            uloziste.github_token = original
+        self.assertTrue(ok, zprava)
+        self.assertEqual(len(put_tela), 1)
+        self.assertEqual(put_tela[0]["branch"], "data")
+        self.assertIn("content", put_tela[0])
 
 
 HTML_ODLOZENEHO_ZAPASU = """

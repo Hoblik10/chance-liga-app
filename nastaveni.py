@@ -40,6 +40,9 @@ SPORTSDB_LIGA = "4631"  # Czech First League
 # Zdarma 100 dotazů denně. Tipsport v té sadě sázkovek není.
 API_FOOTBALL_KEY = nacti_secret("API_FOOTBALL_KEY")
 
+# Záloha kurzů mimo disk Streamlit Cloudu. Čte se až v uloziste.py,
+# ať token nemusí existovat při importu. Větev data, ne main.
+
 # TheSportsDB značí sezónu rozsahem let.
 SEZONA_SPORTSDB = nacti_secret("SEZONA", "2026-2027") or "2026-2027"
 
