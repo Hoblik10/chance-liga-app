@@ -172,48 +172,65 @@ def parsuj_soupisku(html):
     return hraci
 
 
+def _hraci_z_tabulky_sestavy(tabulka):
+    """Z jedné tabulky 1/X/2 vytáhne základ a lavičku, nebo prázdné seznamy."""
+    if tabulka is None:
+        return {"zaklad": [], "nahradnici": []}
+    radky = tabulka.find_all("tr")
+    if not radky:
+        return {"zaklad": [], "nahradnici": []}
+    hlavicka = [bunka.get_text(strip=True) for bunka in radky[0].find_all(["th", "td"])]
+    if "Jméno" not in hlavicka or "#" not in hlavicka or "Hráč" in hlavicka:
+        return None
+
+    zaklad, nahradnici = [], []
+    cil = zaklad
+    for radek in radky[1:]:
+        bunky = radek.find_all("td")
+        if len(bunky) < 4:
+            cil = nahradnici
+            continue
+        odkaz = None
+        for bunka in bunky:
+            odkaz = bunka.find("a")
+            if odkaz:
+                break
+        if odkaz is None:
+            continue
+        identita = _id_z_odkazu(odkaz.get("href", ""))
+        jmeno = " ".join(odkaz.get_text(strip=True).split())
+        if not identita and not jmeno:
+            continue
+        cil.append({"id": identita or jmeno, "jmeno": jmeno})
+    return {"zaklad": zaklad, "nahradnici": nahradnici}
+
+
 def parsuj_sestavu_zapasu(html):
     """Základní jedenáctka a lavička domácích i hostů.
 
-    Prázdný řádek v tabulce odděluje startující od náhradníků. Když tabulky
-    ještě nejsou (typicky dny před výkopem), vrací None.
+    Před výkopem bývá sestava na ``/zapas/statistiky/...`` a občas jen
+    u jednoho týmu. Prázdný řádek v tabulce odděluje startující od lavice.
     """
     soup = BeautifulSoup(html, "html.parser")
+
+    kontejnery = soup.select(".roster-container")
+    if len(kontejnery) >= 2:
+        tymy = []
+        for kontejner in kontejnery[:2]:
+            tym = _hraci_z_tabulky_sestavy(kontejner.find("table"))
+            tymy.append(tym or {"zaklad": [], "nahradnici": []})
+        if any(tym["zaklad"] for tym in tymy):
+            return {"domaci": tymy[0], "hoste": tymy[1]}
+
     tymy = []
-
     for tabulka in soup.find_all("table"):
-        radky = tabulka.find_all("tr")
-        if not radky:
-            continue
-        hlavicka = [bunka.get_text(strip=True) for bunka in radky[0].find_all(["th", "td"])]
-        if "Jméno" not in hlavicka or "#" not in hlavicka or "Hráč" in hlavicka:
-            continue
-
-        zaklad, nahradnici = [], []
-        cil = zaklad
-        for radek in radky[1:]:
-            bunky = radek.find_all("td")
-            if len(bunky) < 4:
-                cil = nahradnici
-                continue
-            odkaz = None
-            for bunka in bunky:
-                odkaz = bunka.find("a")
-                if odkaz:
-                    break
-            if odkaz is None:
-                continue
-            identita = _id_z_odkazu(odkaz.get("href", ""))
-            jmeno = " ".join(odkaz.get_text(strip=True).split())
-            if not identita and not jmeno:
-                continue
-            cil.append({"id": identita or jmeno, "jmeno": jmeno})
-
-        if zaklad:
-            tymy.append({"zaklad": zaklad, "nahradnici": nahradnici})
-
-    if len(tymy) < 2:
+        tym = _hraci_z_tabulky_sestavy(tabulka)
+        if tym and tym["zaklad"]:
+            tymy.append(tym)
+    if not tymy:
         return None
+    if len(tymy) == 1:
+        tymy.append({"zaklad": [], "nahradnici": []})
     return {"domaci": tymy[0], "hoste": tymy[1]}
 
 
@@ -400,13 +417,43 @@ def nacti_odkazy_zapasu(vynutit=False):
 
 
 def stahni_sestavu_zapasu(domaci, hoste, odkazy=None):
-    """Oficiální sestava konkrétního utkání, nebo None když ještě není."""
+    """Oficiální sestava konkrétního utkání, nebo None když ještě není.
+
+    Před výkopem ji liga dává na ``/zapas/statistiky/{slug}``, po zápase
+    i na běžný detail. Zkouší se obojí.
+    """
     odkazy = odkazy if odkazy is not None else nacti_odkazy_zapasu()
     info = odkazy.get((domaci, hoste))
     if not info:
         return None
-    html = _stahni(f"{ADRESA_LIGY}/zapas/{info['slug']}")
-    return parsuj_sestavu_zapasu(html)
+    slug = info["slug"]
+    for url in (
+        f"{ADRESA_LIGY}/zapas/statistiky/{slug}",
+        f"{ADRESA_LIGY}/zapas/{slug}",
+    ):
+        sestava = parsuj_sestavu_zapasu(_stahni(url))
+        if sestava and (
+            sestava["domaci"]["zaklad"] or sestava["hoste"]["zaklad"]
+        ):
+            return sestava
+    return None
+
+
+def stoji_za_stazeni_sestavy(zapas, ted=None):
+    """Dnešní / právě běžící zápas, u kterého má cenu sahat na web ligy."""
+    stav = zapas.get("stav") or ""
+    if stav.startswith("🔴") or stav == modely.ODEHRANO:
+        return False
+    cas = zapas.get("cas")
+    if cas is None:
+        return False
+    if ted is None:
+        ted = datetime.now(cas.tzinfo) if getattr(cas, "tzinfo", None) else datetime.now()
+    elif getattr(cas, "tzinfo", None) and ted.tzinfo is None:
+        ted = ted.replace(tzinfo=cas.tzinfo)
+    elif getattr(cas, "tzinfo", None) is None and ted.tzinfo is not None:
+        ted = ted.replace(tzinfo=None)
+    return abs((ted - cas).total_seconds()) <= 4 * 3600
 
 
 def id_mimo_sestavu(kadr, sestava_tymu):

@@ -679,6 +679,23 @@ for i, z in enumerate(zápasy):
                                 kadry.get(z["hoste"]) or [],
                             )
 
+                        klic_sestavy = f"sest_{zvolene_kolo}_{i}"
+                        if (
+                            klic_sestavy not in st.session_state
+                            and sestavy.stoji_za_stazeni_sestavy(z)
+                        ):
+                            try:
+                                nactena = sestavy.stahni_sestavu_zapasu(
+                                    z["domaci"], z["hoste"]
+                                )
+                                st.session_state[klic_sestavy] = (
+                                    nactena or {"prazdna": True}
+                                )
+                            except Exception as chyba_sestavy:
+                                st.session_state[klic_sestavy] = {
+                                    "chyba": str(chyba_sestavy)
+                                }
+
                         if st.button(
                             "📋 Načíst oficiální sestavu zápasu",
                             key=f"ns_{zvolene_kolo}_{i}",
@@ -687,15 +704,15 @@ for i, z in enumerate(zápasy):
                                 nactena = sestavy.stahni_sestavu_zapasu(
                                     z["domaci"], z["hoste"]
                                 )
-                                st.session_state[f"sest_{zvolene_kolo}_{i}"] = (
+                                st.session_state[klic_sestavy] = (
                                     nactena or {"prazdna": True}
                                 )
                             except Exception as chyba_sestavy:
-                                st.session_state[f"sest_{zvolene_kolo}_{i}"] = {
+                                st.session_state[klic_sestavy] = {
                                     "chyba": str(chyba_sestavy)
                                 }
 
-                        nactena_sestava = st.session_state.get(f"sest_{zvolene_kolo}_{i}")
+                        nactena_sestava = st.session_state.get(klic_sestavy)
                         if nactena_sestava and nactena_sestava.get("chyba"):
                             st.caption(
                                 f"Sestavu se nepodařilo stáhnout ({nactena_sestava['chyba']})."
@@ -703,20 +720,29 @@ for i, z in enumerate(zápasy):
                         elif nactena_sestava and nactena_sestava.get("prazdna"):
                             st.caption(
                                 "Oficiální sestava na ChanceLiga.cz ještě není. "
-                                "Bývá až kolem výkopu, na páteční Telegram to nestihne."
+                                "Bývá až kolem výkopu (stránka statistik zápasu), "
+                                "na páteční Telegram to nestihne."
                             )
-                        elif nactena_sestava and nactena_sestava.get("domaci"):
+                        elif nactena_sestava and (
+                            (nactena_sestava.get("domaci") or {}).get("zaklad")
+                            or (nactena_sestava.get("hoste") or {}).get("zaklad")
+                        ):
                             def _jmena(skupina):
                                 return ", ".join(
                                     h["jmeno"] for h in (skupina or []) if h.get("jmeno")
                                 ) or "–"
 
-                            st.caption(
-                                f"Základ {z['domaci']}: {_jmena(nactena_sestava['domaci']['zaklad'])}"
-                            )
-                            st.caption(
-                                f"Základ {z['hoste']}: {_jmena(nactena_sestava['hoste']['zaklad'])}"
-                            )
+                            for strana, tym in (
+                                ("domaci", z["domaci"]),
+                                ("hoste", z["hoste"]),
+                            ):
+                                zaklad = (nactena_sestava.get(strana) or {}).get("zaklad") or []
+                                if zaklad:
+                                    st.caption(f"Základ {tym}: {_jmena(zaklad)}")
+                                else:
+                                    st.caption(
+                                        f"Základ {tym}: na webu ligy ještě není."
+                                    )
                             if st.button(
                                 "Označit, kdo v soupisce zápasu není",
                                 key=f"os_{zvolene_kolo}_{i}",
@@ -725,6 +751,8 @@ for i, z in enumerate(zápasy):
                                     ("domaci", z["domaci"]),
                                     ("hoste", z["hoste"]),
                                 ):
+                                    if not (nactena_sestava.get(strana) or {}).get("zaklad"):
+                                        continue
                                     klic = (
                                         f"abs_d_{zvolene_kolo}_{i}"
                                         if strana == "domaci"
