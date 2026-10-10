@@ -175,10 +175,10 @@ klic,zapsano,kolo,datum,domaci,hoste,model,p_domaci,p_remiza,p_hoste,tip,skore,v
 9|SK Slavia Praha|FC Viktoria Plzeň|poisson,2026-09-11 08:34:17,9,20.09.2026 18:00,SK Slavia Praha,FC Viktoria Plzeň,poisson,0.61629,0.225115,0.158595,1X (Neprohra domácích),2:1,1
 9|SK Slavia Praha|FC Viktoria Plzeň|elo,2026-09-11 08:34:17,9,20.09.2026 18:00,SK Slavia Praha,FC Viktoria Plzeň,elo,0.562632,0.242619,0.194749,1X (Neprohra domácích),2:1,1
 9|SK Slavia Praha|FC Viktoria Plzeň|ensemble,2026-09-11 08:34:17,9,20.09.2026 18:00,SK Slavia Praha,FC Viktoria Plzeň,ensemble,0.651998,0.1926,0.155402,1X (Neprohra domácích),2:1,1
-10|FC Zlín|SK Slavia Praha|index_sily,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,index_sily,0.022321,0.002917,0.974762,12 (Bez remízy),,
-10|FC Zlín|SK Slavia Praha|poisson,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,poisson,0.076466,0.159742,0.763792,02 (Neprohra hostů),,
-10|FC Zlín|SK Slavia Praha|elo,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,elo,0.1213,0.166072,0.712627,02 (Neprohra hostů),,
-10|FC Zlín|SK Slavia Praha|ensemble,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,ensemble,0.064306,0.099699,0.835995,02 (Neprohra hostů),,
+10|FC Zlín|SK Slavia Praha|index_sily,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,index_sily,0.022321,0.002917,0.974762,12 (Bez remízy),0:1,2
+10|FC Zlín|SK Slavia Praha|poisson,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,poisson,0.076466,0.159742,0.763792,02 (Neprohra hostů),0:1,2
+10|FC Zlín|SK Slavia Praha|elo,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,elo,0.1213,0.166072,0.712627,02 (Neprohra hostů),0:1,2
+10|FC Zlín|SK Slavia Praha|ensemble,2026-09-18 08:34:11,10,09.10.2026 18:00,FC Zlín,SK Slavia Praha,ensemble,0.064306,0.099699,0.835995,02 (Neprohra hostů),0:1,2
 10|FC Viktoria Plzeň|FK Mladá Boleslav|index_sily,2026-09-18 08:34:11,10,10.10.2026 15:00,FC Viktoria Plzeň,FK Mladá Boleslav,index_sily,0.266107,0.24966,0.484233,12 (Bez remízy),,
 10|FC Viktoria Plzeň|FK Mladá Boleslav|poisson,2026-09-18 08:34:11,10,10.10.2026 15:00,FC Viktoria Plzeň,FK Mladá Boleslav,poisson,0.590615,0.224121,0.185263,1X (Neprohra domácích),,
 10|FC Viktoria Plzeň|FK Mladá Boleslav|elo,2026-09-18 08:34:11,10,10.10.2026 15:00,FC Viktoria Plzeň,FK Mladá Boleslav,elo,0.482175,0.27463,0.243195,1X (Neprohra domácích),,
