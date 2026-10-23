@@ -1545,6 +1545,24 @@ HTML_SOUPISKY = """
 </table>
 """
 
+HTML_SESTAVY_JEDNOHO_TYMU = """
+<div class="roster-container home">
+<table class="table border-bottom">
+<tr><th></th><th>#</th><th>P</th><th>Jméno</th><th>G</th></tr>
+<tr><td></td><td>1</td><td>B</td><td><a href="/hrac/100-a-hrdina">A. Hrdina</a></td><td></td></tr>
+<tr><td></td><td>26</td><td>O</td><td><a href="/hrac/101-f-vedral">F. Vedral</a></td><td></td></tr>
+<tr><td colspan="5"></td></tr>
+<tr><td></td><td>78</td><td>B</td><td><a href="/hrac/102-o-prodelal">O. Prodělal</a></td><td></td></tr>
+</table>
+</div>
+<div class="roster-container away">
+<table class="table border-bottom">
+<tr><th></th><th>#</th><th>P</th><th>Jméno</th><th>G</th></tr>
+<tr><td colspan="5">Sestava prozatím není k dispozici</td></tr>
+</table>
+</div>
+"""
+
 HTML_SESTAVY = """
 <table class="table border-bottom">
 <tr><th></th><th>#</th><th>P</th><th>Jméno</th><th>G</th></tr>
@@ -1592,6 +1610,39 @@ class TestSestavy(unittest.TestCase):
         self.assertEqual([h["id"] for h in sestava["domaci"]["zaklad"]], ["4201", "3885"])
         self.assertEqual([h["id"] for h in sestava["domaci"]["nahradnici"]], ["5159"])
         self.assertEqual(len(sestava["hoste"]["zaklad"]), 1)
+
+    def test_parsuj_sestavu_i_kdyz_ma_jedenactku_jen_domaci(self):
+        sestava = sestavy.parsuj_sestavu_zapasu(HTML_SESTAVY_JEDNOHO_TYMU)
+        self.assertIsNotNone(sestava)
+        self.assertEqual(
+            [h["jmeno"] for h in sestava["domaci"]["zaklad"]],
+            ["A. Hrdina", "F. Vedral"],
+        )
+        self.assertEqual(
+            [h["jmeno"] for h in sestava["domaci"]["nahradnici"]],
+            ["O. Prodělal"],
+        )
+        self.assertEqual(sestava["hoste"]["zaklad"], [])
+
+    def test_stoji_za_stazeni_sestavy_jen_kolem_vykopu(self):
+        from datetime import datetime, timedelta
+        from zoneinfo import ZoneInfo
+
+        praha = ZoneInfo("Europe/Prague")
+        vykop = datetime(2026, 8, 29, 17, 0, tzinfo=praha)
+        zapas = {
+            "stav": "🕒 Nadcházející",
+            "cas": vykop,
+            "skore": "-",
+        }
+        self.assertTrue(
+            sestavy.stoji_za_stazeni_sestavy(zapas, ted=vykop - timedelta(hours=1))
+        )
+        self.assertFalse(
+            sestavy.stoji_za_stazeni_sestavy(zapas, ted=vykop - timedelta(hours=6))
+        )
+        odlozeny = dict(zapas, stav="🔴 Odloženo")
+        self.assertFalse(sestavy.stoji_za_stazeni_sestavy(odlozeny, ted=vykop))
 
     def test_id_mimo_sestavu(self):
         kadr = sestavy.parsuj_soupisku(HTML_SOUPISKY)
